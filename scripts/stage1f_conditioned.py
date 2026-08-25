@@ -84,9 +84,14 @@ def run_one(seed):
         probs = big[p_id, avail]
         order = avail[np.argsort(corrs)[::-1]]
         ml = avail[np.argmax(probs)]
+        n_cand = len(avail)
         return {"top1": float(order[0] == ml),
                 "top5": float(ml in order[:5]),
-                "rho": spearman(corrs, probs)}
+                "rho": spearman(corrs, probs),
+                # analytic per-probe chance for a random ranking
+                "chance1": 1.0 / n_cand,
+                "chance5": min(5.0 / n_cand, 1.0),
+                "n_cand": n_cand}
 
     buckets = {}   # (scoring, location) -> list of dicts
     t = TRAIN
@@ -96,24 +101,28 @@ def run_one(seed):
             t += 1
         snap = snapshot(net)
         p_id = stream.ids[t - 1]
-        state = net.step(zero)
-        restore(net, snap)
-        pat = state.spiked.astype(float)
         loc = "after-space" if p_id in ws_ids else "mid-word"
-        s_u = score(pat, p_id, uncond, uncond_n >= MIN_COUNT)
         cond_codes = cond_sum[p_id] / np.maximum(cond_n[p_id][:, None], 1)
-        s_c = score(pat, p_id, cond_codes, cond_n[p_id] >= MIN_COUNT)
-        for name, s in (("unconditional", s_u), ("conditioned", s_c)):
-            if s is not None:
-                buckets.setdefault((name, loc), []).append(s)
-                buckets.setdefault((name, "all"), []).append(s)
+        for lag in (1, 2, 3):
+            state = net.step(zero)
+            pat = state.spiked.astype(float)
+            s_u = score(pat, p_id, uncond, uncond_n >= MIN_COUNT)
+            s_c = score(pat, p_id, cond_codes, cond_n[p_id] >= MIN_COUNT)
+            for name, sc in (("unconditional", s_u), ("conditioned", s_c)):
+                if sc is not None:
+                    buckets.setdefault((name, loc, lag), []).append(sc)
+                    buckets.setdefault((name, "all", lag), []).append(sc)
+        restore(net, snap)
     out = {"seed": seed}
     for key, rows in buckets.items():
-        out["|".join(key)] = {
+        out["|".join(str(x) for x in key)] = {
             "n": len(rows),
             "top1": float(np.mean([r["top1"] for r in rows])),
             "top5": float(np.mean([r["top5"] for r in rows])),
             "rho": float(np.mean([r["rho"] for r in rows])),
+            "chance1": float(np.mean([r["chance1"] for r in rows])),
+            "chance5": float(np.mean([r["chance5"] for r in rows])),
+            "n_cand": float(np.mean([r["n_cand"] for r in rows])),
         }
     return out
 
@@ -122,15 +131,18 @@ def main():
     t0 = time.perf_counter()
     with ProcessPoolExecutor(3) as pool:
         results = list(pool.map(run_one, [0, 1, 2]))
-    print(f"3 seeds in {time.perf_counter()-t0:.0f}s (silence step 1 only; "
-          f"chance top-1 ~ 1/n_candidates)\n")
+    print(f"3 seeds in {time.perf_counter()-t0:.0f}s (all 3 silence steps; "
+          f"chance computed per probe from its candidate count)\n")
     keys = sorted({k for r in results for k in r if k != "seed"})
     for k in keys:
         rows = [r[k] for r in results if k in r]
-        print(f"  {k:>28}: top1 {np.mean([x['top1'] for x in rows]):.3f} | "
-              f"top5 {np.mean([x['top5'] for x in rows]):.3f} | "
+        print(f"  {k:>34}: top1 {np.mean([x['top1'] for x in rows]):.3f} "
+              f"(chance {np.mean([x['chance1'] for x in rows]):.3f}) | "
+              f"top5 {np.mean([x['top5'] for x in rows]):.3f} "
+              f"(chance {np.mean([x['chance5'] for x in rows]):.3f}) | "
               f"rho {np.mean([x['rho'] for x in rows]):+.3f} | "
-              f"n/seed ~{int(np.mean([x['n'] for x in rows]))}")
+              f"cands ~{np.mean([x['n_cand'] for x in rows]):.0f} | "
+              f"n ~{int(np.mean([x['n'] for x in rows]))}")
 
 
 if __name__ == "__main__":
