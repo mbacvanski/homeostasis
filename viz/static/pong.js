@@ -478,17 +478,23 @@ const PARAM_ORDER = [
 ];
 function buildParams(config) {
   const box = document.getElementById("params");
-  if (box.childElementCount) return;
+  if (!box.childElementCount) {
+    for (const name of PARAM_ORDER) {
+      const label = document.createElement("label");
+      label.textContent = name;
+      const input = document.createElement("input");
+      input.id = `param-${name}`;
+      input.type = "number";
+      input.step = "any";
+      box.appendChild(label);
+      box.appendChild(input);
+    }
+  }
+  // Mirror the live config so Reset re-applies what is actually running
+  // (only skip a field while the user is editing it).
   for (const name of PARAM_ORDER) {
-    const label = document.createElement("label");
-    label.textContent = name;
-    const input = document.createElement("input");
-    input.id = `param-${name}`;
-    input.type = "number";
-    input.step = "any";
-    input.value = config[name];
-    box.appendChild(label);
-    box.appendChild(input);
+    const input = document.getElementById(`param-${name}`);
+    if (input && document.activeElement !== input) input.value = config[name];
   }
 }
 function readParams() {
