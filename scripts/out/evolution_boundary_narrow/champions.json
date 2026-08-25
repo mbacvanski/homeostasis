@@ -1,0 +1,48 @@
+[
+ {
+  "id": "evoB-narrow-0",
+  "label": "boundary narrow champion rep0",
+  "metrics": {
+   "score": 0.253,
+   "dir_agree": 0.0,
+   "prop_spiked": 0.0,
+   "sensor_band": 0.333,
+   "rate_band": 0.0,
+   "mean_abs_E": 0.9832
+  },
+  "params": {
+   "n_nodes": 80,
+   "p_link": 0.0422,
+   "input_weight": 0.4006,
+   "weight_init_mean": 0.851,
+   "weight_init_sd": 0.1231,
+   "leak": 0.2967,
+   "target_lr": 0.009,
+   "threshold_ratio": 2.5596,
+   "gain": 4.2882
+  }
+ },
+ {
+  "id": "evoB-narrow-1",
+  "label": "boundary narrow champion rep1",
+  "metrics": {
+   "score": 0.248,
+   "dir_agree": 0.49,
+   "prop_spiked": 0.77,
+   "sensor_band": 0.227,
+   "rate_band": 0.004,
+   "mean_abs_E": 0.0172
+  },
+  "params": {
+   "n_nodes": 197,
+   "p_link": 0.2276,
+   "input_weight": 0.358,
+   "weight_init_mean": 0.0,
+   "weight_init_sd": 0.1727,
+   "leak": 0.1944,
+   "target_lr": 0.0726,
+   "threshold_ratio": 1.7834,
+   "gain": 4.6799
+  }
+ }
+]

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Object Tracking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Object Tracking <span class="sub">Falandays, Yoshimi, Warren &amp; Spivey (2024), case study 1</span></h1>
+  <div id="conn" class="conn">connecting…</div>
+</header>
+
+<div id="controls">
+  <button id="btn-play" title="space">▶ Play</button>
+  <button id="btn-step1" title="s">Step ×1</button>
+  <button id="btn-step10">Step ×10</button>
+  <button id="btn-step100">Step ×100</button>
+  <span class="ctl">
+    <label>speed</label>
+    <input id="speed" type="range" min="0" max="100" value="50">
+    <span id="speed-val" class="mono">60/s</span>
+  </span>
+  <span class="ctl">
+    <label><input id="chk-learning" type="checkbox" checked> learning</label>
+    <label title="Smoothly varying speed and irregularly timed reversals; changing this resets the run"><input id="chk-variable" type="checkbox"> irregular motion</label>
+    <label><input id="chk-manual" type="checkbox"> manual stimulus</label>
+    <button id="btn-flip">flip direction</button>
+  </span>
+  <span class="ctl">
+    <label>seed</label><input id="seed" type="number" value="0" step="1">
+    <button id="btn-reset">Reset</button>
+  </span>
+  <span class="ctl loadout-ctl">
+    <label for="loadout">loadout</label>
+    <select id="loadout" title="Named parameter loadout"></select>
+    <button id="btn-loadout" title="Apply the selected parameters and reset the run">Load &amp; Reset</button>
+    <span id="loadout-metrics" class="mono"></span>
+  </span>
+  <span class="status mono">t=<span id="stat-t">0</span> · seed <span id="stat-seed">0</span> · stim <span id="stat-dir">↺</span> · <span id="stat-motion">constant</span> <span id="stat-stim-speed">1.00°/step</span></span>
+  <details id="params-box">
+    <summary>parameters (applied on Reset)</summary>
+    <div id="params"></div>
+  </details>
+</div>
+
+<main>
+  <div class="col" id="col-1">
+    <section class="panel">
+      <h2>Agent &amp; Stimulus <span class="hint">drag the green dot</span></h2>
+      <canvas id="arena" width="292" height="292"></canvas>
+      <div class="readout mono" id="arena-readout"></div>
+    </section>
+    <section class="panel">
+      <h2>Sensor Activations</h2>
+      <canvas id="sensors" width="292" height="76"></canvas>
+      <div class="legend"><span class="sw red"></span>left eye (−30°…+90°) <span class="sw blue"></span>right eye (−90°…+30°)</div>
+    </section>
+    <section class="panel">
+      <h2>Effector Activations</h2>
+      <canvas id="effectors" width="292" height="84"></canvas>
+    </section>
+  </div>
+
+  <div class="col" id="col-2">
+    <section class="panel">
+      <h2>Heading vs. Stimulus <span class="hint">cf. paper Fig. 4A</span></h2>
+      <canvas id="strip" width="640" height="164"></canvas>
+    </section>
+    <section class="panel">
+      <h2>Heading Error <span class="hint">±45° band shaded</span></h2>
+      <canvas id="errstrip" width="640" height="76"></canvas>
+    </section>
+    <section class="panel">
+      <h2>Stimulus Speed <span class="hint">current speed and active target</span></h2>
+      <canvas id="speedchart" width="640" height="72"></canvas>
+    </section>
+    <section class="panel">
+      <h2>Reservoir Spikes <span class="hint">1 px = 1 step; rows = nodes · click to inspect a node</span></h2>
+      <canvas id="raster" width="640" height="170"></canvas>
+      <canvas id="propchart" width="640" height="54"></canvas>
+    </section>
+  </div>
+
+  <div class="col" id="col-3">
+    <section class="panel">
+      <h2>Reservoir Node Properties</h2>
+      <div id="net-stats" class="fields mono"></div>
+    </section>
+    <section class="panel">
+      <h2>Weights Distribution</h2>
+      <canvas id="whist" width="300" height="86"></canvas>
+    </section>
+    <section class="panel">
+      <h2>Node Inspector <span class="hint">click a raster row</span></h2>
+      <div class="node-head">node <input id="node-idx" type="number" value="0" min="0" step="1"></div>
+      <div id="node-fields" class="fields mono"></div>
+      <canvas id="node-spark" width="300" height="64"></canvas>
+    </section>
+    <div class="fingerprint mono" id="fingerprint"></div>
+  </div>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

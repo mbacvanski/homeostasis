@@ -1,0 +1,48 @@
+[
+ {
+  "id": "evoF0",
+  "label": "flow champion rep0",
+  "metrics": {
+   "score": 0.621,
+   "dir_agree": 0.93,
+   "prop_spiked": 0.34,
+   "input_flow": 2.99,
+   "rate_band": 0.347,
+   "mean_abs_E": 0.1038
+  },
+  "params": {
+   "n_nodes": 170,
+   "p_link": 0.0634,
+   "input_weight": 2.5,
+   "weight_init_mean": 1.5,
+   "weight_init_sd": 0.0362,
+   "leak": 0.5472,
+   "target_lr": 0.0273,
+   "threshold_ratio": 1.9316,
+   "gain": 13.666
+  }
+ },
+ {
+  "id": "evoF1",
+  "label": "flow champion rep1",
+  "metrics": {
+   "score": 0.426,
+   "dir_agree": 0.95,
+   "prop_spiked": 0.28,
+   "input_flow": 2.69,
+   "rate_band": 0.327,
+   "mean_abs_E": 0.0933
+  },
+  "params": {
+   "n_nodes": 135,
+   "p_link": 0.1067,
+   "input_weight": 1.9936,
+   "weight_init_mean": 1.5,
+   "weight_init_sd": 0.5096,
+   "leak": 0.6,
+   "target_lr": 0.0064,
+   "threshold_ratio": 2.0988,
+   "gain": 16.225
+  }
+ }
+]

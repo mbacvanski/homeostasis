@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "visualizer",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "uvicorn", "viz.server:app", "--port", "8471"],
+      "port": 8471
+    },
+    {
+      "name": "visualizer-alt",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "uvicorn", "viz.server:app", "--port", "8472"],
+      "port": 8472,
+      "url": "http://localhost:8472"
+    }
+  ]
+}

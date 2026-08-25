@@ -1,0 +1,48 @@
+[
+ {
+  "id": "evoB0",
+  "label": "boundary champion rep0",
+  "metrics": {
+   "score": 0.247,
+   "dir_agree": 0.47,
+   "prop_spiked": 0.6,
+   "sensor_band": 0.313,
+   "rate_band": 0.085,
+   "mean_abs_E": 0.1539
+  },
+  "params": {
+   "n_nodes": 179,
+   "p_link": 0.2266,
+   "input_weight": 0.25,
+   "weight_init_mean": 1.4292,
+   "weight_init_sd": 0.2955,
+   "leak": 0.2966,
+   "target_lr": 0.0405,
+   "threshold_ratio": 1.8731,
+   "gain": 2.5911
+  }
+ },
+ {
+  "id": "evoB1",
+  "label": "boundary champion rep1",
+  "metrics": {
+   "score": 0.251,
+   "dir_agree": 0.43,
+   "prop_spiked": 0.24,
+   "sensor_band": 0.325,
+   "rate_band": 0.855,
+   "mean_abs_E": 16020816.1435
+  },
+  "params": {
+   "n_nodes": 182,
+   "p_link": 0.3,
+   "input_weight": 2.1987,
+   "weight_init_mean": 0.6064,
+   "weight_init_sd": 0.145,
+   "leak": 0.05,
+   "target_lr": 0.0045,
+   "threshold_ratio": 3.056,
+   "gain": 2.1845
+  }
+ }
+]

@@ -1,0 +1,33 @@
+/* Pong-specific additions on top of the shared visualizer stylesheet. */
+
+main {
+  grid-template-columns: minmax(0, 1fr) 344px;
+}
+
+@media (max-width: 1120px) {
+  main { grid-template-columns: minmax(0, 1fr); }
+  #col-2 { flex-direction: row; flex-wrap: wrap; }
+  #col-2 > .panel { flex: 1 1 300px; }
+}
+
+.row { display: flex; gap: 10px; }
+.half { flex: 1; min-width: 0; }
+
+.scoreline { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.big { font-size: 26px; font-weight: 600; color: var(--green); }
+.scoresub { font-size: 12px; color: var(--dim); }
+
+.recent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 8px;
+}
+.recent i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.recent i.hit { background: var(--green); }
+.recent i.miss { background: var(--red); }

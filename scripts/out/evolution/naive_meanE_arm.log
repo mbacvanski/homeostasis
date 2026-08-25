@@ -1,0 +1,25 @@
+rep0 gen00 | mean|E| best 0.0253 pop 0.6965 | score best-fit 0.25 popmax 0.38 | spike 0.98 | r(V,S) -0.07 | 3s
+rep0 gen01 | mean|E| best 0.0194 pop 106415612614.3391 | score best-fit 0.23 popmax 0.46 | spike 0.83 | r(V,S) -0.10 | 6s
+rep0 gen02 | mean|E| best 0.0165 pop 0.2193 | score best-fit 0.25 popmax 0.61 | spike 0.96 | r(V,S) +0.03 | 10s
+rep0 gen03 | mean|E| best 0.0144 pop 0.1657 | score best-fit 0.25 popmax 0.37 | spike 1.00 | r(V,S) -0.09 | 14s
+rep0 gen04 | mean|E| best 0.0091 pop 0.0790 | score best-fit 0.25 popmax 0.43 | spike 0.99 | r(V,S) +0.20 | 18s
+rep0 gen05 | mean|E| best 0.0115 pop 0.1527 | score best-fit 0.25 popmax 0.29 | spike 1.00 | r(V,S) +0.06 | 23s
+rep0 gen06 | mean|E| best 0.0086 pop 0.0507 | score best-fit 0.25 popmax 0.27 | spike 1.00 | r(V,S) +0.01 | 29s
+rep0 gen07 | mean|E| best 0.0102 pop 0.1180 | score best-fit 0.25 popmax 0.32 | spike 1.00 | r(V,S) +0.17 | 34s
+rep0 gen08 | mean|E| best 0.0086 pop 0.1642 | score best-fit 0.25 popmax 0.27 | spike 1.00 | r(V,S) +0.10 | 39s
+rep0 gen09 | mean|E| best 0.0077 pop 0.1549 | score best-fit 0.25 popmax 0.26 | spike 1.00 | r(V,S) +0.18 | 44s
+rep0 gen10 | mean|E| best 0.0076 pop 0.1430 | score best-fit 0.25 popmax 0.25 | spike 1.00 | r(V,S) -0.09 | 49s
+rep0 gen11 | mean|E| best 0.0094 pop 0.1626 | score best-fit 0.25 popmax 0.27 | spike 1.00 | r(V,S) +0.01 | 54s
+rep0 gen12 | mean|E| best 0.0091 pop 0.0725 | score best-fit 0.25 popmax 0.29 | spike 1.00 | r(V,S) +0.01 | 59s
+rep0 gen13 | mean|E| best 0.0089 pop 0.1231 | score best-fit 0.25 popmax 0.27 | spike 0.99 | r(V,S) +0.26 | 63s
+rep0 gen14 | mean|E| best 0.0084 pop 0.0808 | score best-fit 0.25 popmax 0.28 | spike 1.00 | r(V,S) -0.01 | 68s
+rep0 gen15 | mean|E| best 0.0082 pop 0.1745 | score best-fit 0.25 popmax 0.31 | spike 1.00 | r(V,S) -0.03 | 72s
+rep0 gen16 | mean|E| best 0.0081 pop 0.2500 | score best-fit 0.25 popmax 0.27 | spike 1.00 | r(V,S) +0.01 | 76s
+rep0 gen17 | mean|E| best 0.0081 pop 0.1585 | score best-fit 0.25 popmax 0.27 | spike 1.00 | r(V,S) +0.03 | 81s
+rep0 gen18 | mean|E| best 0.0081 pop 0.1724 | score best-fit 0.25 popmax 0.25 | spike 1.00 | r(V,S) +0.23 | 86s
+rep0 gen19 | mean|E| best 0.0073 pop 0.1614 | score best-fit 0.25 popmax 0.25 | spike 1.00 | r(V,S) +0.32 | 91s
+rep0 gen20 | mean|E| best 0.0067 pop 0.1641 | score best-fit 0.25 popmax 0.27 | spike 1.00 | r(V,S) -0.04 | 95s
+rep0 gen21 | mean|E| best 0.0067 pop 0.3171 | score best-fit 0.25 popmax 0.28 | spike 1.00 | r(V,S) +0.01 | 99s
+rep0 gen22 | mean|E| best 0.0078 pop 0.2611 | score best-fit 0.25 popmax 0.25 | spike 1.00 | r(V,S) +0.36 | 103s
+/Users/marc/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
