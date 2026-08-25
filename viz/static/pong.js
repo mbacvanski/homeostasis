@@ -500,8 +500,21 @@ function readParams() {
   return params;
 }
 
+function buildLoadouts(loadouts) {
+  const sel = document.getElementById("loadout");
+  if (!loadouts || sel.options.length) return;
+  sel.appendChild(new Option("custom / edited", ""));
+  for (const l of loadouts) sel.appendChild(new Option(l.label, l.id));
+  sel.onchange = () => {
+    if (sel.value)
+      send({ cmd: "loadout", id: sel.value,
+             seed: Number(document.getElementById("seed").value) || 0 });
+  };
+}
+
 function syncControls(m) {
   buildParams(m.config);
+  buildLoadouts(m.loadouts);
   const play = document.getElementById("btn-play");
   play.textContent = m.playing ? "⏸ Pause" : "▶ Play";
   play.classList.toggle("primary", m.playing);

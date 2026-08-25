@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <title>Homeostatic Reservoir — Pong</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="/pong/static/style.css">
-<link rel="stylesheet" href="/pong/static/pong.css">
+<link rel="stylesheet" href="/pong/static/style.css?v=2">
+<link rel="stylesheet" href="/pong/static/pong.css?v=2">
 </head>
 <body>
 <header>
@@ -26,6 +26,9 @@
   <span class="ctl">
     <label><input id="chk-learning" type="checkbox" checked> learning</label>
     <label title="The paper's control condition: sensors encode the ball's absolute height instead of its angle relative to the paddle. Changing this resets the run."><input id="chk-allo" type="checkbox"> allocentric sensors</label>
+  </span>
+  <span class="ctl">
+    <label>preset</label><select id="loadout"></select>
   </span>
   <span class="ctl">
     <label>seed</label><input id="seed" type="number" value="0" step="1">
@@ -97,6 +100,6 @@
   </div>
 </main>
 
-<script src="/pong/static/pong.js"></script>
+<script src="/pong/static/pong.js?v=2"></script>
 </body>
 </html>

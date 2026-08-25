@@ -1,0 +1,44 @@
+[
+ {
+  "id": "pongEvo0",
+  "label": "flow-evolved rep0 (hit 0.66)",
+  "metrics": {
+   "hit_rate": 0.656,
+   "end_flow": 0.983,
+   "prop_spiked": 0.04
+  },
+  "params": {
+   "n_nodes": 420,
+   "p_link": 0.0308,
+   "input_weight": 4.1966,
+   "weight_init_mean": -0.3078,
+   "weight_init_sd": 0.1678,
+   "inhibitory_fraction": 0.1015,
+   "leak": 0.5666,
+   "target_lr": 0.1092,
+   "threshold_ratio": 2.313,
+   "gain": 215.9617
+  }
+ },
+ {
+  "id": "pongEvo1",
+  "label": "flow-evolved rep1 (hit 0.63)",
+  "metrics": {
+   "hit_rate": 0.627,
+   "end_flow": 0.981,
+   "prop_spiked": 0.05
+  },
+  "params": {
+   "n_nodes": 700,
+   "p_link": 0.0563,
+   "input_weight": 5.0194,
+   "weight_init_mean": 0.2191,
+   "weight_init_sd": 0.2565,
+   "inhibitory_fraction": 0.4,
+   "leak": 0.5245,
+   "target_lr": 0.0256,
+   "threshold_ratio": 4.0,
+   "gain": 240.2376
+  }
+ }
+]

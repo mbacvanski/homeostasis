@@ -51,6 +51,22 @@ RESERVOIR_PARAMS = {
 }
 PONG_PARAMS = {"gain", "paddle_half_height", "ball_speed_x", "ball_speed_y"}
 
+# Preset loadouts: the published configuration plus any champions produced by
+# scripts/evolve_pong.py (read at import; restart the server to refresh).
+PONG_LOADOUTS = [{
+    "id": "published",
+    "label": "published (hit 0.58)",
+    "metrics": {"hit_rate": 0.582},
+    "params": {},   # empty = the defaults, which are the published values
+}]
+_CHAMPS = Path(__file__).resolve().parent.parent / "scripts/out/evolution_pong/champions.json"
+if _CHAMPS.exists():
+    try:
+        PONG_LOADOUTS += json.loads(_CHAMPS.read_text())
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"could not load pong champions: {exc!r}")
+LOADOUT_BY_ID = {entry["id"]: entry for entry in PONG_LOADOUTS}
+
 
 class PongSession:
     """One connection's Pong simulation plus playback state."""
@@ -208,6 +224,7 @@ class PongSession:
                 "n_opportunities": int(hits.size),
             },
             "custom_params": bool(self.params),
+            "loadouts": PONG_LOADOUTS,
             "config": {
                 **{f: getattr(net.config, f) for f in (
                     "n_nodes", "p_link", "input_weight", "weight_init_mean",
@@ -245,6 +262,11 @@ class PongSession:
         elif cmd == "select_node":
             self.selected_node = max(0, int(msg.get("index", 0)))
             self.dirty = True
+        elif cmd == "loadout":
+            entry = LOADOUT_BY_ID.get(str(msg.get("id")))
+            if entry is not None:
+                self.playing = False
+                self.reset(msg.get("seed"), dict(entry["params"]), "egocentric")
         return []
 
 
