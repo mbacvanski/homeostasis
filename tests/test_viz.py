@@ -61,7 +61,10 @@ def test_visualizer_normalizes_reversed_parameter_ranges():
 def test_visualizer_exposes_all_named_loadouts():
     session = VizSession()
     frame = session.frame([])
-    assert [loadout["id"] for loadout in frame["loadouts"]] == ["paper", "236", "234"]
+    ids = [loadout["id"] for loadout in frame["loadouts"]]
+    # The three named loadouts come first; evolved champions (scripts/out/
+    # evolution*/champions.json) are appended dynamically when present.
+    assert ids[:3] == ["paper", "236", "234"]
     assert frame["active_loadout"] == "paper"
     assert not frame["custom_params"]
 

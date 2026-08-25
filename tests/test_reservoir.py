@@ -467,3 +467,97 @@ class TestInvariants:
             assert np.all(s.outputs >= 0.0) and np.all(s.outputs <= 1.0)
         assert np.all(net.targets >= 1.0)
         assert np.all(np.isfinite(net.weights))
+
+
+# ---------------------------------------------------------------------------
+# weight_lr scaling and plastic input weights (language stage 1 additions)
+# ---------------------------------------------------------------------------
+
+
+class TestWeightLr:
+    def test_scales_recurrent_update(self):
+        # Same two-source setup as TestWeightUpdate, with weight_lr = 0.1:
+        # E2 = -0.8 split across 2 links, scaled -> each moves by +0.4 * 0.1.
+        net = make_manual_net(
+            input_adj=[[True, False, False], [False, True, False]],
+            adj=[[False, False, True], [False, False, True], [False, False, False]],
+            weights=[[0, 0, 0.5], [0, 0, -0.3], [0, 0, 0]],
+            out_adj=[[False], [False], [True]],
+        )
+        object.__setattr__(net.config, "weight_lr", 0.1)
+        net.step(np.array([3.0, 3.0]))
+        net.step(np.array([0.0, 0.0]))
+        assert net.weights[0, 2] == pytest.approx(0.5 + 0.04)
+        assert net.weights[1, 2] == pytest.approx(-0.3 + 0.04)
+
+    def test_unit_lr_is_default_behavior(self):
+        cfg = ReservoirConfig()
+        assert cfg.weight_lr == 1.0
+
+
+class TestInputPlasticity:
+    def plastic_net(self, **kw):
+        net = make_manual_net(
+            input_adj=[[True, False]],
+            adj=[[False, True], [False, False]],
+            weights=[[0.0, 1.5], [0.0, 0.0]],
+            out_adj=[[True], [False]],
+        )
+        cfg = net.config
+        object.__setattr__(cfg, "input_plastic", True)
+        for k, v in kw.items():
+            object.__setattr__(cfg, k, v)
+        return net
+
+    def test_active_input_weight_moves(self):
+        # Node 0: input 1.5 through weight 1.0 -> x = 1.5, no spike,
+        # E0 = 0.5; its only active afferent is the input link, so
+        # w_in[0,0] -= 0.5 -> 0.5.
+        net = self.plastic_net()
+        s = net.step(np.array([1.5]))
+        assert s.error[0] == pytest.approx(0.5)
+        assert net.input_weights[0, 0] == pytest.approx(0.5)
+
+    def test_inactive_input_weight_frozen(self):
+        net = self.plastic_net()
+        net.step(np.array([0.0]))
+        assert net.input_weights[0, 0] == pytest.approx(1.0)
+
+    def test_pooled_divisor_splits_across_input_and_recurrent(self):
+        # Step 1: input 3.0 -> node 0 spikes (x=3 >= 2), and node 0's own
+        # error also moves its input weight (active afferent pool = {input}).
+        # E0 = 1-1 = 0 -> no change. Step 2: input active again AND node 0
+        # spiked last step, so node 1's pool is {node0} (recurrent) and node
+        # 0's pool is {input}. Feed input 1.0: node 0 x = 1*0.75 + 1.0 = 1.75,
+        # E0 = 0.75, its single active afferent is the input link ->
+        # w_in -= 0.75. Node 1 x = 1.5, E1 = 0.5, pool = {node0} ->
+        # W[0,1] -= 0.5.
+        net = self.plastic_net()
+        s1 = net.step(np.array([3.0]))
+        assert s1.spiked[0] and s1.error[0] == pytest.approx(0.0)
+        assert net.input_weights[0, 0] == pytest.approx(1.0)
+        s2 = net.step(np.array([1.0]))
+        assert s2.error[0] == pytest.approx(0.75)
+        assert net.input_weights[0, 0] == pytest.approx(1.0 - 0.75)
+        assert net.weights[0, 1] == pytest.approx(1.5 - 0.5)
+
+    def test_weight_lr_applies_to_input_updates(self):
+        net = self.plastic_net(weight_lr=0.1)
+        net.step(np.array([1.5]))  # E0 = 0.5 -> w -= 0.05
+        assert net.input_weights[0, 0] == pytest.approx(0.95)
+
+    def test_off_by_default_input_weights_frozen(self):
+        net = make_manual_net(
+            input_adj=[[True, False]],
+            adj=[[False, True], [False, False]],
+            weights=[[0.0, 1.5], [0.0, 0.0]],
+            out_adj=[[True], [False]],
+        )
+        for _ in range(20):
+            net.step(np.array([1.5]))
+        assert net.input_weights[0, 0] == pytest.approx(1.0)
+
+    def test_dense_input_option(self):
+        cfg = ReservoirConfig(input_p_link=1.0)
+        net = HomeostaticReservoir(cfg, seed=0)
+        assert net.input_adjacency.all()

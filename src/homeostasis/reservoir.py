@@ -91,6 +91,18 @@ class ReservoirConfig:
     target_floor: float = 1.0   # hard lower bound on T (eq. 4)
     target_lr: float = 0.01     # proportion of error applied to targets
     threshold_ratio: float = 2.0  # spike threshold = ratio * target
+    # Scale on the weight update (eq. 5). The released 2024 code applies the
+    # full error (1.0); the 2021 language model uses L_Wx = 0.1.
+    weight_lr: float = 1.0
+    # When True, input weights are plastic under the same local rule: input
+    # afferents active on the current step join the update pool alongside
+    # last step's spiking recurrent neighbors, and the error is split across
+    # the combined pool. (Both papers freeze input weights; this is our
+    # extension — learned input projections, i.e. embeddings.)
+    input_plastic: bool = False
+    # Link probability for input->reservoir connections; None = use p_link.
+    # Dense input wiring (1.0) makes token projections directly comparable.
+    input_p_link: float | None = None
     allow_self_connections: bool = False  # code: `if row == col continue`
     clamp_negative_activations: bool = False  # code's acts_neg switch (off in runs)
 
@@ -146,7 +158,8 @@ class HomeostaticReservoir:
         # --- Fixed structure ------------------------------------------------
         # Input -> reservoir: Bernoulli(p_link) per (input, node) pair, all
         # existing links share one fixed weight.
-        self.input_adjacency = rng.random((c.n_inputs, c.n_nodes)) < c.p_link
+        input_p = c.p_link if c.input_p_link is None else c.input_p_link
+        self.input_adjacency = rng.random((c.n_inputs, c.n_nodes)) < input_p
         self.input_weights = self.input_adjacency * c.input_weight
 
         # Reservoir recurrent: directed Bernoulli(p_link) per ordered pair.
@@ -189,6 +202,7 @@ class HomeostaticReservoir:
         re-allocating NxN float casts on every step.
         """
         self._adjacency_f = self.adjacency.astype(float)
+        self._input_adjacency_f = self.input_adjacency.astype(float)
         self._output_adjacency_f = self.output_adjacency.astype(float)
         self._output_in_degree = self.output_adjacency.sum(axis=0)
         self._spiked_f = getattr(self, "spiked", np.zeros(self.adjacency.shape[0], dtype=bool)).astype(float)
@@ -236,10 +250,29 @@ class HomeostaticReservoir:
         if self.learning_enabled:
             # Spikes integrated in phase 1 (previous step's), as row indices.
             prev_rows = np.flatnonzero(self.spiked)
-            if prev_rows.size:
+            if c.input_plastic:
+                # Input afferents active this step (their delivery was just
+                # integrated) join the pool: the error is split across ALL
+                # active afferents, recurrent and input alike, and both weight
+                # matrices move by their share (scaled by weight_lr).
+                active = inputs > 0.0
+                active_rows = np.flatnonzero(active)
+                if prev_rows.size or active_rows.size:
+                    counts = self._spiked_f @ self._adjacency_f
+                    if active_rows.size:
+                        counts = counts + active.astype(float) @ self._input_adjacency_f
+                    with np.errstate(divide="ignore", invalid="ignore"):
+                        per_weight = np.where(counts > 0, error / counts, 0.0) * c.weight_lr
+                    if prev_rows.size:
+                        self.weights[prev_rows] -= self._adjacency_f[prev_rows] * per_weight
+                    if active_rows.size:
+                        self.input_weights[active_rows] -= (
+                            self._input_adjacency_f[active_rows] * per_weight
+                        )
+            elif prev_rows.size:
                 counts = self._spiked_f @ self._adjacency_f
                 with np.errstate(divide="ignore", invalid="ignore"):
-                    per_weight = np.where(counts > 0, error / counts, 0.0)
+                    per_weight = np.where(counts > 0, error / counts, 0.0) * c.weight_lr
                 # Only links whose source spiked at t-1 move; each absorbs an
                 # equal share of the full error, opposite in sign (eq. 5).
                 self.weights[prev_rows] -= self._adjacency_f[prev_rows] * per_weight
