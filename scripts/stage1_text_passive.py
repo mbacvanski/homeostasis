@@ -49,7 +49,8 @@ def build_config(n_tokens: int, n_nodes: int) -> ReservoirConfig:
         n_outputs=2,               # unused; readout ignored in stage 1
         p_link=0.1,
         input_p_link=1.0,
-        input_weight=0.5,          # 0.5 * N dense ~= 5.0 * 0.1 * N sparse
+        input_weight=1.0,          # per-node drive 1.0/step -> x* = 4 > threshold
+        input_weight_sd=0.1,       # class-free symmetry breaking
         weight_init_mean=0.0,
         weight_init_sd=1.0,        # 2021: recurrent weights ~ Normal(0, 1)
         leak=0.25,
@@ -75,11 +76,14 @@ def run_one(task):
         prop_spiked[t] = state.prop_spiked
 
     # -- checkpoint 1: embedding structure ---------------------------------
+    # Center rows before cosine: the shared mean component (every char drives
+    # every node positively) compresses raw cosines toward 1 and hides the
+    # differential structure, as with word-frequency components in word2vec.
     W = net.input_weights  # (n_tokens, N), dense
     classes = [char_class(ch) for ch in stream.vocab]
-    # cosine similarity between all token pairs
-    norms = np.linalg.norm(W, axis=1, keepdims=True)
-    Wn = W / np.maximum(norms, 1e-12)
+    Wc = W - W.mean(axis=0, keepdims=True)
+    norms = np.linalg.norm(Wc, axis=1, keepdims=True)
+    Wn = Wc / np.maximum(norms, 1e-12)
     sim = Wn @ Wn.T
     v = stream.n_tokens
     iu = np.triu_indices(v, k=1)
@@ -106,6 +110,13 @@ def run_one(task):
             o = np.argsort(x); r = np.empty(len(x)); r[o] = np.arange(len(x)); return r
         return float(np.corrcoef(ranks(a), ranks(b))[0, 1])
     rho = spearman(act, surp)
+    rho_spike = spearman(prop_spiked[settle:], surp)
+
+    # frequency hypothesis: are similar-frequency characters more similar?
+    freq = np.bincount(stream.ids, minlength=v).astype(float)
+    freq = np.log(freq + 1.0)
+    freq_dist = np.abs(freq[iu[0]] - freq[iu[1]])
+    rho_freq = spearman(-freq_dist, sim[iu])
 
     # most-similar pairs, for the qualitative readout
     pairs = sorted(
@@ -116,6 +127,8 @@ def run_one(task):
         "seed": seed,
         "within": within, "between": between, "gap_z": z,
         "rho_act_surprisal": rho,
+        "rho_spike_surprisal": rho_spike,
+        "rho_freq_similarity": rho_freq,
         "prop_spiked": float(prop_spiked[settle:].mean()),
         "embed_drift": float(np.abs(W - w0).mean()),
         "top_pairs": [(f"{a!r}~{b!r}", round(s, 3)) for s, a, b in pairs],
@@ -140,10 +153,12 @@ def main():
     print(f"{len(results)} runs of {args.steps} steps in {time.perf_counter()-t0:.0f}s\n")
 
     for r in results:
-        print(f"seed {r['seed']}: within-class sim {r['within']:.3f} vs between "
-              f"{r['between']:.3f} (permutation z = {r['gap_z']:+.1f}) | "
-              f"rho(activation, surprisal) = {r['rho_act_surprisal']:+.3f} | "
-              f"spike {r['prop_spiked']:.2f} | embed drift {r['embed_drift']:.3f}")
+        print(f"seed {r['seed']}: class gap z = {r['gap_z']:+.1f} "
+              f"(within {r['within']:.3f} vs between {r['between']:.3f}) | "
+              f"freq-similarity rho = {r['rho_freq_similarity']:+.2f} | "
+              f"surprisal rho: act {r['rho_act_surprisal']:+.3f} "
+              f"spikes {r['rho_spike_surprisal']:+.3f} | "
+              f"spike {r['prop_spiked']:.2f} | drift {r['embed_drift']:.3f}")
     print(f"\nseed 0 most-similar embedding pairs: "
           f"{', '.join(f'{p}({s})' for p, s in results[0]['top_pairs'][:8])}")
 

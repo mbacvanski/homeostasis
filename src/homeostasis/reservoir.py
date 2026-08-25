@@ -103,6 +103,10 @@ class ReservoirConfig:
     # Link probability for input->reservoir connections; None = use p_link.
     # Dense input wiring (1.0) makes token projections directly comparable.
     input_p_link: float | None = None
+    # Optional Normal(input_weight, sd) jitter on the initial input
+    # weights (class-free symmetry breaking for plastic-input runs).
+    # Drawn AFTER all contract draws so 0.0 (default) changes nothing.
+    input_weight_sd: float = 0.0
     allow_self_connections: bool = False  # code: `if row == col continue`
     clamp_negative_activations: bool = False  # code's acts_neg switch (off in runs)
 
@@ -171,6 +175,11 @@ class HomeostaticReservoir:
         # Reservoir -> output: Bernoulli(p_link); readout is the proportion of
         # in-neighbors spiking, so these links carry no weight value.
         self.output_adjacency = rng.random((c.n_nodes, c.n_outputs)) < c.p_link
+        # Appended draw (after the seed contract's four): input-weight
+        # jitter, only consumed when requested.
+        if c.input_weight_sd > 0.0:
+            self.input_weights = self.input_adjacency * rng.normal(
+                c.input_weight, c.input_weight_sd, (c.n_inputs, c.n_nodes))
         self._rebuild_structure_caches()
 
         # --- Mutable state --------------------------------------------------
