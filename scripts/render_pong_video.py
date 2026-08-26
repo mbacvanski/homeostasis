@@ -147,6 +147,7 @@ def simulate(cfg, plan):
 
     hits = np.asarray(sim.env.hits, dtype=float)
     rec["hit_curve"] = (np.cumsum(hits) / np.arange(1, hits.size + 1)) if hits.size else np.zeros(0)
+    rec["rates_g"] = np.sqrt(rec["rates"])   # gamma applied once, not per frame
     rec["hist_bins"] = hist_bins
     rec["n_nodes"] = n_nodes
     rec["sensor_values"] = pong_cfg.sensor_values
@@ -206,11 +207,11 @@ def build_figure(rec, cfg):
     ax = panel([0.06, 0.455, 0.40, 0.085], "Score  ·  running hit rate vs. scoring opportunities")
     ax.set_ylim(0, 1.0)
     ax.set_yticks([0, 0.5, 1])
-    ax.set_xlim(0, max(rec["final_opps"], 1))
     ax.axhline(rec["chance"], color=MUTED, ls=(0, (3, 3)), lw=1.0)
     ax.text(0.99, rec["chance"] + 0.04, "chance", transform=ax.get_yaxis_transform(),
             fontsize=7, color=MUTED, ha="right")
     (art["score_tr"],) = ax.plot([], [], color=GREEN, lw=1.8, zorder=3)
+    art["score_ax"] = ax
     art["score_big"] = ax.text(0.02, 0.94, "", transform=ax.transAxes,
                                fontsize=13, fontweight="bold", color=GREEN,
                                ha="left", va="top", family="monospace")
@@ -251,8 +252,7 @@ def build_figure(rec, cfg):
                             color=MUTED, ha="right", va="top")
 
     # ---- effectors ----------------------------------------------------------
-    ax = panel([0.545, 0.345, 0.395, 0.068],
-               f"Effectors  ·  Δy = {rec['gain']:.0f}·(up−down) px")
+    ax = panel([0.545, 0.345, 0.395, 0.068], "Effectors")
     out_max = max(float(rec["outputs"].max()), 0.02)
     ax.set_xlim(0, out_max * 1.06)
     ax.set_ylim(-0.65, 0.65)
@@ -307,6 +307,9 @@ def make_update(rec, art, cfg):
     ang_frames = int(ANGLE_SECONDS * cfg.fps)
     frame_end = rec["frame_end"]
     dang_scale = max(float(rec["dangle"].max()), 1.0)
+    TRAIL_PTS = 220
+    trail_colors = [(0.05, 0.61, 0.38, al)
+                    for al in np.linspace(0.05, 0.55, TRAIL_PTS - 1)]
 
     def update(f):
         # ---- field ----
@@ -334,16 +337,13 @@ def make_update(rec, art, cfg):
         start = max(0, end - TRAIL_STEPS)
         path = rec["path"][start:end]
         if len(path) > 2:
-            stride = max(1, len(path) // 400)
-            pts = path[::stride]
+            # resample to a fixed point count so the fade palette is reusable
+            idx = np.linspace(0, len(path) - 1, TRAIL_PTS).astype(int)
+            pts = path[idx]
             tsegs = np.stack([pts[:-1], pts[1:]], axis=1)
-            # drop the teleport segment when the ball is re-served
             keep = np.abs(tsegs[:, 1, 0] - tsegs[:, 0, 0]) < 400
-            tsegs = tsegs[keep]
-            n = len(tsegs)
-            alpha = np.linspace(0.05, 0.55, n) if n else np.zeros(0)
-            art["trail"].set_segments(list(tsegs))
-            art["trail"].set_colors([(0.05, 0.61, 0.38, al) for al in alpha])
+            art["trail"].set_segments(list(tsegs[keep]))
+            art["trail"].set_colors([c for c, k in zip(trail_colors, keep) if k])
         art["paddle"].set_data([PX, PX], [py - PH, py + PH])
         art["ball"].set_data([bx], [by])
         ev = rec["event"][f]
@@ -357,6 +357,7 @@ def make_update(rec, art, cfg):
         n_opp = rec["hits_done"][f]
         if n_opp:
             art["score_tr"].set_data(np.arange(1, n_opp + 1), rec["hit_curve"][:n_opp])
+            art["score_ax"].set_xlim(0, max(n_opp, 8) * 1.04)
             rate = rec["hits_sum"][f] / n_opp
             art["score_big"].set_text(f"{rate * 100:4.1f}%   {rec['hits_sum'][f]}/{n_opp}")
         else:
@@ -389,8 +390,8 @@ def make_update(rec, art, cfg):
         # ---- raster ----
         rlo = max(0, f - raster_frames + 1)
         win = np.zeros((rec["n_nodes"], raster_frames), dtype=np.float32)
-        chunk = rec["rates"][:, rlo:f + 1]
-        win[:, raster_frames - chunk.shape[1]:] = np.sqrt(chunk)
+        chunk = rec["rates_g"][:, rlo:f + 1]
+        win[:, raster_frames - chunk.shape[1]:] = chunk
         art["raster"].set_data(win)
 
         # ---- weights ----

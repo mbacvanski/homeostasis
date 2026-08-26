@@ -1,0 +1,74 @@
+<svg viewBox="0 0 1280 700" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5b6470"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c0504d"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3d6fa8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="700" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="640" y="52" text-anchor="middle" font-size="30" font-weight="600" fill="#1f2430">Every neuron follows one rule: keep activation near my comfort level</text>
+
+  <!-- Step 1 -->
+  <rect x="60" y="95" width="350" height="115" rx="14" fill="#f6f7f9" stroke="#c9ced6" stroke-width="1.5"/>
+  <text x="235" y="128" text-anchor="middle" font-size="17" font-weight="700" fill="#5b6470" letter-spacing="2">1 · LISTEN</text>
+  <text x="235" y="156" text-anchor="middle" font-size="18" fill="#1f2430">
+    <tspan x="235" dy="0">Add input from senses and from</tspan>
+    <tspan x="235" dy="24">neighbors that spiked; leak a little.</tspan>
+  </text>
+
+  <line x1="410" y1="152" x2="460" y2="152" stroke="#5b6470" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Step 2 -->
+  <rect x="465" y="95" width="350" height="115" rx="14" fill="#f6f7f9" stroke="#c9ced6" stroke-width="1.5"/>
+  <text x="640" y="128" text-anchor="middle" font-size="17" font-weight="700" fill="#5b6470" letter-spacing="2">2 · FIRE</text>
+  <text x="640" y="156" text-anchor="middle" font-size="18" fill="#1f2430">
+    <tspan x="640" dy="0">Above threshold? Spike, and</tspan>
+    <tspan x="640" dy="24">subtract the threshold cost.</tspan>
+  </text>
+
+  <line x1="815" y1="152" x2="865" y2="152" stroke="#5b6470" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Step 3 -->
+  <rect x="870" y="95" width="350" height="115" rx="14" fill="#fdf6e3" stroke="#d9b44a" stroke-width="2"/>
+  <text x="1045" y="128" text-anchor="middle" font-size="17" font-weight="700" fill="#8a6d1a" letter-spacing="2">3 · ADJUST</text>
+  <text x="1045" y="156" text-anchor="middle" font-size="18" fill="#1f2430">
+    <tspan x="1045" dy="0">Am I above or below</tspan>
+    <tspan x="1045" dy="24" font-weight="600">my target (comfort level)?</tspan>
+  </text>
+
+  <line x1="1045" y1="210" x2="1045" y2="252" stroke="#5b6470" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Panel -->
+  <rect x="60" y="258" width="1160" height="350" rx="16" fill="#f6f7f9" stroke="#c9ced6" stroke-width="1.5"/>
+
+  <!-- Gauge -->
+  <line x1="150" y1="300" x2="150" y2="566" stroke="#aab2bd" stroke-width="3"/>
+  <line x1="115" y1="433" x2="185" y2="433" stroke="#1f2430" stroke-width="4"/>
+  <text x="150" y="462" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2430">target</text>
+  <line x1="150" y1="420" x2="150" y2="318" stroke="#c0504d" stroke-width="4" marker-end="url(#arrRed)"/>
+  <line x1="150" y1="472" x2="150" y2="552" stroke="#3d6fa8" stroke-width="4" marker-end="url(#arrBlue)"/>
+  <text x="150" y="590" text-anchor="middle" font-size="15" fill="#5b6470">activation</text>
+
+  <!-- Too high card -->
+  <rect x="250" y="285" width="930" height="140" rx="14" fill="#fbecea" stroke="#c0504d" stroke-width="1.5"/>
+  <text x="280" y="322" font-size="20" font-weight="700" fill="#a13c39">TOO HIGH  →  calm down (desensitize)</text>
+  <text x="280" y="356" font-size="18" fill="#1f2430">•  Raise my target — get used to the stimulation</text>
+  <text x="280" y="388" font-size="18" fill="#1f2430">•  Turn <tspan font-weight="700">down</tspan> the weights from neighbors that just spiked — receive less next time</text>
+
+  <!-- Too low card -->
+  <rect x="250" y="443" width="930" height="140" rx="14" fill="#e8f0fa" stroke="#3d6fa8" stroke-width="1.5"/>
+  <text x="280" y="480" font-size="20" font-weight="700" fill="#2e5583">TOO LOW  →  seek more (sensitize)</text>
+  <text x="280" y="514" font-size="18" fill="#1f2430">•  Lower my target (never below the floor)</text>
+  <text x="280" y="546" font-size="18" fill="#1f2430">•  Turn <tspan font-weight="700">up</tspan> the weights from neighbors that just spiked — receive more next time</text>
+
+  <!-- Footnote -->
+  <text x="640" y="656" text-anchor="middle" font-size="17" fill="#5b6470">The original flowchart is this one adjust rule drawn once per branch — after a spike, the neuron simply compares its leftover activation to the target.</text>
+</svg>
