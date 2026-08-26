@@ -277,7 +277,7 @@ def build_figure(rec, cfg, rng):
         axt.text(0.005, 0.80, f"{chr(97 + i)}", transform=axt.transAxes,
                  fontsize=9, fontweight="bold", color=SPIKE)
         if i == 0:
-            axt.text(0.995, 0.10, "activation · threshold (dashed) · spike",
+            axt.text(0.995, 0.10, "activation before reset · threshold (dashed) · spike",
                      transform=axt.transAxes, fontsize=7.5, color=MUTED,
                      ha="right", va="bottom")
         art["traces"].append((axt, ln_x, ln_t, sc))
@@ -371,12 +371,16 @@ def make_update(rec, art, cfg):
         lo = max(0, t - TRACE_WIN + 1)
         xs = np.arange(lo, t + 1) - t
         for (axt, ln_x, ln_t, sc), node in zip(art["traces"], trio):
-            xv = rec["x"][lo:t + 1, node]
+            # Show the PRE-reset activation: the model stores x' = x - 2T at
+            # spike steps, so add the threshold back where a spike occurred -
+            # the trace then visibly crosses the dashed line at every spike.
+            sp_w = rec["spiked"][lo:t + 1, node]
             tv = rec["thr"][lo:t + 1, node]
+            xv = rec["x"][lo:t + 1, node] + sp_w * tv
             ln_x.set_data(xs, xv)
             ln_t.set_data(xs, tv)
-            sp = rec["spiked"][lo:t + 1, node]
-            top = max(float(tv.max()) * 1.25, float(xv.max()) * 1.1, 0.5)
+            sp = sp_w
+            top = max(float(tv.max()) * 1.25, float(xv.max()) * 1.08, 0.5)
             sc.set_offsets(np.c_[xs[sp], np.full(sp.sum(), top * 0.96)]
                            if sp.any() else np.empty((0, 2)))
             axt.set_ylim(min(0.0, float(xv.min()) * 1.1), top)
