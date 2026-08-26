@@ -36,7 +36,9 @@ from matplotlib import animation
 from matplotlib.collections import LineCollection
 from matplotlib.patches import Circle, FancyArrowPatch
 
-from homeostasis import VariableTrackingSimulation
+from homeostasis import (ReservoirConfig, VariableTrackingConfig,
+                         VariableTrackingSimulation)
+from viz.server import BASE_TRACKING_PARAMS, LOADOUT_BY_ID, RESERVOIR_PARAMS
 
 INK = "#1c2733"
 MUTED = "#7a8494"
@@ -62,8 +64,12 @@ plt.rcParams.update({
 })
 
 
-def simulate(seed: int, n_steps: int):
-    sim = VariableTrackingSimulation(seed=seed)
+def simulate(seed: int, n_steps: int, loadout: str = "paper"):
+    params = LOADOUT_BY_ID[loadout]["params"]
+    r_cfg = ReservoirConfig(**{k: v for k, v in params.items() if k in RESERVOIR_PARAMS})
+    t_cfg = VariableTrackingConfig(
+        **{k: v for k, v in params.items() if k in BASE_TRACKING_PARAMS})
+    sim = VariableTrackingSimulation(r_cfg, t_cfg, seed=seed)
     net = sim.network
     n = net.config.n_nodes
     rec = {
@@ -177,7 +183,8 @@ def build_figure(rec, cfg, rng):
 
     art["sens"] = ax.scatter(s_pos[:, 0], s_pos[:, 1], s=26, c="#eef1f5",
                              edgecolors=EDGE, linewidths=0.5, zorder=4)
-    art["nodes"] = ax.scatter(pos[:, 0], pos[:, 1], s=52, c="#f2f5f9",
+    node_s = float(np.clip(52.0 * 100.0 / rec["n_nodes"], 14.0, 52.0))
+    art["nodes"] = ax.scatter(pos[:, 0], pos[:, 1], s=node_s, c="#f2f5f9",
                               edgecolors=EDGE, linewidths=0.6, zorder=5)
     for i, node in enumerate(trio):
         ax.add_patch(Circle(pos[node], 0.075, fill=False, color=SPIKE,
@@ -276,13 +283,10 @@ def build_figure(rec, cfg, rng):
                          alpha=0.45, linewidths=0.7, zorder=4)
         axt.text(0.005, 0.80, f"{chr(97 + i)}", transform=axt.transAxes,
                  fontsize=9, fontweight="bold", color=SPIKE)
-        if i == 0:
-            axt.text(0.995, 0.10, "activation before reset · threshold (dashed) · spike",
-                     transform=axt.transAxes, fontsize=7.5, color=MUTED,
-                     ha="right", va="bottom")
         art["traces"].append((axt, ln_x, ln_t, sc))
     art["traces"][-1][0].set_xlabel(
-        f"last {TRACE_WIN} steps (2.5 s of video)", fontsize=7.5)
+        f"last {TRACE_WIN} steps (2.5 s of video)   ·   "
+        "activation before reset · threshold (dashed) · spike", fontsize=7.5)
     return fig, art
 
 
@@ -395,6 +399,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--steps", type=int, default=7200)
+    ap.add_argument("--loadout", type=str, default="paper",
+                    choices=sorted(LOADOUT_BY_ID),
+                    help="preset from the visualizer's loadout table")
     ap.add_argument("--steps-per-frame", type=int, default=6)
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--dpi", type=int, default=150)
@@ -404,7 +411,7 @@ def main():
 
     print(f"simulating seed {cfg.seed}, {cfg.steps} steps (irregular motion, "
           f"paper config — matches the tracking demo)...", flush=True)
-    rec = simulate(cfg.seed, cfg.steps)
+    rec = simulate(cfg.seed, cfg.steps, cfg.loadout)
     rng = np.random.default_rng(0)
     fig, art = build_figure(rec, cfg, rng)
     update = make_update(rec, art, cfg)
