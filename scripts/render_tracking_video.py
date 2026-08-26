@@ -15,6 +15,9 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 import matplotlib
 
@@ -25,7 +28,8 @@ from matplotlib import animation
 from matplotlib.collections import LineCollection
 from matplotlib.patches import Circle, Wedge
 
-from homeostasis import VariableTrackingSimulation
+from homeostasis import ReservoirConfig, VariableTrackingConfig, VariableTrackingSimulation
+from viz.server import BASE_TRACKING_PARAMS, LOADOUT_BY_ID, RESERVOIR_PARAMS
 
 # ---- light theme -----------------------------------------------------------
 INK = "#1c2733"          # primary text / marks
@@ -53,9 +57,17 @@ plt.rcParams.update({
 })
 
 
-def simulate(seed: int, n_steps: int, frame_stride: int):
-    """Run the irregular-motion tracking model, recording what the panels need."""
-    sim = VariableTrackingSimulation(seed=seed)
+def simulate(seed: int, n_steps: int, frame_stride: int, loadout: str):
+    """Run the irregular-motion tracking model, recording what the panels need.
+
+    ``loadout`` names an entry in the visualizer's loadout table (viz.server),
+    so a rendered video matches the corresponding preset exactly.
+    """
+    params = LOADOUT_BY_ID[loadout]["params"]
+    r_cfg = ReservoirConfig(**{k: v for k, v in params.items() if k in RESERVOIR_PARAMS})
+    t_cfg = VariableTrackingConfig(
+        **{k: v for k, v in params.items() if k in BASE_TRACKING_PARAMS})
+    sim = VariableTrackingSimulation(r_cfg, t_cfg, seed=seed)
     n = sim.network.config.n_nodes
     rec = {
         "heading": np.empty(n_steps), "stim": np.empty(n_steps),
@@ -64,8 +76,11 @@ def simulate(seed: int, n_steps: int, frame_stride: int):
         "outputs": np.empty((n_steps, 2), dtype=np.float32),
         "spikes": np.zeros((n_steps, n), dtype=bool),
     }
-    hist_bins = np.linspace(-2.0, 3.0, 51)
+    # Wide fixed bins so any loadout fits; the axis is trimmed to the observed
+    # range at draw time.
+    hist_bins = np.linspace(-8.0, 8.0, 161)
     hists = []
+    w_lo, w_hi = np.inf, -np.inf
     flips = []
     prev_dir = sim.env.stimulus_direction
     for t in range(n_steps):
@@ -83,10 +98,13 @@ def simulate(seed: int, n_steps: int, frame_stride: int):
         if t % frame_stride == 0:
             w = sim.network.weights[sim.network.adjacency]
             hists.append(np.histogram(w, bins=hist_bins)[0])
+            w_lo, w_hi = min(w_lo, float(w.min())), max(w_hi, float(w.max()))
     rec["hists"] = np.array(hists)
     rec["hist_bins"] = hist_bins
     rec["flips"] = np.array(flips)
     rec["n_nodes"] = n
+    rec["w_range"] = (w_lo, w_hi)
+    rec["gain"] = t_cfg.gain
     return rec
 
 
@@ -141,11 +159,18 @@ def build_figure(rec, cfg):
             fontsize=8, color=BLUE, ha="right", va="top")
 
     # ---- effectors ----
-    ax = panel([0.435, 0.745, 0.535, 0.062], "Effectors  ·  ΔH = 10·(L−R)")
-    ax.set_xlim(0, 1)
+    gain_txt = f"{rec['gain']:g}"
+    ax = panel([0.435, 0.745, 0.535, 0.062],
+               f"Effectors  ·  ΔH = {gain_txt}·(L−R)")
+    # Sparse regimes emit tiny effector values; scale the axis to the run so
+    # the asymmetry that actually drives behaviour is visible either way.
+    out_max = max(float(rec["outputs"].max()), 0.02)
+    ax.set_xlim(0, out_max * 1.06)
     ax.set_ylim(-0.6, 0.6)
     ax.set_xticks([])
     ax.set_yticks([])
+    ax.text(0.997, 0.04, f"full scale {out_max:.2f}", transform=ax.transAxes,
+            fontsize=7.5, color=MUTED, ha="right", va="bottom")
     ax.axhline(0, color=EDGE, lw=1)
     art["effL"] = ax.barh(0.3, 0, height=0.34, left=0, color=AGENT, alpha=0.85)[0]
     art["effR"] = ax.barh(-0.3, 0, height=0.34, left=0, color=BLUE, alpha=0.85)[0]
@@ -157,11 +182,19 @@ def build_figure(rec, cfg):
     # ---- weights ----
     ax = panel([0.435, 0.655, 0.535, 0.055], "Weights")
     bins = rec["hist_bins"]
-    ax.set_xlim(bins[0], bins[-1])
+    # Robust range: a few weights drift far out, so trim to the central
+    # 99% of all weight samples pooled over the run.
+    pooled = rec["hists"].sum(axis=0).astype(float)
+    cdf = np.cumsum(pooled) / max(pooled.sum(), 1.0)
+    w_lo = float(bins[int(np.searchsorted(cdf, 0.005))])
+    w_hi = float(bins[min(int(np.searchsorted(cdf, 0.995)) + 1, len(bins) - 1)])
+    pad = 0.06 * max(w_hi - w_lo, 1.0)
+    ax.set_xlim(w_lo - pad, w_hi + pad)
     ax.set_yticks([])
-    ax.set_xticks([-2, 0, 3])
+    ticks = sorted({round(w_lo, 1), 0.0, round(w_hi, 1)})
+    ax.set_xticks(ticks)
     ax.axvline(0, color=EDGE, lw=1, ls=(0, (3, 3)))
-    art["hist"] = ax.bar(0.5 * (bins[:-1] + bins[1:]), np.zeros(50),
+    art["hist"] = ax.bar(0.5 * (bins[:-1] + bins[1:]), np.zeros(len(bins) - 1),
                          width=(bins[1] - bins[0]) * 0.94, color=HIST)
     art["hist_ax"] = ax
 
@@ -194,11 +227,15 @@ def build_figure(rec, cfg):
     art["err_tr"] = ax.scatter([], [], s=2.6, color=BLUE, zorder=2)
 
     # ---- raster ----
-    ax = panel([0.075, 0.035, 0.895, 0.17], "Reservoir spikes  (rows = 200 nodes)")
+    ax = panel([0.075, 0.035, 0.895, 0.17],
+               f"Reservoir spikes  (rows = {rec['n_nodes']} nodes)")
     time_axis(ax)
     ax.set_yticks([])
+    # In dense regimes the informative structure is the *gaps*, so render
+    # spikes at full black; sparser runs look better slightly softened.
+    vmax = 1.0 if rec["spikes"].mean() > 0.5 else 1.35
     art["raster"] = ax.imshow(np.zeros((rec["n_nodes"], WINDOW)), aspect="auto",
-                              cmap="Greys", vmin=0, vmax=1.35,
+                              cmap="Greys", vmin=0, vmax=vmax,
                               extent=(-WINDOW, 0, 0, rec["n_nodes"]),
                               interpolation="nearest", zorder=2)
 
@@ -278,6 +315,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--steps", type=int, default=7200)
+    ap.add_argument("--loadout", type=str, default="paper",
+                    choices=sorted(LOADOUT_BY_ID),
+                    help="preset from the visualizer's loadout table")
     ap.add_argument("--steps-per-frame", type=int, default=6)
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--dpi", type=int, default=150)
@@ -286,8 +326,9 @@ def main():
                     help="render only this frame to PNG and exit")
     cfg = ap.parse_args()
 
-    print(f"simulating seed {cfg.seed}, {cfg.steps} steps...", flush=True)
-    rec = simulate(cfg.seed, cfg.steps, cfg.steps_per_frame)
+    label = LOADOUT_BY_ID[cfg.loadout]["label"]
+    print(f"simulating '{label}', seed {cfg.seed}, {cfg.steps} steps...", flush=True)
+    rec = simulate(cfg.seed, cfg.steps, cfg.steps_per_frame, cfg.loadout)
     fig, art = build_figure(rec, cfg)
     update = make_update(rec, art, cfg)
     n_frames = cfg.steps // cfg.steps_per_frame
