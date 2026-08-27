@@ -327,7 +327,8 @@ def main():
     cfg = ap.parse_args()
 
     label = LOADOUT_BY_ID[cfg.loadout]["label"]
-    print(f"simulating '{label}', seed {cfg.seed}, {cfg.steps} steps...", flush=True)
+    print(f"simulating loadout {cfg.loadout} ('{label}'), seed {cfg.seed}, "
+          f"{cfg.steps} steps...", flush=True)
     rec = simulate(cfg.seed, cfg.steps, cfg.steps_per_frame, cfg.loadout)
     fig, art = build_figure(rec, cfg)
     update = make_update(rec, art, cfg)

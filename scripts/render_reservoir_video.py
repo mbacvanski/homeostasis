@@ -1,12 +1,13 @@
 """Render the reservoir explainer as the right-half companion of the tracking
 demo video.
 
-Runs the SAME simulation as scripts/render_tracking_video.py's original
-output (paper configuration, irregular stimulus motion, seed 0) with the same
-frame timing (6 steps per frame at 30 fps), so the two videos play in
-lockstep on one 16:9 slide: tracking demo left, this network view right.
+Runs the SAME simulation as scripts/render_tracking_video.py given the same
+--loadout and --seed (defaults: paper configuration, seed 0; irregular
+stimulus motion either way) with the same frame timing (6 steps per frame at
+30 fps), so the two videos play in lockstep on one 16:9 slide: tracking demo
+left, this network view right.
 
-Top: the network as a ring. Sensors form an outer arc and the 200 neurons
+Top: the network as a ring. Sensors form an outer arc and the neurons
 are arranged by the stimulus direction they are wired to prefer, in the
 agent's own frame with FRONT FACING UP (annotated) - so the lit region moves
 around the ring as the stimulus moves across the retina, while every neuron
@@ -15,8 +16,8 @@ threshold) and red with the neuron's firing rate within the current frame.
 Effectors sit at the center. Bottom: three real, connected neurons with
 activation-vs-threshold traces.
 
-Usage: python scripts/render_reservoir_video.py [--seed 0] [--steps 7200]
-       [--steps-per-frame 6] [--still N]
+Usage: python scripts/render_reservoir_video.py [--loadout paper] [--seed 0]
+       [--steps 7200] [--steps-per-frame 6] [--still N]
 """
 
 from __future__ import annotations
@@ -409,8 +410,9 @@ def main():
     ap.add_argument("--still", type=int, default=None)
     cfg = ap.parse_args()
 
-    print(f"simulating seed {cfg.seed}, {cfg.steps} steps (irregular motion, "
-          f"paper config — matches the tracking demo)...", flush=True)
+    label = LOADOUT_BY_ID[cfg.loadout]["label"]
+    print(f"simulating loadout {cfg.loadout} ('{label}'), seed {cfg.seed}, "
+          f"{cfg.steps} steps (irregular motion)...", flush=True)
     rec = simulate(cfg.seed, cfg.steps, cfg.loadout)
     rng = np.random.default_rng(0)
     fig, art = build_figure(rec, cfg, rng)

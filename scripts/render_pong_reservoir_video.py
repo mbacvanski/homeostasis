@@ -523,8 +523,8 @@ def main():
     cfg.frames = int(round(cfg.seconds * cfg.fps))
 
     plan = frame_plan(cfg)
-    print(f"'{LOADOUT_BY_ID[cfg.loadout]['label']}' seed {cfg.seed}: "
-          f"{cfg.frames} frames, {plan.sum():,} steps", flush=True)
+    print(f"loadout {cfg.loadout} ('{LOADOUT_BY_ID[cfg.loadout]['label']}') "
+          f"seed {cfg.seed}: {cfg.frames} frames, {plan.sum():,} steps", flush=True)
     rec = simulate(cfg, plan)
     rec["trio"] = pick_trio(rec)
     print(f"  trio: {rec['trio']}", flush=True)

@@ -424,8 +424,8 @@ def main():
     cfg.frames = int(round(cfg.seconds * cfg.fps))
 
     plan = frame_plan(cfg)
-    print(f"'{LOADOUT_BY_ID[cfg.loadout]['label']}' seed {cfg.seed}: "
-          f"{cfg.frames} frames, {plan.sum():,} steps "
+    print(f"loadout {cfg.loadout} ('{LOADOUT_BY_ID[cfg.loadout]['label']}') "
+          f"seed {cfg.seed}: {cfg.frames} frames, {plan.sum():,} steps "
           f"({cfg.intro_sps:.0f}/s for {cfg.intro_seconds:.0f}s, "
           f"then {cfg.main_sps:.0f}/s)", flush=True)
     rec = simulate(cfg, plan)
