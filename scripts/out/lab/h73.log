@@ -3,3 +3,7 @@ baseline bernoulli-p.02: rel 0.67 mean 0.478
 gen 0: best fit 1.312 genome {'p': 0.028, 'reg': 0.812, 'b': 0.412, 'rec': 0.22}
 gen 1: best fit 1.296 genome {'p': 0.3, 'reg': 0.0, 'b': -1.397, 'rec': 0.0}
 gen 2: best fit 1.248 genome {'p': 0.151, 'reg': 0.038, 'b': 1.485, 'rec': 0.2}
+gen 3: best fit 1.280 genome {'p': 0.3, 'reg': 0.071, 'b': -1.397, 'rec': 0.0}
+gen 4: best fit 1.309 genome {'p': 0.3, 'reg': 0.0, 'b': -1.418, 'rec': 0.0}
+gen 5: best fit 1.354 genome {'p': 0.3, 'reg': 0.072, 'b': -1.397, 'rec': 0.0}
+champion 12-fresh: rel 0.75 mean 0.474  genome {'p': 0.3, 'reg': 0.072, 'b': -1.397, 'rec': 0.0}

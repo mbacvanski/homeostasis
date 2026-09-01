@@ -2046,3 +2046,40 @@ it also beats sparse-Bernoulli (>= 0.85 reliability) — i.e. statistics
 BEYOND density buy reliability; (c) if (b) fails, generative statistics
 beyond density are inert and the lottery residue is idiosyncratic
 (extending H40b's static illegibility).
+
+## H74 (preregistered): the target channel's role at Pong's sparse-slow optimum
+
+Pong p=.02/wlr=.03 (the 0.679 cell) x target_lr {0.0, 0.01, 0.1} x 12
+CRN seeds. The damper story says fast targets are needed only against
+weight-growth overshoot at high wlr; the H71 story says slow T drift
+erodes. Predictions: (a) tlr=0.0 >= tlr=0.01 within noise (damper
+unnecessary at slow wlr); (b) tlr=0.1 (the published damper) HURTS here
+(<= 0.55): over-damping absorbs the game signal.
+
+## H73 verdict: wiring statistics beyond density are (nearly) inert — at the ridge
+
+Champion generator {p 0.3, reg 0.07, input-bias b -1.4, rec 0} reaches
+12-fresh-wiring reliability 0.75 / mean 0.474 vs Bernoulli baselines
+0.67 / 0.478: +0.08, below the +0.15 prereg bar and far from the 0.85
+target — prediction (c) stands: at the ridge, generative topology
+statistics buy little beyond density, extending H40b's static
+illegibility to the generative case. Two footnotes on the record:
+(i) the GA consistently evolved ANTI-HUB input targeting (b ~ -1.4:
+inputs onto low-in-degree nodes — a self-invented quasi-feedforward
+sensory layer), directionally interpretable even if weak; (ii) scope —
+evaluated at wlr=0.1 where density itself is flat; the statue-side
+(wlr=.03), where density matters hugely, is untested for generator
+effects. Methodological anecdote kept: both baselines' 12-seed
+aggregates landed IDENTICAL (rel 0.67, mean 0.478) with completely
+different per-seed scores — checked before trusting, a genuine fluke.
+Fifth hit of the stdin-ProcessPool trap during diagnosis (write real
+files). (h73_dna.json)
+
+## H74 verdict: at sparse-slow Pong the target channel is irrelevant
+
+tlr 0.0 -> 0.684, 0.01 -> 0.679, 0.1 -> 0.673 (SDs ~0.16): (a)
+confirmed (damper unnecessary at slow wlr), (b) refuted (fast targets
+do not hurt either). The damper role exists only against fast-weight
+overshoot; at the sparse-slow optimum Pong runs on the weight channel
+alone — tlr=0 is nominally the campaign's best Pong cell (0.684).
+(h74_pong_tlr.json)
