@@ -42,7 +42,23 @@ from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 
-__all__ = ["WallConfig", "WallEnv"]
+__all__ = ["WallConfig", "WallEnv", "ray_wall_distance"]
+
+
+def ray_wall_distance(px: float, py: float, angle: float, box_size: float) -> float:
+    """Distance from (px, py) along `angle` to the nearest face of the box."""
+    c, s = np.cos(angle), np.sin(angle)
+    ts = []
+    if c > 1e-12:
+        ts.append((box_size - px) / c)
+    elif c < -1e-12:
+        ts.append((0.0 - px) / c)
+    if s > 1e-12:
+        ts.append((box_size - py) / s)
+    elif s < -1e-12:
+        ts.append((0.0 - py) / s)
+    ts = [t for t in ts if t >= 0.0]
+    return float(min(ts)) if ts else float(np.sqrt(2.0) * box_size)
 
 
 @dataclass(frozen=True)
@@ -86,20 +102,7 @@ class WallEnv:
     # -- sensing ------------------------------------------------------------
 
     def _ray_wall_distance(self, px: float, py: float, angle: float) -> float:
-        """Distance from (px, py) along `angle` to the nearest box face."""
-        c, s = np.cos(angle), np.sin(angle)
-        size = self.config.box_size
-        ts = []
-        if c > 1e-12:
-            ts.append((size - px) / c)
-        elif c < -1e-12:
-            ts.append((0.0 - px) / c)
-        if s > 1e-12:
-            ts.append((size - py) / s)
-        elif s < -1e-12:
-            ts.append((0.0 - py) / s)
-        ts = [t for t in ts if t >= 0.0]
-        return float(min(ts)) if ts else float(self.config.max_dist)
+        return ray_wall_distance(px, py, angle, self.config.box_size)
 
     def sense(self) -> np.ndarray:
         """Sensor activations, with the published perturbation and optional

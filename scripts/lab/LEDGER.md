@@ -973,3 +973,43 @@ follower's quality degrades smoothly toward it (dist 0.58 → 2.39 over
 1.27 → 1.6): an absorbability TOLERANCE, not a cliff. Final hierarchy:
 1.0 follower 0.80 | 1.27 follower 0.58 | 1.6 follower 2.39 | 2.5 toll-booth
 | 4.0 toll-booth | discontinuous toll-booth | aperiodic nothing.
+
+## H39 (preregistered): the mixed-sign embodiment
+
+Pursuit with 2 wall-proximity sensors APPENDED to the 91-sensor bearing
+retina (flow-positive + flow-negative channels in one body), stimulus orbit
+radius 6.0 (path within ~1.5 of the walls — approach and wall-comfort in
+conflict). Joint GA (10 gens) with vs without wall sensors. Predictions:
+(a) wall sensors reduce wall hits (early search made wall-averse);
+(b) the conflict produces a measurable COMPROMISE in champions with wall
+sensors: agent-stimulus distance increases where the stimulus is
+wall-close (positive corr(dist, stimulus wall proximity) across orbit
+phase), absent without them; (c) peak near3 is not worse with wall sensors
+(the channels are compatible mid-arena).
+
+## H39 verdict: (a)(b) REFUTED, (c) confirmed — the manifold law subsumes the sign story
+
+Both arms evolve perfect wall-adjacent followers (near3 1.00, dist
+1.01/1.13, hits 46=46); no compromise signature (corr -0.05/-0.08). Channel
+conflict never materializes because the entrained solution makes ALL
+channels stationary simultaneously — the co-rotating frame renders
+wall-proximity input periodic too. Signs shape screen-level correlations
+(H27b); solutions are joint-stationarity orbits.
+
+## H40 (preregistered): is the wiring lottery decided early?
+
+Pursuit champion genome x 32 fresh wirings: record first-200-step features
+(mean flow, flow trend, net rotation vs stimulus direction, f) and final
+near3. Prediction: early features separate eventual lockers from failures
+with >= 80% accuracy — the lottery is an opening-basin property, enabling
+audition/developmental selection.
+
+## H41 (preregistered): discomfort-triggered annealing fixes the lottery WITHOUT reward
+
+Homeostasis-native reliability rule built from K3's shuffle-recovery: every
+600 steps, if the agent's own input is non-stationary (flow_sd/flow above a
+threshold — self-detectable), SHUFFLE the recurrent weights (learning stays
+on) and try again; keep the configuration once input goes stationary.
+Prediction: lock rate on the pursuit champion genome rises from ~2/16
+(baseline jackpot rate) to >= 8/16 within 14400 steps — reliability from
+the network's own comfort signal, no external reward.

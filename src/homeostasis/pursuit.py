@@ -30,6 +30,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from .tracking import angular_difference
+from .wall import ray_wall_distance
 
 __all__ = ["PursuitConfig", "PursuitEnv"]
 
@@ -49,6 +50,11 @@ class PursuitConfig:
     plateau_width: float = 4.0
     # intensity falloff: 1 / (1 + dist / intensity_scale)
     intensity_scale: float = 3.0
+    # Optional wall-proximity channel: two extra sensors (the wall task's
+    # +/-45 deg rays, activation 1 - dist/diagonal) APPENDED to the retina.
+    # This makes the embodiment mixed-sign: stimulus bearing is the
+    # flow-positive channel, wall proximity the flow-negative one.
+    wall_sensors: bool = False
     # motor geometry: omega = (e2 - e1) / wheel_base; None = 2 * agent_radius
     # (the released wall-avoidance kinematics). Larger wheel_base = gentler
     # turning per step - the morphological knob that matches motor authority
@@ -68,7 +74,7 @@ class PursuitConfig:
 
     @property
     def n_sensors(self) -> int:
-        return self.sensors_per_eye * len(self.eye_offsets)
+        return self.sensors_per_eye * len(self.eye_offsets) + (2 if self.wall_sensors else 0)
 
     @property
     def sensor_offsets(self) -> np.ndarray:
@@ -128,7 +134,17 @@ class PursuitEnv:
         theta = np.abs(angular_difference(self.stimulus_bearing_deg(), self._offsets))
         acts = np.exp(-(theta ** 2) / c.tuning_width)
         acts[theta <= c.plateau_width] = 1.0
-        return acts / (1.0 + self.distance() / c.intensity_scale)
+        acts = acts / (1.0 + self.distance() / c.intensity_scale)
+        if c.wall_sensors:
+            diag = np.sqrt(2.0) * c.box_size
+            wall = np.empty(2)
+            for i, off in enumerate((45.0, -45.0)):
+                ang = self.heading + np.deg2rad(off)
+                px = self.x + c.agent_radius * np.cos(ang)
+                py = self.y + c.agent_radius * np.sin(ang)
+                wall[i] = 1.0 - ray_wall_distance(px, py, ang, c.box_size) / diag
+            acts = np.concatenate([acts, wall])
+        return acts
 
     # -- dynamics -----------------------------------------------------------
 
