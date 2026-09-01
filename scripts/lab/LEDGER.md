@@ -1939,3 +1939,37 @@ arena-units/step. H60's ceiling FACT stands; its mechanism is speed
 floor, not jitter amplification (H67b) and not signal noise (H68 -
 replay-D fails because the REPLAYED TARGET IS SLOW, consistent with all
 of tonight's failures). (h68b_circles.json, chain_truth.png)
+
+## H66 addendum (48 seeds): long-horizon erosion is real; sparse is more durable
+
+wander48 cluster batch: both cells sag from segments 5-9 to 25-29 —
+sparse -0.054 (t=-2.62), ridge -0.109 (t=-3.60), n=48 CRN seeds; paired
+contrast ridge-minus-sparse sag computed below in-session. CONTINUED
+PLASTICITY SLOWLY ERODES SOLVED BEHAVIOR on a stationary task — the
+lifelong-rewiring lesson (H43) reappearing at the synaptic level.
+(wander48_results.jsonl, job 21730399)
+
+## H69 (preregistered): the developmental window works for weights too
+
+If the sag is caused by continued weight churn, freezing BOTH channels
+at step 7200 (freeze-mid arm) in the ridge cell should abolish it.
+16 CRN seeds, n=21600. Predictions: (a) freeze-mid late (segs 25-29)
+within 0.03 of its early (5-9) level — sag abolished (vs full's -0.10);
+(b) freeze-mid late BEATS full late by >= 0.05 (freezing is the better
+long-run policy on a stationary task); (c) freeze-mid early matches
+full early within 0.03 (no immediate cost, replicating act-2).
+
+## H69 verdict: REFUTED backwards — plasticity FIGHTS the sag, not causes it
+
+freeze-mid sags MORE than full (early 0.421 both, by CRN construction;
+late 0.285 vs 0.357; sag -0.136 vs -0.064; paired late-contrast t=-1.04
+NS at n=16 but the abolish prediction (a) clearly fails). The long-run
+erosion is NOT plasticity churn: it is metastable LOCK DECAY — wander
+excursions lose the entrained lock, and only a plastic network can
+re-acquire (B6b: re-entrainment requires plasticity). Lifelong weight
+plasticity, unlike lifelong rewiring (H43), earns its keep as the
+re-locking mechanism. ALSO: the paired ridge-vs-sparse sag contrast in
+wander48 is t=-1.54 (NS) — "sparse is more durable" is suggestive only,
+softening the H66 addendum. Mechanism of the universal sag itself:
+OPEN (candidates: slow T drift under reversals; environment-lock
+metastability). (h69_devfreeze.json)
