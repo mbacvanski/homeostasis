@@ -16,6 +16,12 @@ supervision. The authors' original Julia code (OSF:
 [osf.io/6hqrt](https://osf.io/6hqrt/)) is archived in
 [reference/original_julia/](reference/original_julia/) as ground truth.
 
+**Two ways into the research that grew out of the replication:** the
+plain-language, illustrated **[Field Guide](docs/field_guide.md)**
+(animations of every world, no background assumed), and the technical
+synthesis **[docs/design_space.md](docs/design_space.md)** (the
+100-hypothesis campaign: laws, mechanisms, and the experiment ledger).
+
 ## Layout
 
 - [src/homeostasis/reservoir.py](src/homeostasis/reservoir.py) — the

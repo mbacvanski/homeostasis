@@ -1,5 +1,10 @@
 # How homeostatic reservoirs work: laws, phases, and the entrainment mechanism
 
+> **New to this project?** Start with the
+> **[Field Guide](field_guide.md)** — the same findings in plain
+> language, with animations of every world and no assumed background.
+
+
 *Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/;
 100 preregistered hypotheses H1–H100 in
 [scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~28,000 local runs plus

@@ -1,11 +1,14 @@
 # scripts/lab — the design-space campaign
 
-The overnight campaign of 2026-08-31/09-01: 94 preregistered hypotheses,
-~26,000 runs, six cluster batches. This directory is self-contained lab
+The overnight campaign of 2026-08-31/09-01: 100 preregistered hypotheses,
+~28,000 runs, nine cluster batches. This directory is self-contained lab
 code; the model lives in `src/homeostasis/` and is never duplicated here.
 
 ## How to read the campaign
 
+0. **[docs/field_guide.md](../../docs/field_guide.md)** — the
+   plain-language, illustrated version of everything (start here if any
+   of the terms below are unfamiliar).
 1. **[LEDGER.md](LEDGER.md)** — the running preregistration log
    (hypothesis → prediction → verdict, refutations and instrument bugs
    kept on the record). This is the authority for what was claimed and
