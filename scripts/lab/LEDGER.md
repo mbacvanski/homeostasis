@@ -1457,3 +1457,120 @@ wheel_base at max: below the horizon, vision has zero marginal fitness
 and SELECTION EVOLVES A BLIND SWEEPER. Catching a baseball is homeostatic
 only because the ball is watched continuously from launch — one long
 engagement. (h55b_horizon.json)
+
+## H56 (preregistered): eligibility traces vs the absorbability barrier
+
+H36 protocol verbatim (waypoint pursuit, H34 champion, r = clipped
+distance-closing rate, 12 CRN seeds) with the one-step outer product
+replaced by a decaying eligibility trace E <- lambda*E + outer(pre,post)
+(*adj), dw = eta*r*E; lambda {0.9, 0.97} x eta {0.003, 0.01, 0.03}, plus
+lambda=0/eta=0.01 as the H36 anchor. NEW ARM "frozen-half": homeostatic
+learning disabled from step 3600, reward channel continues — the
+discriminator. Predictions: if H36 failed from credit DELAY, traces cross
+(some cell median near3 >= 0.4, shuffled control <= 0.15) in BOTH modes.
+If the barrier is ABSORBABILITY (Law 3 erodes reward-installed structure
+as drive error), traces fail under full homeostasis but frozen-half
+IMPROVES markedly over its own full twin. Stated prior: absorbability —
+traces alone do not cross; frozen-half > full.
+
+## H56 verdict: BOTH accounts refuted — the barrier is task-side, not rule-side
+
+Every cell 0.09-0.14 = eta=0 baseline (0.13) = shuffled control (0.12).
+Eligibility traces do not cross (credit delay was not the missing
+ingredient), and frozen-half does not help either (so Law-3 absorbability
+was not the blocker — my stated prior, wrong). Reward ladder complete:
+reward-scaled x, one-step three-factor x, eligibility x, eligibility
+without homeostatic erosion x. Synthesis: the waypoint task's random legs
+last ~30-50 steps — BELOW the 90-225 re-lock horizon (third clause). The
+reward mechanisms were being asked to cross a boundary the competence law
+forbids on the task side; no weight-tweak rule can install a policy for
+engagements shorter than the lock. (h56_eligibility.json)
+
+## H57 (preregistered): "aperiodic -> nothing" is really "sub-horizon -> nothing"
+
+If the third clause is fundamental and periodicity merely its easiest
+satisfier, then SLOWING the waypoint stimulus (legs lengthen past the
+horizon) should make fully-aperiodic pursuit WORK. H34 champion + blinded
+control on waypoint at speeds {0.15, 0.08, 0.04} (legs ~35 -> ~65 -> ~130
+steps), 8 seeds, n=7200. Predictions: (a) champion-minus-blind near3 gap
+opens with slowing, reaching >= +0.25 at 0.04; (b) if instead the gap
+stays ~0 at all speeds, aperiodicity per se is the barrier and the
+competence law keeps its periodicity clause.
+
+## H57 verdict: refuted — slowing does not unlock SUSTAINED aperiodic pursuit
+
+Skill gap (champ - blind, near3) is -0.28 at ALL speeds: blind cruising
+scores 0.43-0.46 (a moving body covers the 15-box; the target never
+leaves) while the sighted champion sits at 0.14-0.17. Slow 130-step legs
+(> the 1D horizon) do not produce following. ALSO EXPOSED: the doc table's
+"waypoint -> nothing (0.12)" was the H34 champion's TRANSFER number (no GA
+was ever evolved on waypoint - h38 ran ellipse+shuttle only), and 0.43 is
+trivially attainable blind — the row must be restated as "entrainment
+fails; blind cruising beats vision". (h57_slowway.json)
+
+## H57b (preregistered): interception and following are different competences
+
+Same runs, apples-to-apples metric: per-LEG catch (dist<1.5 during a leg;
+legs bounded by stimulus heading kinks) for champ vs blind on waypoint
+{0.08, 0.04}. Prediction: per-leg catch gap champ-blind >= +0.20 at 0.04
+(matching ballistic interception) while near3 gap stays negative -
+i.e. clause (iii) governs transient interception, clauses (i)+(ii) govern
+sustained following, and waypoint kinks only break the latter. If the
+per-leg catch gap is also ~0 or negative, the ballistic success was
+geometry-specific (edge-to-edge crossings), not a general competence.
+
+## H57b verdict: refuted — and the blind anchor was PARKED, not cruising
+
+Per-leg catch gap -0.135 (speed .08) / +0.004 (.04), not the predicted
++0.20. The blind H34 body has agent speed 0.000 — a statue that the
+milling waypoint target visits often (near3 0.43, leg-catch 0.37). The
+sighted champion MOVES (0.065-0.084) yet catches no more than the statue
+and holds far less. Length is NOT the separator: ballistic ~140-step
+crossings gap +0.21 vs waypoint ~160-step legs +0.00 (matched length,
+opposite outcome). Hypothesis sharpened: ballistic resets occur in
+DARKNESS (clean; the ratchet pawl holds), waypoint kinks occur IN VIEW
+(flow flips mid-lock and poisons the loop) — vision under in-view-kinked
+flow is worse than blindness. (h57b_legcatch.json)
+
+## H57c (preregistered): in-view kinks poison the lock (causal test)
+
+Ballistic at speed 0.04 with per-step kink hazard 1/150 (heading jumps
+uniform +-90deg mid-flight, env rng). Within the same runs, classify
+crossings: kink-free vs >=1 in-view kink (detected from stimulus heading).
+Predictions: (a) champion catch(kink-free) - catch(kinked) >= +0.20;
+(b) the blind body shows no such split (|diff| < 0.05); (c) kink-free
+crossings match the H55b no-hazard catch (~0.5).
+
+## H57c verdict: DESIGN INVALID — the blind negative control caught it
+
+Kinked crossings catch MORE for both agents (champ 0.596 vs 0.472, blind
+0.313 vs 0.124). Prediction (b) failed exactly as a confound flag: hazard
+classification selects for LONG crossings (P(kink) grows with duration)
+and kinks redirect flights inward — more time in the box, more catch.
+Within-run outcome classification under a hazard is selection-biased by
+construction; lesson recorded. (h57c_kink.json)
+
+## H57d (preregistered): randomized in-view kink at flight age 100
+
+ballistic_kink_at=100: every crossing surviving to age 100 gets exactly
+one +-90deg kink (env rng); same seeds 41-48, speed 0.04, vs the H55b
+no-kink runs (same CRN). Intent-to-treat on crossings reaching age 100.
+Predictions: (a) champion catch on kinked crossings falls >= 0.15 below
+its H55b no-kink level (0.535 -> <= 0.38) — in-view kinks break locks;
+(b) blind changes little (< 0.08 either way); (c) if champion holds
+~0.53, kinks are NOT the waypoint poison and the failure is loitering
+geometry instead.
+
+## H57d verdict: kinks are INNOCENT — prediction (c) is the outcome
+
+Randomized kink at flight age 100, intent-to-treat on 422 crossings/arm:
+champion kink effect +0.007 (placebo -0.014); blind +0.041 (flights
+redirected inward last slightly longer — the H57c confound's direction,
+confirming its diagnosis). The lock re-forms within a long engagement even
+through a +-90 deg in-view redirect. With aperiodicity (H57), length
+(H55b/H57b matched), and kinks (H57d) all cleared, the live hypothesis
+for the waypoint failure is TRAVERSAL vs LOITERING geometry: ballistic
+targets approach from far with a monotone intensity ramp the flow-ratchet
+climbs (champ pre-100 catch 0.332, blind 0.000 — blind's catches are all
+late target-comes-to-you luck); loitering targets flutter at mid-range
+with no ramp. Open, recorded. (h57d_kinkfixed.json)

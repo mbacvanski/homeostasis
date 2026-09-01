@@ -271,7 +271,7 @@ genuine velocity-matched follower (near3 1.00, dist 0.58, agent speed 0.159
 | ellipse | 2.5 | toll-booth, parked (0.43) |
 | ellipse | 4.0 | toll-booth (0.69) |
 | shuttle | discontinuous | toll-booth, parked (0.54) |
-| waypoint | aperiodic | nothing (0.12) |
+| waypoint | aperiodic, loitering | entrainment fails — vision *harms* (see below) |
 
 **Entrainment reaches exactly those motions whose co-moving frame can be
 held with ~constant control** (constant curvature ⇒ constant turn rate ⇒
@@ -282,10 +282,19 @@ substitutes stillness
 at favorable points; without periodicity, nothing. This is the quantitative
 form of the mentors' rung 3, and of the "prediction vs Gibsonian loops"
 question: within the law's reach the baseball intuition is exactly right —
-no prediction is needed; beyond it, the family cannot go, and neither
-reward-scaled (H35) nor one-step reward-directed (H36) plasticity crosses,
-leaving *minimal structural additions* (eligibility traces? prediction?) as
-the live question.
+no prediction is needed; beyond it, the family cannot go, and no scalar-reward plasticity crosses:
+reward-scaled (H35), one-step three-factor (H36), eligibility traces at
+two decay constants (H56), and — decisively — traces with the
+homeostatic channel *switched off* mid-run so nothing could erode what
+reward installs (H56's frozen-half arm) all sit exactly at the η=0
+baseline and its shuffled-reward control (0.09–0.14). Neither credit
+delay nor Law-3 absorbability was the barrier; the barrier is
+task-side — waypoint legs are sub-horizon engagements of loitering
+geometry (see the H57 series below), so there is no gradient any
+weight-tweak rule could climb. This retro-explains H29's "reward =
+selector, not shaper": selection evaluates whole trajectories and can
+find repertoire members; within-life scalar broadcast has nothing to
+work with here.
 
 **The third clause: engagements must outlast the lock** (H55/H55b,
 `h55_intercept.py`, ballistic stimulus mode). The baseball test run
@@ -310,6 +319,29 @@ floor and the wheel base to maximum. Below the horizon, vision has zero
 marginal fitness, and selection evolves a blind sweeper. Catching a fly
 ball is homeostatic only because the fielder watches the ball
 continuously from launch: one long engagement, not forty short ones.
+
+The H57 series then stress-tested clause (iii) and corrected the table's
+old aperiodic row (whose "nothing (0.12)" was in fact the orbital
+champion's *transfer* score — no GA was ever evolved on waypoint). Three
+successive preregistered predictions failed, each failure narrowing the
+truth: slowing waypoint legs past the horizon does *not* produce
+following (H57); it's not the sustained-vs-transient metric (H57b:
+per-leg catch gap ≈ 0, and the "blind cruiser" turned out to be a
+*parked statue* that the loitering target visits — near3 0.43 vs the
+sighted champion's 0.17, so **vision actively harms on loitering
+motion**); and it's not the kinks (H57d, randomized mid-flight ±90°
+kinks at n=422 crossings: champion effect +0.007, placebo clean — the
+lock re-forms through an in-view redirect; the hazard-classified first
+attempt H57c was caught as duration-confounded by its own preregistered
+blind control). What separates success from failure at *matched
+engagement length* (~140–160 steps: ballistic gap +0.21, waypoint
++0.00) is **traversal versus loitering geometry**: a through-flying
+target approaches from far with a monotone intensity ramp the
+flow-ratchet climbs (the champion catches 33% of crossings inside 100
+steps; the blind control, 0.000 — its catches are all
+target-comes-to-you luck), while a loitering target flutters at
+mid-range and offers no ramp. Why ramplessness turns vision from useless
+into *harmful* is the sharpest open question this arc produced.
 
 **The lottery's home, and the mechanism hierarchy** (H40–H42): the wiring
 lottery lives in the frozen adjacency — weight-space operations cannot touch

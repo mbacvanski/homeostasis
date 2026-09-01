@@ -66,6 +66,8 @@ class PursuitConfig:
     ellipse_b: float = 2.5
     wander_sigma: float = 0.05            # per-step heading diffusion (rad), wander mode
     stimulus_speed: float = 0.15          # arena units per step
+    ballistic_kink_hazard: float = 0.0    # per-step prob of a +-90deg in-flight heading kink
+    ballistic_kink_at: int = 0            # if >0: one deterministic kink at this flight age
     orbit_radius: float = 4.5
     waypoint_margin: float = 2.0          # keep targets this far from walls
     initial_agent_x: float = 7.5
@@ -134,6 +136,7 @@ class PursuitEnv:
             self.sx, self.sy = along, hi
         self._sphi = inward + float(self.rng.uniform(-np.pi / 3, np.pi / 3))
         self.crossings = getattr(self, "crossings", 0) + 1
+        self._flight_age = 0
 
     def _new_waypoint(self):
         c = self.config
@@ -215,6 +218,11 @@ class PursuitEnv:
             self.sx = center + a * np.cos(self._phase)
             self.sy = center + b * np.sin(self._phase)
         elif c.stimulus_motion == "ballistic":
+            self._flight_age += 1
+            if c.ballistic_kink_hazard > 0.0 and self.rng.random() < c.ballistic_kink_hazard:
+                self._sphi += float(self.rng.uniform(-np.pi / 2, np.pi / 2))
+            if c.ballistic_kink_at > 0 and self._flight_age == c.ballistic_kink_at:
+                self._sphi += float(self.rng.uniform(-np.pi / 2, np.pi / 2))
             nx = self.sx + c.stimulus_speed * np.cos(self._sphi)
             ny = self.sy + c.stimulus_speed * np.sin(self._sphi)
             lo, hi = c.waypoint_margin, c.box_size - c.waypoint_margin
