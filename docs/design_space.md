@@ -200,9 +200,12 @@ fast signals lose activity but keep information.
 regional. Former upper-edge question answered by h22: no averaging corner;
 the fast edge is sparse-and-informative.)
 
-1. **The seed lottery's microfoundation** at defaults — not the static
-   kernel; plausibly realized-gain disorder after adaptation. (Regress
-   per-seed outcome on realized in-degree × w̄ trajectories.)
+1. **What sets the wander floor.** The "seed lottery" partially dissolves:
+   late segment scores within a run are mutually uncorrelated (+0.03) — much
+   of the seed variance is sampling noise of a *wandering* process, and w1′'s
+   100%-seed reliability is a wander floor above threshold. The fixed seed
+   effect that remains (early↔late +0.45 at the ridge) is modest. The right
+   question is what design choices raise the floor of the wander.
 2. **Formalize information-per-spike**: the h22 sparse-informative fast edge
    suggests an efficiency curve (bits/spike vs slip frequency) worth one
    clean experiment; also the secondary resonance near sensor-spacing/speed.
