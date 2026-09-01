@@ -48,6 +48,7 @@ PARAM_SPECS = {
     "weight_init_sd": (0.0, 2.0, float),
     "leak": (0.0, 1.0, float),
     "target_lr": (0.0, 1.0, float),
+    "weight_lr": (0.0, 2.0, float),
     "threshold_ratio": (1.0, 10.0, float),
     "gain": (0.0, 90.0, float),
     "stimulus_speed": (0.0, 10.0, float),
@@ -62,7 +63,7 @@ PARAM_SPECS = {
 }
 RESERVOIR_PARAMS = {
     "n_nodes", "p_link", "input_weight", "weight_init_mean", "weight_init_sd",
-    "leak", "target_lr", "threshold_ratio",
+    "leak", "target_lr", "weight_lr", "threshold_ratio",
 }
 BASE_TRACKING_PARAMS = {"gain", "stimulus_speed", "reverse_every"}
 VARIABLE_TRACKING_PARAMS = BASE_TRACKING_PARAMS | {
@@ -88,6 +89,7 @@ CONFIG_LOADOUTS = (
             "weight_init_sd": 0.10,
             "leak": 0.25,
             "target_lr": 0.010,
+            "weight_lr": 1.0,
             "threshold_ratio": 2.0,
             "gain": 10.0,
         },
@@ -104,6 +106,7 @@ CONFIG_LOADOUTS = (
             "weight_init_sd": 0.11,
             "leak": 0.57,
             "target_lr": 0.020,
+            "weight_lr": 1.0,
             "threshold_ratio": 1.52,
             "gain": 28.0,
         },
@@ -120,8 +123,46 @@ CONFIG_LOADOUTS = (
             "weight_init_sd": 0.22,
             "leak": 0.56,
             "target_lr": 0.003,
+            "weight_lr": 1.0,
             "threshold_ratio": 3.14,
             "gain": 38.0,
+        },
+    },
+    # Lab-campaign configs (scripts/lab/act2_*): metrics are means over the
+    # recorded runs in scripts/out/lab/act2_batch1.json (12 seeds, 7200 steps;
+    # score = whole-run within-45).
+    {
+        "id": "lab-ridge25",
+        "label": "lab: ridge25 (leak .25, wlr .1)",
+        "metrics": {"score": 0.513, "dir_agree": 0.35, "prop_spiked": 0.17},
+        "params": {
+            "n_nodes": 200,
+            "p_link": 0.10,
+            "input_weight": 0.75,
+            "weight_init_mean": 0.75,
+            "weight_init_sd": 0.10,
+            "leak": 0.25,
+            "target_lr": 0.010,
+            "weight_lr": 0.1,
+            "threshold_ratio": 2.0,
+            "gain": 10.0,
+        },
+    },
+    {
+        "id": "lab-w1prime",
+        "label": "lab: w1-prime",
+        "metrics": {"score": 0.766, "dir_agree": 0.38, "prop_spiked": 0.95},
+        "params": {
+            "n_nodes": 100,
+            "p_link": 0.21,
+            "input_weight": 0.83,
+            "weight_init_mean": 0.75,
+            "weight_init_sd": 0.11,
+            "leak": 0.57,
+            "target_lr": 0.020,
+            "weight_lr": 1.0,
+            "threshold_ratio": 1.52,
+            "gain": 28.0,
         },
     },
 )
@@ -288,7 +329,8 @@ class VizSession:
         config = {
             **{f: getattr(net.config, f) for f in (
                 "n_nodes", "p_link", "input_weight", "weight_init_mean",
-                "weight_init_sd", "leak", "target_lr", "threshold_ratio",
+                "weight_init_sd", "leak", "target_lr", "weight_lr",
+                "threshold_ratio",
             )},
             **{f: getattr(env.config, f) for f in (
                 "gain", "stimulus_speed", "reverse_every",

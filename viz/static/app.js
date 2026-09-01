@@ -59,9 +59,15 @@ let displayedConfigSignature = null;
 let ws = null;
 const connEl = document.getElementById("conn");
 
+// ?loadout=ID applies a named loadout on connect (used by /lab/phase links).
+const urlLoadout = new URLSearchParams(location.search).get("loadout");
+
 function connect() {
   ws = new WebSocket(`ws://${location.host}/ws`);
-  ws.onopen = () => { connEl.textContent = "connected"; connEl.className = "conn ok"; };
+  ws.onopen = () => {
+    connEl.textContent = "connected"; connEl.className = "conn ok";
+    if (urlLoadout) send({ cmd: "loadout", id: urlLoadout });
+  };
   ws.onclose = () => {
     connEl.textContent = "disconnected — retrying…"; connEl.className = "conn bad";
     setTimeout(connect, 1000);
@@ -497,7 +503,7 @@ function drawStats(m) {
 // ---------- controls --------------------------------------------------------
 const PARAM_ORDER = [
   "n_nodes", "p_link", "input_weight", "weight_init_mean", "weight_init_sd",
-  "leak", "target_lr", "threshold_ratio", "gain", "stimulus_speed", "reverse_every",
+  "leak", "target_lr", "weight_lr", "threshold_ratio", "gain", "stimulus_speed", "reverse_every",
   "stimulus_speed_min", "stimulus_speed_max", "speed_smoothing",
   "speed_change_min_steps", "speed_change_max_steps",
   "reverse_min_steps", "reverse_max_steps",

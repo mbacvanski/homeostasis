@@ -494,3 +494,13 @@ sufficient — the best configs are non-decomposable in this design space.
 gain-only 0.308, leak-only 0.456, essence+wlr0.65 no better. The wander-floor
 question stays open and is now known to live in ≥3-way interactions
 (plausibly: small N ↔ per-node input share ↔ authority ↔ damping).
+
+## Metric accounting: the canonical dir-agree was an entrainment metric all along
+
+analysis.tracking_metrics.direction_agreement compares the agent's SMOOTHED
+TURNING DIRECTION to the STIMULUS direction (chance 0.5 for a turner, 0 for
+a non-mover) — it measures velocity-following, not error correction. The
+paper's 0.83 anchor is thus a follow statistic, consistent with the
+entrainment mechanism. The lab harness's error-sign variant reads ~0.47-0.49
+on constant-offset followers by construction (offset keeps err positive in
+both travel directions) — do not interpret it as "no direction sense".

@@ -205,7 +205,13 @@ the fast edge is sparse-and-informative.)
    of the seed variance is sampling noise of a *wandering* process, and w1′'s
    100%-seed reliability is a wander floor above threshold. The fixed seed
    effect that remains (early↔late +0.45 at the ridge) is modest. The right
-   question is what design choices raise the floor of the wander.
+   question is what design choices raise the floor of the wander — and it is
+   now known to be **non-additive** (h24/h25): necessity analysis names
+   {gain, leak, N} as w1′'s load-bearing trio, yet no subset transplants
+   (grafts onto ridge25 all hurt; the trio at N=200 reaches only 0.534 vs
+   w1′'s 0.84), and the ridge law itself failed to extrapolate to w1′'s
+   corner (wlr=1.0 ≥ 0.65 there). The best configs are jointly-tuned wholes;
+   the floor lives in ≥3-way interactions.
 2. **Formalize information-per-spike**: the h22 sparse-informative fast edge
    suggests an efficiency curve (bits/spike vs slip frequency) worth one
    clean experiment; also the secondary resonance near sensor-spacing/speed.

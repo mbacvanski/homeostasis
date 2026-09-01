@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Trajectory Viewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Trajectory Viewer <span class="sub">watch the entrainment · one closed-loop tracking run · lab viewer</span></h1>
+  <div id="conn" class="conn">idle</div>
+</header>
+
+<div id="controls">
+  <span class="ctl labnav">
+    <a href="/lab">single node</a>
+    <a href="/lab/phase">phase maps</a>
+    <a href="/lab/traj" class="here">trajectories</a>
+  </span>
+  <span class="ctl">
+    <label>variant</label>
+    <select id="variant">
+      <option value="ridge25">ridge25 (leak .25, wlr .1)</option>
+      <option value="w1prime">w1-prime (cfg 236, w₀ .75)</option>
+      <option value="default">default (paper config)</option>
+    </select>
+  </span>
+  <span class="ctl"><label>seed</label><input id="seed" type="number" value="0" min="0" step="1"></span>
+  <span class="ctl"><label>steps</label><input id="steps" type="number" value="7200" min="720" max="14400" step="720"></span>
+  <span class="ctl"><label title="From this step on, the two effector outputs are exchanged before being applied — the swap-mid arm of scripts/lab/common.py, at an arbitrary step. Leave empty for no swap.">swap effectors at</label><input id="swap" type="number" placeholder="off" min="0" step="240"></span>
+  <button id="btn-run" class="primary">Run</button>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main>
+  <section class="panel explainer">
+    <p>
+    One run of the closed-loop tracking task, stepped exactly as the lab campaign runs it
+    (<span class="mono">scripts/lab/common.py run_closed_loop</span>: sense → step → act → advance).
+    These agents follow by <b>velocity entrainment</b>: the loop locks the agent's turning
+    rate to the stimulus's angular velocity, with <b>no position servo</b> — the mean signed
+    turn per degree of heading error is ≈ 0 — so the heading rides parallel to the stimulus
+    and drifts within (and out of) the ±45° band rather than being pulled to its center.
+    The optional effector swap inverts the motor mapping mid-run; the segment strip shows
+    whether tracking recovers.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Heading vs stimulus <span class="hint">unwrapped degrees · heading (blue) · stimulus (yellow) · swap marked in pink</span></h2>
+    <canvas id="follow" width="960" height="250"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Heading error <span class="hint">signed, ±45° band shaded</span></h2>
+    <canvas id="errc" width="960" height="150"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Segment scores <span class="hint">within-45 fraction per 720-step segment · 0.35 dashed · chance ≈ 0.25</span></h2>
+    <canvas id="segc" width="960" height="120"></canvas>
+    <div class="hint mono" id="summary"></div>
+  </section>
+</main>
+
+<script src="/lab/static/lab_traj.js"></script>
+</body>
+</html>

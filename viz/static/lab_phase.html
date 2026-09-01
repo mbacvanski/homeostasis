@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Phase Maps</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Phase Maps <span class="sub">Act II design-space sweeps, recorded runs · lab viewer</span></h1>
+  <div id="conn" class="conn">loading…</div>
+</header>
+
+<div id="controls">
+  <span class="ctl labnav">
+    <a href="/lab">single node</a>
+    <a href="/lab/phase" class="here">phase maps</a>
+    <a href="/lab/traj">trajectories</a>
+  </span>
+  <span class="ctl">
+    <label>color by</label>
+    <select id="metric">
+      <option value="score_late">score_late (within-45, segments 6–10)</option>
+      <option value="prop_spiked">prop_spiked</option>
+      <option value="input_flow">input_flow</option>
+    </select>
+  </span>
+  <span class="ctl"><canvas id="colorbar" width="190" height="30"></canvas></span>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main class="phase-main">
+  <div class="col" id="col-maps">
+    <section class="panel explainer">
+      <p>
+      Each cell aggregates 12 seeds × 7200 steps of the closed-loop tracking task
+      (arm <span class="mono">full</span>) from the Act II campaign
+      (<span class="mono">scripts/lab/act2_batch1.py</span>; all other parameters at package
+      defaults). Color = mean of the selected metric; the default,
+      <b>score_late</b>, is the fraction of late-half steps within ±45° of the stimulus
+      (chance ≈ 0.25). The small line in each cell is the fraction of seeds with
+      score_late ≥ 0.35. Click a cell for its per-seed numbers; cells whose
+      configuration matches a registered loadout link straight into the tracking
+      visualizer.
+      </p>
+    </section>
+    <section class="panel">
+      <h2>A1 — weight_lr × target_lr <span class="hint">leak 0.25 (default) · x: wlr, y: tlr</span></h2>
+      <div id="map-A1" class="heatmap"></div>
+    </section>
+    <section class="panel">
+      <h2>A3 — leak × weight_lr <span class="hint">target_lr 0.01 (default) · x: leak, y: wlr</span></h2>
+      <div id="map-A3" class="heatmap"></div>
+    </section>
+  </div>
+
+  <div class="col" id="col-side">
+    <section class="panel">
+      <h2>Cell Inspector <span class="hint">click a cell</span></h2>
+      <div id="cell-info" class="hint">no cell selected</div>
+    </section>
+  </div>
+</main>
+
+<script src="/lab/static/lab_phase.js"></script>
+</body>
+</html>

@@ -40,3 +40,59 @@ main {
 .sumstat .v.small { font-size: 17px; font-weight: 500; }
 .sumop { color: var(--dim); font-size: 13px; align-self: flex-end; padding-bottom: 4px; }
 #boundaries { margin-top: 4px; font-size: 11px; }
+
+/* nav between the lab pages */
+.labnav { gap: 2px; }
+.labnav a {
+  color: var(--dim);
+  text-decoration: none;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.labnav a:hover { background: #2a313c; color: var(--text); }
+.labnav a.here { background: #2a313c; color: var(--accent); }
+
+/* phase-map browser */
+.phase-main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 10px; }
+@media (max-width: 1000px) { .phase-main { grid-template-columns: 1fr; } }
+.heatmap { display: grid; gap: 3px; align-items: stretch; }
+.hlab { color: var(--dim); font-size: 11px; align-self: center; padding-right: 6px; text-align: right; white-space: nowrap; }
+.hlab.center { text-align: center; padding: 2px 0 0; }
+.hcell {
+  border-radius: 4px;
+  padding: 5px 4px 4px;
+  text-align: center;
+  cursor: pointer;
+  line-height: 1.25;
+  border: 1px solid transparent;
+  position: relative;
+}
+.hcell:hover { border-color: var(--text); }
+.hcell.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.hcell.empty { background: #171c24; cursor: default; }
+.hcell b { display: block; font-size: 13px; font-weight: 600; }
+.hcell i { display: block; font-style: normal; font-size: 9.5px; opacity: 0.85; }
+.hcell u { position: absolute; top: 1px; right: 3px; font-size: 8px; text-decoration: none; }
+.cellhead { color: var(--text); font-size: 12px; margin-bottom: 6px; }
+.seedtab { border-collapse: collapse; width: 100%; font-size: 11.5px; margin-bottom: 8px; }
+.seedtab th { color: var(--dim); font-weight: 400; text-align: right; padding: 1px 4px; border-bottom: 1px solid var(--panel-edge); }
+.seedtab td { text-align: right; padding: 1px 4px; color: var(--dim); }
+.seedtab tr.ok td { color: var(--text); }
+.seedtab tr.ok td:nth-child(2) { color: var(--green); }
+.seedtab tr.meanrow td { border-top: 1px solid var(--panel-edge); color: var(--text); font-weight: 600; }
+.btn {
+  display: inline-block;
+  background: #2a313c;
+  color: var(--text);
+  border: 1px solid #39424f;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12.5px;
+  text-decoration: none;
+}
+.btn:hover { background: #343d4a; }
+
+/* trajectory viewer */
+.panel canvas#follow, .panel canvas#errc, .panel canvas#segc { width: 100%; }
+#summary { margin-top: 6px; }
