@@ -1973,3 +1973,76 @@ wander48 is t=-1.54 (NS) — "sparse is more durable" is suggestive only,
 softening the H66 addendum. Mechanism of the universal sag itself:
 OPEN (candidates: slow T drift under reversals; environment-lock
 metastability). (h69_devfreeze.json)
+
+## H70 (preregistered): wander dips are dark excursions
+
+Instrument run_closed_loop with per-segment input duty and flow. Ridge
+cell, 16 CRN seeds, n=21600 (30 segments). Predictions: (a) within-run,
+segment score correlates with segment input-duty at r >= +0.5 (bad
+segments are dark ones); (b) the long-horizon sag rides on duty: late
+segments (25-29) have lower duty than early (5-9) by >= 0.05; (c) in
+the sparse cell (p=.02, wlr=.03) the same correlation holds — the
+mechanism is shared.
+
+## H70 verdict: dips are dark; the sag is not
+
+(a),(c) CONFIRMED: within-run r(segment score, segment duty) = +0.52
+(ridge) and +0.81 (sparse) — the wander's bad segments are dark
+excursions, the H51 trap visited transiently by healthy configs.
+(b) REFUTED: duty does not fall over the long horizon (0.734 -> 0.754)
+— the sag degrades capture at CONSTANT engagement. (h70_dips.json)
+
+## H71 (preregistered): the sag is slow statue-ification (target inflation)
+
+Ridge cell, 12 CRN seeds, n=21600, snaps on; arms full vs freeze-T-only
+(T frozen at init). Predictions: (a) in full, T_mean rises measurably
+over the run (>= +0.05 from snap 5 to snap 89); (b) freeze-T-only shows
+sag reduced by >= 60% relative to full's; (c) across full seeds, sag
+magnitude correlates with T_mean rise (r <= -0.4 between delta-score
+and delta-T).
+
+## H71 verdict: the target channel causes the sag — but not through its mean
+
+(b) CONFIRMED beyond the threshold: freeze-T-only abolishes the sag
+(+0.030 vs full -0.104) and wins absolutely (late 0.519 vs 0.336).
+(a),(c) REFUTED: mean T rises only +0.018 and sag does not correlate
+with it (+0.21, wrong sign) — the erosion lives in the T PROFILE
+(per-node relabeling invisible in the mean), not aggregate inflation.
+Channel prescription sharpened by H69+H71 together: keep W plastic
+(it re-locks), freeze T (its slow drift erodes capture) — on
+supercritical tracking. (h71_slowstatue.json)
+
+## H72 (preregistered): T buys off the informative nodes
+
+Full arm, 12 seeds, n=21600; record per-node dT = T_final - T_init and
+each node's stationary input drive mu_in (from the retina at bearing 0
+through its input weights, the H59 machinery). Predictions: (a) across
+nodes, corr(dT, mu_in) >= +0.4 within-seed (input-driven nodes get
+relabeled hardest); (b) the top-decile-mu_in nodes' mean dT exceeds the
+bottom decile's by >= 0.2.
+
+## H72 verdict: REFUTED — no static-input selectivity in the relabeling
+
+corr(dT, mu_in static proxy) -0.10..+0.25 (one degenerate seed), decile
+gap +0.03 (predicted >= 0.2). The T-profile erosion is not targeted at
+anatomically input-driven nodes; the remaining suspect is DYNAMIC
+selectivity (activity during locked epochs — behavior-dependent, like
+every drive quantity in this system, cf. the k0 static-formula lesson).
+Micro-mechanism open; causality (T channel) and cure (freeze T after
+calibration) stand. (h72_relabel.json)
+
+## H73 (preregistered): is reliability writable in wiring STATISTICS? (the DNA question)
+
+Evolve a wiring GENERATOR, not a wiring: genome = {density p [.02,.3
+log], degree-regularity rho_reg [0,1] (fraction of nodes with exactly
+round(p*N) afferents), input-targeting bias b [-2,2] (input links land
+on nodes weighted (in_degree+1)^b), reciprocity rec [0,0.5]}. Fitness of
+a genome = over 4 FRESH wirings sampled from it (ridge config wlr=.1,
+n=7200): frac(score>=0.35) + 0.5*mean. GA pop 16 x 6 gens. Baselines at
+the same protocol: Bernoulli p=.1 (the paper generator) and Bernoulli
+p=.02 (the sparse cell). Predictions: (a) the champion generator's
+12-fresh-wiring reliability beats Bernoulli-p=.1 by >= 0.15; (b) risky:
+it also beats sparse-Bernoulli (>= 0.85 reliability) — i.e. statistics
+BEYOND density buy reliability; (c) if (b) fails, generative statistics
+beyond density are inert and the lottery residue is idiosyncratic
+(extending H40b's static illegibility).

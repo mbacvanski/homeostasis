@@ -547,6 +547,33 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   start-basin sensitive (one false start caught and fixed on the record)
   — IC-dependence at the collective level.
 
+## The long horizon: locks decay, plasticity re-locks, targets erode
+
+Three-fold extension of the channel story over 21,600-step runs
+(H66–H72, 48-seed cluster + local arms). Performance sags everywhere on
+long horizons (ridge −0.109 early→late, t=−3.6, n=48). The wander's bad
+segments are *dark excursions* (within-run r(segment score, segment
+input-duty) = +0.52 ridge / +0.81 sparse — the H51 trap, visited
+transiently by healthy agents), but the sag itself is not accumulating
+darkness (duty holds at 0.73–0.75 throughout). Two causal arms then
+split the channels cleanly:
+
+- **Freezing everything makes it worse** (H69: freeze-mid sag −0.136 vs
+  full −0.064): the erosion is metastable *lock decay*, and the weight
+  channel is the re-locking mechanism (as the re-entrainment experiments
+  said) — lifelong weight plasticity earns its keep.
+- **Freezing only the targets abolishes the sag and wins outright**
+  (H71: freeze-T-only +0.030 vs full −0.104; late score 0.519 vs
+  0.336). The erosion is the target channel's doing — but not through
+  its mean (T̄ moves +0.018, uncorrelated with sag) and not by
+  relabeling anatomically input-driven nodes (H72 null): a per-node
+  profile drift whose selectivity is dynamic, still open.
+
+Prescription: **keep W plastic, freeze T after calibration** — on
+supercritical tracking. (Pong's subcritical regime still wants fast
+targets as a damper at high wlr; at the slow-wlr cells that now win
+there, the question is open.)
+
 ## What the two homeostatic channels actually do
 
 - **The weight servo is the universal necessary channel**: freeze-W-only is
@@ -610,14 +637,16 @@ family:
    networks — it abolishes the absorbing dark state while sparing
    contrast. Sparse wiring's internal fluctuations buy the same thing
    architecturally.
-6. **Don't freeze a deployed network.** Long-horizon competence decays by
-   metastable lock loss, and plasticity is the re-locking mechanism —
-   frozen networks sag *faster*. (Structural rewiring is the opposite:
-   developmental window only.)
+6. **Keep the weight channel plastic; freeze the target channel after
+   calibration.** Long-horizon competence decays by metastable lock
+   loss, and weight plasticity is the re-locking mechanism (full-frozen
+   networks sag faster) — while the *target* channel's slow profile
+   drift is what causes the sag (freeze-T-only abolishes it and wins:
+   0.519 vs 0.336 late). Structural rewiring: developmental window
+   only.
 7. **Targets are the calibration surface.** Only heterogeneous, adapted
    per-node target profiles hold interior spike rates statically;
-   homogeneous frozen networks are dead-or-saturated (the cliff). Let
-   T adapt, then freeze T if you must freeze something.
+   homogeneous frozen networks are dead-or-saturated (the cliff).
 8. **Size is inert.** Pick N for readout smoothness; pin in-degree
    (~20) and input wiring; check ignition with Law 1 (drive ≥
    leak·ρ·T). Predict the frozen cold-start fate from the wiring file

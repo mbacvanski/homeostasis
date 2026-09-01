@@ -120,6 +120,8 @@ def run_closed_loop(task: dict) -> dict:
     n_seg = max(1, n_steps // SEG)
     seg_in45 = np.zeros(n_seg)
     seg_count = np.zeros(n_seg)
+    seg_duty = np.zeros(n_seg)
+    seg_flow = np.zeros(n_seg)
     err_sign_agree = 0.0
     flow_sum = 0.0
     duty = 0.0
@@ -191,6 +193,8 @@ def run_closed_loop(task: dict) -> dict:
         flow = float(inputs.sum())
         flow_sum += flow
         duty += flow > 0.05
+        seg_duty[seg] += flow > 0.05
+        seg_flow[seg] += flow
         f_sum += state.prop_spiked
         f_win_acc += state.prop_spiked
         absE_sum += float(np.mean(np.abs(state.error)))
@@ -219,6 +223,8 @@ def run_closed_loop(task: dict) -> dict:
         score=float(np.mean(seg_scores)),
         score_late=float(np.mean(late)),
         seg_scores=[round(s, 4) for s in seg_scores],
+        seg_duty=[round(v, 4) for v in (seg_duty / np.maximum(seg_count, 1)).tolist()],
+        seg_flow=[round(v, 3) for v in (seg_flow / np.maximum(seg_count, 1)).tolist()],
         dir_agree=err_sign_agree / n_steps,
         prop_spiked=f_sum / n_steps,
         mean_abs_E=absE_sum / n_steps,
