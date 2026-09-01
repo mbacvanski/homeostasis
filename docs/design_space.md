@@ -328,8 +328,19 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   must sit inside the entrainment band (speed).*
 - Ecology corollary for the multi-agent program: sustained collective
   entrainment requires a **slow periodic pacemaker** — interaction alone
-  yields stillness or unfollowable churn. Slow-circling wall-avoidance
-  configs are the predicted viable pacemakers.
+  yields stillness or unfollowable churn.
+- **And the ecology was then built** (H48,
+  [fig_live_chain](../scripts/out/lab/fig_live_chain.png)): the paper-scale
+  family cannot pace itself (absorption wall-agents are dead statues; churn
+  circlers turn ≥5.6°/step, above the band), but a wall circler with
+  wheel_base 2.5 in a 30-unit arena circles cleanly at 1.9°/step — and a
+  warm-start-evolved follower locks onto it live: **near4 1.00, dist 3.77,
+  stable through 10,800 steps. A blind pacemaker, circling because of walls
+  it avoids, entrains a follower that senses it — the first sustained
+  two-agent homeostatic system.** Requirements measured: band-compatible
+  pacemaker (morphology + arena rescaling), one-way coupling, and selection
+  warm-started from prior follower competence (cold-start GAs find
+  toll-booths).
 
 ## What the two homeostatic channels actually do
 
