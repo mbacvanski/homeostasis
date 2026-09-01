@@ -28,7 +28,10 @@ const CAPTIONS = {  // keyed genome|motion
     "the blind sweeper cruises its fixed beat whatever the stimulus does",
 };
 
-const connEl = document.getElementById("conn");
+// Batch status goes to its own element now that #conn shows the LIVE
+// connection state (the live section is served by lab_pursuit_live.js).
+const connEl = document.getElementById("batch-status") || document.getElementById("conn");
+const batchBox = document.getElementById("batch-box");
 let latest = null;
 let runSeq = 0;
 
@@ -37,7 +40,7 @@ function params() {
   return {
     genome: document.getElementById("genome").value,
     motion: document.getElementById("motion").value,
-    speed: parseFloat(document.getElementById("speed").value) || 0.15,
+    speed: parseFloat(document.getElementById("stim-speed").value) || 0.15,
     seed: Math.max(parseInt(document.getElementById("seed").value) || 0, 0),
     steps: Math.min(Math.max(parseInt(document.getElementById("steps").value) || 3600, 200), 14400),
   };
@@ -45,10 +48,11 @@ function params() {
 
 function showSpeed() {
   document.getElementById("v-speed").textContent =
-    (parseFloat(document.getElementById("speed").value) || 0.15).toFixed(3);
+    (parseFloat(document.getElementById("stim-speed").value) || 0.15).toFixed(3);
 }
 
 async function run() {
+  if (batchBox && !batchBox.open) return;  // batch is lazy: render only when shown
   const p = params();
   const seq = ++runSeq;
   connEl.textContent = "running…";
@@ -300,11 +304,18 @@ function render(d) {
 }
 
 // ---------- wiring ----------------------------------------------------------
-for (const id of ["genome", "motion", "speed", "seed", "steps"]) {
+for (const id of ["genome", "motion", "stim-speed", "seed", "steps"]) {
   document.getElementById(id).addEventListener("change", run);
 }
-document.getElementById("speed").addEventListener("input", showSpeed);
+document.getElementById("stim-speed").addEventListener("input", showSpeed);
 document.getElementById("btn-run").addEventListener("click", run);
 showSpeed();
-fitWide();
-run();
+if (batchBox) {
+  let batchRan = false;
+  batchBox.addEventListener("toggle", () => {
+    if (batchBox.open && !batchRan) { batchRan = true; fitWide(); run(); }
+  });
+} else {
+  fitWide();
+  run();
+}

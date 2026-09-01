@@ -9,21 +9,29 @@
 </head>
 <body>
 <header>
-  <h1>Homeostatic Reservoir — Pursuit <span class="sub">following a moving stimulus in 2D (beyond the paper) · lab viewer</span></h1>
-  <div id="conn" class="conn">idle</div>
+  <h1>Homeostatic Reservoir — Pursuit <span class="sub">following a moving stimulus in 2D (beyond the paper) · live lab viewer</span></h1>
+  <div id="conn" class="conn">connecting…</div>
 </header>
 
 <div id="controls">
   <span class="ctl labnav">
     <a href="/lab">single node</a>
     <a href="/lab/phase">phase maps</a>
-    <a href="/lab/traj">trajectories</a>
-    <a href="/lab/wall">wall</a>
-    <a href="/lab/pursuit" class="here">pursuit</a>
-    <a href="/lab/ecology">ecology</a>
+    <a href="/lab/traj">trajectories<span class="livemark">▶</span></a>
+    <a href="/lab/wall">wall<span class="livemark">▶</span></a>
+    <a href="/lab/pursuit" class="here">pursuit<span class="livemark">▶</span></a>
+    <a href="/lab/ecology">ecology<span class="livemark">▶</span></a>
     <a href="/lab/ecology3">ecology³</a>
     <a href="/lab/reproduce">reproduce</a>
-    <a href="/lab/repair">repair</a>
+    <a href="/lab/repair">repair<span class="livemark">▶</span></a>
+  </span>
+  <span class="ctl livebar">
+    <button id="btn-play" class="primary" title="space">▶ Play</button>
+    <button id="btn-step1" title="s">Step ×1</button>
+    <button id="btn-step10">Step ×10</button>
+    <button id="btn-step100">Step ×100</button>
+    <label>speed</label><input id="speed" type="range" min="0" max="100" value="50">
+    <span id="speed-val" class="mono val">60/s</span>
   </span>
   <span class="ctl">
     <label>genome</label>
@@ -40,53 +48,89 @@
       <option value="ballistic">ballistic</option>
     </select>
   </span>
-  <span class="ctl"><label title="Stimulus speed, arena units per step. Ballistic crossings last ~70 steps at 0.15 and ~275 at 0.04 — either side of the 90–225-step re-entrainment horizon (H31/H55b)">speed</label><input id="speed" type="range" min="0.04" max="0.15" step="0.005" value="0.15"><span id="v-speed" class="mono val"></span></span>
+  <span class="ctl"><label title="Stimulus speed, arena units per step — applied LIVE via dataclasses.replace on the env config. Ballistic crossings last ~70 steps at 0.15 and ~275 at 0.04 — either side of the 90–225-step re-entrainment horizon (H31/H55b)">stim speed</label><input id="stim-speed" type="range" min="0.04" max="0.15" step="0.005" value="0.15"><span id="v-speed" class="mono val"></span></span>
   <span class="ctl"><label title="Wiring seed. The H34 champion is a genome+seed PAIR; fresh seeds mostly fail (genome lottery). The H55 sweeper is wiring-insensitive">seed</label><input id="seed" type="number" value="66777" min="0" step="1"></span>
-  <span class="ctl"><label>steps</label><input id="steps" type="number" value="3600" min="200" max="14400" step="200"></span>
-  <button id="btn-run" class="primary">Run</button>
-  <span class="status mono" id="stat"></span>
+  <button id="btn-reset">Reset</button>
+  <span class="status mono live-t">t=<b id="live-t">0</b> · <span id="live-note"></span></span>
 </div>
 
 <main>
   <section class="panel explainer">
     <p>
-    The pursuit task joins the family's parts: the wall-avoidance body (differential drive,
-    invisible walls that clamp and kick) with a tracking-style retina aimed at a moving
-    stimulus — here a single full-circle eye of 91 sensors — whose activation falls off with
-    distance, so approach feeds the network and escape starves it. Two stored genomes:
-    the <b class="st-spiking">H34 orbital champion</b> (a genome+seed PAIR, wiring seed 66777,
-    N=64; evolved to minimize late distance on <i>orbit</i> — phase-locked pursuit that
-    collapses on <i>waypoint</i> motion), and the <b class="st-frozen">H55 blind sweeper</b>
-    (the ballistic GA's champion: evolved below the re-lock horizon, where vision has zero
-    marginal fitness, its input_weight sits at the range floor — it cruises regardless of the
-    stimulus). On <b>ballistic</b> motion targets spawn on an edge, fly straight, and respawn
-    on exit; a <i>catch</i> is closing within 1.5 units during a crossing. The H55b story to
-    verify by eye: at speed 0.15 (~70-step crossings) both genomes sit near the blind-body
-    chance floor ≈0.2 — each crossing ends before entrainment can lock — while at 0.04
-    (~275-step crossings, past the 90–225-step re-lock horizon) the H34 champion catches
-    over half the crossings and the sweeper still just cruises. Slow speeds leave only
-    ~13 crossings in a 3600-step run, so give the catch rate 7200+ steps to settle.
+    The pursuit task joins the family's parts, simulated LIVE — press Play. The wall-avoidance
+    body (differential drive, invisible walls that clamp and kick) carries a tracking-style
+    retina aimed at a moving stimulus — a single full-circle eye of 91 sensors — whose
+    activation falls off with distance, so approach feeds the network and escape starves it.
+    Two stored genomes: the <b class="st-spiking">H34 orbital champion</b> (a genome+seed PAIR,
+    wiring seed 66777, N=64; evolved on <i>orbit</i> — watch it settle into phase-locked
+    pursuit inside the target's ring, and collapse on <i>waypoint</i> motion), and the
+    <b class="st-frozen">H55 blind sweeper</b> (evolved below the re-lock horizon; its
+    input_weight sits at the range floor — it cruises regardless of the stimulus). On
+    <b>ballistic</b> motion targets spawn on an edge, fly straight, and respawn on exit; a
+    <i>catch</i> is closing within 1.5 units during a crossing. Drag <b>stim speed</b>
+    <i>while it runs</i>: at 0.15 (~70-step crossings) the champion sits near the blind-body
+    chance floor, at 0.04 (~275-step crossings, past the 90–225-step re-lock horizon) it
+    catches over half the crossings — H55b's story, watchable.
     </p>
   </section>
 
-  <section class="panel">
-    <h2>Arena <span class="hint">15×15 · agent trail blue (fading) · stimulus trail/orbit red · wall hits ×</span></h2>
-    <canvas id="arena" width="460" height="460"></canvas>
-    <div class="caption mono" id="caption"></div>
-    <div class="sumrow">
-      <div class="sumstat"><div class="k">late mean distance</div><div class="v mono" id="p-dist">—</div></div>
-      <div class="sumstat"><div class="k">near-3 fraction (late)</div><div class="v mono small" id="p-near">—</div></div>
-      <div class="sumstat" title="Ballistic only: fraction of crossings with closest approach < 1.5 (a crossing ends when the stimulus jumps >1 unit in one step, i.e. respawns)"><div class="k">catch rate (per crossing)</div><div class="v mono" id="p-catch">—</div></div>
-      <div class="sumstat"><div class="k">wall hits</div><div class="v mono small" id="p-hits">—</div></div>
+  <div class="livegrid">
+    <section class="panel">
+      <h2>Arena (live) <span class="hint">15×15 · target orange · agent teal · link line flashes green when dist &lt; 1.5 (catch) · wall hit flashes red</span></h2>
+      <canvas id="live-arena" width="460" height="460"></canvas>
+      <div class="readout mono" id="live-readout"></div>
+      <div class="caption mono" id="live-caption"></div>
+      <div class="sumrow">
+        <div class="sumstat"><div class="k">distance now</div><div class="v mono" id="lp-dist">—</div></div>
+        <div class="sumstat" title="Ballistic only: crossings with closest approach < 1.5, over completed crossings ≥ 20 steps (the h55_intercept rule, computed incrementally)"><div class="k">catches / crossings</div><div class="v mono" id="lp-catch">—</div></div>
+        <div class="sumstat"><div class="k">wall hits</div><div class="v mono small" id="lp-hits">—</div></div>
+        <div class="sumstat"><div class="k">prop. spiking</div><div class="v mono small" id="lp-prop">—</div></div>
+      </div>
+    </section>
+    <div class="stack">
+      <section class="panel">
+        <h2>Agent–stimulus distance (live) <span class="hint">catch band &lt;1.5 shaded · 4-unit lock line dashed · wall hits ticked red · exact, one column per step</span></h2>
+        <canvas id="live-dist" class="wide" width="960" height="200"></canvas>
+      </section>
+      <section class="panel">
+        <h2>Proportion spiking (live)</h2>
+        <canvas id="live-prop" class="wide" width="960" height="110"></canvas>
+      </section>
     </div>
-  </section>
+  </div>
 
-  <section class="panel">
-    <h2>Agent–stimulus distance <span class="hint">3-unit band shaded · late window (scored half) tinted · wall hits ticked red</span></h2>
-    <canvas id="distc" width="960" height="160"></canvas>
-  </section>
+  <details class="batch-box" id="batch-box">
+    <summary>Batch experiments (full runs, summary charts) — the original request→run→render viewer with late-window scores</summary>
+    <div class="batch-body">
+      <div class="batchctl">
+        <label>steps</label><input id="steps" type="number" value="3600" min="200" max="14400" step="200">
+        <button id="btn-run" class="primary">Run batch</button>
+        <span class="status mono" id="batch-status"></span>
+        <span class="status mono" id="stat"></span>
+      </div>
+
+      <section class="panel">
+        <h2>Arena <span class="hint">15×15 · agent trail blue (fading) · stimulus trail/orbit red · wall hits ×</span></h2>
+        <canvas id="arena" width="460" height="460"></canvas>
+        <div class="caption mono" id="caption"></div>
+        <div class="sumrow">
+          <div class="sumstat"><div class="k">late mean distance</div><div class="v mono" id="p-dist">—</div></div>
+          <div class="sumstat"><div class="k">near-3 fraction (late)</div><div class="v mono small" id="p-near">—</div></div>
+          <div class="sumstat" title="Ballistic only: fraction of crossings with closest approach < 1.5 (a crossing ends when the stimulus jumps >1 unit in one step, i.e. respawns)"><div class="k">catch rate (per crossing)</div><div class="v mono" id="p-catch">—</div></div>
+          <div class="sumstat"><div class="k">wall hits</div><div class="v mono small" id="p-hits">—</div></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Agent–stimulus distance <span class="hint">3-unit band shaded · late window (scored half) tinted · wall hits ticked red</span></h2>
+        <canvas id="distc" width="960" height="160"></canvas>
+      </section>
+    </div>
+  </details>
 </main>
 
+<script src="/lab/static/lab_live.js"></script>
+<script src="/lab/static/lab_pursuit_live.js"></script>
 <script src="/lab/static/lab_pursuit.js"></script>
 </body>
 </html>
