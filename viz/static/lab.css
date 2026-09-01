@@ -96,3 +96,8 @@ main {
 /* trajectory viewer */
 .panel canvas#follow, .panel canvas#errc, .panel canvas#segc { width: 100%; }
 #summary { margin-top: 6px; }
+
+/* wall viewer */
+.panel canvas#sensors, .panel canvas#propc, .panel canvas#ferr { width: 100%; }
+#view-wall, #view-flank { display: flex; flex-direction: column; gap: 10px; }
+.panel canvas#arena, .panel canvas#ring { margin: 0 auto; }

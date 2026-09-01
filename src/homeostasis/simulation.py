@@ -27,8 +27,12 @@ from .pong import PongConfig, PongEnv
 from .reservoir import HomeostaticReservoir, ReservoirConfig, StepState
 from .tracking import TrackingConfig, TrackingEnv
 from .wall import WallConfig, WallEnv
+from .pursuit import PursuitConfig, PursuitEnv
 
 __all__ = [
+    "PursuitSimulation",
+    "PursuitHistory",
+    "run_pursuit",
     "TrackingSimulation",
     "History",
     "run_tracking",
@@ -160,6 +164,96 @@ def run_tracking(
     sim = TrackingSimulation(reservoir_config, tracking_config, seed=seed)
     sim.network.learning_enabled = learning_enabled
     return sim.run(n_steps, record_spikes=record_spikes)
+
+
+@dataclass
+class PursuitHistory:
+    """Per-step records of a pursuit run."""
+
+    x: np.ndarray
+    y: np.ndarray
+    sx: np.ndarray
+    sy: np.ndarray
+    heading: np.ndarray
+    dist: np.ndarray            # agent-stimulus distance at sensing time
+    bearing: np.ndarray         # stimulus bearing (deg) at sensing time
+    hit: np.ndarray
+    outputs: np.ndarray
+    prop_spiked: np.ndarray
+    mean_target: np.ndarray
+    mean_abs_error: np.ndarray
+    flow: np.ndarray            # total sensor activation per step
+
+    def __len__(self) -> int:
+        return len(self.x)
+
+
+class PursuitSimulation:
+    """A reservoir-controlled Braitenberg agent pursuing a moving stimulus."""
+
+    def __init__(
+        self,
+        reservoir_config: ReservoirConfig,
+        pursuit_config: PursuitConfig = PursuitConfig(),
+        seed: int | None = None,
+    ):
+        if reservoir_config.n_inputs != pursuit_config.n_sensors:
+            raise ValueError(
+                f"reservoir expects {reservoir_config.n_inputs} inputs but the "
+                f"environment has {pursuit_config.n_sensors} sensors"
+            )
+        if reservoir_config.n_outputs != 2:
+            raise ValueError("the pursuit task needs exactly 2 effectors")
+        self.network = HomeostaticReservoir(reservoir_config, seed=seed)
+        self.env = PursuitEnv(pursuit_config, rng=self.network.rng)
+        self.t = 0
+
+    def step(self) -> tuple[StepState, float, bool]:
+        inputs = self.env.sense()
+        state = self.network.step(inputs)
+        e_first, e_second = state.outputs
+        d_heading, hit = self.env.apply_action(e_first, e_second)
+        self.env.advance_stimulus()
+        self.t += 1
+        return state, d_heading, hit
+
+    def run(self, n_steps: int) -> PursuitHistory:
+        arrs = {k: np.empty(n_steps) for k in
+                ("x", "y", "sx", "sy", "heading", "dist", "bearing",
+                 "prop_spiked", "mean_target", "mean_abs_error", "flow")}
+        hit = np.zeros(n_steps, dtype=bool)
+        outputs = np.empty((n_steps, 2))
+        for i in range(n_steps):
+            arrs["dist"][i] = self.env.distance()
+            arrs["bearing"][i] = self.env.stimulus_bearing_deg()
+            state, dh, h = self.step()
+            arrs["x"][i] = self.env.x
+            arrs["y"][i] = self.env.y
+            arrs["sx"][i] = self.env.sx
+            arrs["sy"][i] = self.env.sy
+            arrs["heading"][i] = self.env.heading
+            hit[i] = h
+            outputs[i] = state.outputs
+            arrs["prop_spiked"][i] = state.prop_spiked
+            arrs["mean_target"][i] = float(np.mean(state.targets))
+            arrs["mean_abs_error"][i] = float(np.mean(np.abs(state.error)))
+            arrs["flow"][i] = float(state.inputs.sum())
+        return PursuitHistory(hit=hit, outputs=outputs, **arrs)
+
+
+def run_pursuit(
+    n_steps: int = 3600,
+    seed: int | None = None,
+    learning_enabled: bool = True,
+    reservoir_config: ReservoirConfig | None = None,
+    pursuit_config: PursuitConfig = PursuitConfig(),
+) -> PursuitHistory:
+    """Convenience one-shot pursuit run (default network: tracking-style)."""
+    if reservoir_config is None:
+        reservoir_config = ReservoirConfig(n_inputs=pursuit_config.n_sensors)
+    sim = PursuitSimulation(reservoir_config, pursuit_config, seed=seed)
+    sim.network.learning_enabled = learning_enabled
+    return sim.run(n_steps)
 
 
 # Network parameters for case study 3, from the released wall-avoidance

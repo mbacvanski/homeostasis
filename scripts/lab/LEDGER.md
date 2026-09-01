@@ -732,3 +732,47 @@ better estimator flagged, not patched. Resolution of the b6b puzzle:
 deeper stored bias -> longer post-reversal excursion -> the ratchet's
 stall-and-reacquire pays the time; entrenchment is stored momentum in
 BEHAVIOR, not synaptic sluggishness.
+
+## H32 (pursuit, exploratory rounds 1-5): the family's first hard competence boundary
+
+New task (src/homeostasis/pursuit.py): tracking's bearing retina (optional
+1/(1+d/3) intensity falloff) on the wall-avoidance Braitenberg body, moving
+stimulus (orbit/waypoint/still) in the 15x15 box. A P-controller scores
+dist 0.81 / near3 1.00 — the task is servo-trivial. The homeostatic family
+FAILS at every configuration tried (~40 arms x 8 seeds):
+
+1. Baseline grids: agents die (f→0) — Law 1 in space: the intensity field
+   has an ABSORBING dead basin (wander far → starve → still → dead), which
+   rotation-only tracking geometrically lacked.
+2. Bearing-only (cannot starve by distance) STILL dies → the true basin is
+   **wall-pinned outward-facing poses**: parked in a corner facing out, the
+   whole stimulus orbit stays behind the ±92° view forever. Walls +
+   translation manufacture absorbing darkness; tracking's periodicity
+   rescue needs a body that cannot leave or look away for good.
+3. 360° retina deletes the basin (f 0.17-0.44 sustained ✓) — but pursuit
+   still fails: orientation at chance, distance ≈ random-turn.
+4. Motor-grain hypothesis (wheel_base 1→16, max turn 57→3.6°/step):
+   REFUTED — gentler turning is worse. Best whisper: forward retina, wb 4,
+   wlr 0.1 (orientation 0.41-0.42 vs 0.25 chance; dist 6.06 vs still-agent
+   4.50).
+5. Velocity-floor hypothesis (churn-forced cruise cannot match a slower
+   target): REFUTED cleanly — faster stimuli are WORSE (orient 0.41 → 0.20
+   at speed 0.3-0.5) and cruise straddled the target speed anyway.
+
+Reading: tracking worked because its effector-to-slip map is 1-DOF,
+sign-stable, and stillness-capable. The 2D body breaks all three at once
+(parallax adds a distance-dependent second coupling that diverges on
+approach; translation is churn-forced so the ratchet's waiting state is
+unreachable; dark poses exist). The mentors' ladder rung 3 is genuinely
+OPEN — not an incremental extension of the paper. Next candidates recorded:
+evolution over the pursuit design space (H30 pattern: can selection find
+pursuers where hand-design cannot?), tonic-drive restlessness, and
+stimulus-locked orbiting (approach-free following) as the achievable form.
+
+## H30 addendum (from the wall-viewer verification): the evolved edge-holder is seed-brittle
+
+Across fresh seeds 0-7 at 7200 steps the champion's band fraction is
+{0.91, 0.75, 0.41, 0.33, 0.32, 0.23, 0.10, 0.00} — a works-or-fails wiring
+lottery, the same pattern as the historical flow-evolution champions.
+Selection finds seed-specific solutions when fitness is averaged over few
+resampled seeds.

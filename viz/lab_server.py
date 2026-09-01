@@ -17,6 +17,9 @@ Pages:
               scripts/lab/common.py run_closed_loop step order, plus an
               optional effector swap (the "swap-mid" arm generalized to an
               arbitrary step).
+  /lab/wall   arena viewer for the wall-avoidance case study (package
+              run_wall, the scripts/lab/wall_rep.py arms), plus the H30
+              evolved edge-holder — a TRACKING run — as a fifth variant.
 
 Run via the main app:  uvicorn viz.server:app --port 8471  ->  /lab
 """
@@ -31,8 +34,12 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+import dataclasses
+
 from homeostasis.reservoir import HomeostaticReservoir, ReservoirConfig
+from homeostasis.simulation import WALL_RESERVOIR_CONFIG, run_tracking, run_wall
 from homeostasis.tracking import TrackingConfig, TrackingEnv
+from homeostasis.wall import WallConfig
 
 STATIC_DIR = Path(__file__).parent / "static"
 OUT_DIR = Path(__file__).resolve().parent.parent / "scripts/out"
@@ -303,6 +310,131 @@ def run_traj(variant: str, seed: int, steps: int, swap_at: int | None) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Wall-avoidance viewer (/lab/wall): case study 3, plus the evolved
+# edge-holder (a TRACKING run) as its fifth variant.
+# ---------------------------------------------------------------------------
+
+WALL_MAX_STEPS = 14_400
+WALL_DEFAULT_STEPS = 3_600
+WALL_SUBSAMPLE = 2
+LATE_WINDOW = 1_000  # summary window, as scripts/lab/wall_rep.py
+FLANK_FILE = OUT_DIR / "lab/h30_evolve_flank.json"
+
+# The evolved edge-holder from the H30 flank evolution: the last generation's
+# champion dict (ReservoirConfig fields plus the tracking gain).
+FLANK_CHAMPION = (
+    json.loads(FLANK_FILE.read_text())[-1]["champion"] if FLANK_FILE.exists() else None
+)
+
+WALL_VARIANTS = {
+    # variant -> (WallConfig, learning_enabled); exactly scripts/lab/wall_rep.py's arms
+    "base": (WallConfig(), True),
+    "perturb": (WallConfig(perturb_at=1000), True),
+    "noise": (WallConfig(sensor_noise=0.2), True),
+    "no-learn": (WallConfig(), False),
+}
+
+
+def _pair_any(flags: np.ndarray, k: int) -> np.ndarray:
+    """OR-reduce consecutive groups of k, so subsampling drops no hit events."""
+    n = (len(flags) // k) * k
+    return flags[:n].reshape(-1, k).any(axis=1)
+
+
+def run_wall_variant(variant: str, seed: int, steps: int, wlr: float, tlr: float) -> dict:
+    """One wall-avoidance run (the tested package's run_wall), subsampled for
+    transport. wlr/tlr replace weight_lr/target_lr on WALL_RESERVOIR_CONFIG
+    (defaults 1.0 / 0.01 = the released values); config plumbing only."""
+    wall_config, learning = WALL_VARIANTS[variant]
+    rcfg = dataclasses.replace(WALL_RESERVOIR_CONFIG, weight_lr=wlr, target_lr=tlr)
+    h = run_wall(
+        n_steps=steps, seed=seed, learning_enabled=learning,
+        reservoir_config=rcfg, wall_config=wall_config,
+    )
+    sl = slice(0, steps, WALL_SUBSAMPLE)
+    late = slice(-min(LATE_WINDOW, steps), None)
+    return {
+        "kind": "wall",
+        "params": {
+            "variant": variant, "seed": seed, "steps": steps,
+            "wlr": wlr, "tlr": tlr, "subsample": WALL_SUBSAMPLE,
+        },
+        "config": {
+            "box_size": wall_config.box_size,
+            "agent_radius": wall_config.agent_radius,
+            "sensor_angles": list(wall_config.sensor_angles),
+            "perturb_at": wall_config.perturb_at,
+            "sensor_noise": wall_config.sensor_noise,
+            "learning": learning,
+            "n_nodes": rcfg.n_nodes,
+        },
+        "trace": {
+            "t": np.arange(steps)[sl].tolist(),
+            "x": np.round(h.x[sl], 3).tolist(),
+            "y": np.round(h.y[sl], 3).tolist(),
+            "heading": np.round(h.heading[sl], 4).tolist(),  # radians
+            # OR of each pair, so no hit event vanishes from the display
+            "hit": _pair_any(h.hit, WALL_SUBSAMPLE).astype(int).tolist(),
+            "s_left": np.round(h.inputs[sl, 0], 4).tolist(),   # +45 deg sensor
+            "s_right": np.round(h.inputs[sl, 1], 4).tolist(),  # -45 deg sensor
+            "prop": np.round(h.prop_spiked[sl], 4).tolist(),
+        },
+        "summary": {  # all at full resolution, as scripts/lab/wall_rep.py
+            "hits_total": int(h.hit.sum()),
+            "hits_last_1000": int(h.hit[late].sum()),
+            "late_mean_abs_dh": round(float(np.abs(h.d_heading[late]).mean()), 4),
+            "hit_rate": round(float(h.hit.mean()), 4),
+        },
+    }
+
+
+def run_flank_champion(seed: int, steps: int) -> dict:
+    """The evolved edge-holder: a TRACKING run of the H30 champion config.
+    Selection rewarded holding |heading error| in [50, 90] degrees — a band
+    homeostasis alone never aims for — so the agent orbits the stimulus
+    off-center indefinitely."""
+    if FLANK_CHAMPION is None:
+        return {"error": f"{FLANK_FILE} not found"}
+    champ = dict(FLANK_CHAMPION)
+    gain = champ.pop("gain")
+    tcfg = TrackingConfig(gain=gain)
+    rcfg = ReservoirConfig(n_inputs=tcfg.n_sensors, **champ)
+    hist = run_tracking(
+        n_steps=steps, seed=seed, reservoir_config=rcfg,
+        tracking_config=tcfg, record_spikes=False,
+    )
+    sl = slice(0, steps, WALL_SUBSAMPLE)
+    abs_err = np.abs(hist.error)
+    late = slice(-min(LATE_WINDOW, steps), None)
+    return {
+        "kind": "tracking",
+        "params": {
+            "variant": "flank-champion", "seed": seed, "steps": steps,
+            "subsample": WALL_SUBSAMPLE,
+        },
+        "config": {
+            "n_nodes": rcfg.n_nodes, "gain": round(gain, 3),
+            "leak": round(rcfg.leak, 4), "weight_lr": round(rcfg.weight_lr, 4),
+            "target_lr": round(rcfg.target_lr, 5),
+        },
+        "trace": {
+            "t": np.arange(steps)[sl].tolist(),
+            "heading": np.round(hist.heading[sl], 2).tolist(),          # degrees
+            "stimulus": np.round(hist.stimulus_angle[sl], 2).tolist(),  # degrees
+            "err": np.round(hist.error[sl], 2).tolist(),
+            "prop": np.round(hist.prop_spiked[sl], 4).tolist(),
+        },
+        "summary": {
+            "band_frac": round(float(np.mean((abs_err >= 50) & (abs_err <= 90))), 4),
+            "band_frac_late": round(float(np.mean(
+                (abs_err[late] >= 50) & (abs_err[late] <= 90))), 4),
+            "within45": round(float(np.mean(abs_err <= 45)), 4),
+            "mean_abs_err": round(float(abs_err.mean()), 2),
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # App and routes
 # ---------------------------------------------------------------------------
 
@@ -322,6 +454,11 @@ async def phase_page():
 @lab_app.get("/traj")
 async def traj_page():
     return FileResponse(STATIC_DIR / "lab_traj.html")
+
+
+@lab_app.get("/wall")
+async def wall_page():
+    return FileResponse(STATIC_DIR / "lab_wall.html")
 
 
 lab_app.mount("/static", StaticFiles(directory=STATIC_DIR), name="lab-static")
@@ -383,3 +520,25 @@ def traj(
     seed = min(max(int(seed), 0), 1_000_000)
     swap = None if swap_at < 0 else min(int(swap_at), steps)
     return run_traj(variant, seed, steps, swap)
+
+
+@lab_app.get("/api/wall")
+def wall(
+    variant: str = "base",
+    seed: int = 0,
+    steps: int = WALL_DEFAULT_STEPS,
+    wlr: float = 1.0,
+    tlr: float = 0.01,
+):
+    if variant not in WALL_VARIANTS and variant != "flank-champion":
+        return {"error": f"unknown variant {variant!r}; "
+                         f"have {sorted(WALL_VARIANTS) + ['flank-champion']}"}
+    steps = min(max(int(steps), 200), WALL_MAX_STEPS)
+    steps -= steps % WALL_SUBSAMPLE
+    seed = min(max(int(seed), 0), 1_000_000)
+    if variant == "flank-champion":
+        # wlr/tlr do not apply here: the champion dict fixes its own rates
+        return run_flank_champion(seed, steps)
+    wlr = min(max(float(wlr), 0.0), 2.0)
+    tlr = min(max(float(tlr), 0.0), 1.0)
+    return run_wall_variant(variant, seed, steps, wlr, tlr)
