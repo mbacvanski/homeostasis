@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Self-Repair</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Self-Repair <span class="sub">mid-run node death, learning vs frozen · protocol of scripts/lab/h53_selfrepair.py</span></h1>
+  <div id="conn" class="conn">idle</div>
+</header>
+
+<div id="controls">
+  <span class="ctl labnav">
+    <a href="/lab">single node</a>
+    <a href="/lab/phase">phase maps</a>
+    <a href="/lab/traj">trajectories</a>
+    <a href="/lab/wall">wall</a>
+    <a href="/lab/pursuit">pursuit</a>
+    <a href="/lab/ecology">ecology</a>
+    <a href="/lab/repair" class="here">repair</a>
+  </span>
+  <span class="ctl">
+    <label title="Fraction of nodes killed at the run midpoint: full adjacency removal (in+out), input cut, x=0, caches rebuilt so plasticity cannot regrow them; dead nodes stay in the output-pool denominators">kill</label>
+    <select id="kill">
+      <option value="0.1">10% of nodes</option>
+      <option value="0.3" selected>30% of nodes</option>
+      <option value="0.5">50% of nodes</option>
+    </select>
+  </span>
+  <span class="ctl"><label>seed</label><input id="seed" type="number" value="0" min="0" step="1"></span>
+  <span class="ctl"><label>steps</label><input id="steps" type="number" value="14400" min="1440" max="21600" step="1440"></span>
+  <button id="btn-run" class="primary">Run</button>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main>
+  <section class="panel explainer">
+    <p>
+    At the midpoint of a tracking run on the ridge config (leak .25, wlr .1, tlr .01) a
+    fraction of the reservoir's nodes is destroyed outright, and the same wound is run twice:
+    <b class="st-spiking">learning on</b> (arm <span class="mono">kill-mid</span>) versus
+    <b class="st-frozen">learning frozen at the kill</b> (<span class="mono">kill-mid-frozen</span>),
+    both stepped by <span class="mono">scripts/lab/common.py run_closed_loop</span> — the H53
+    campaign's exact runs. Physiology always repairs: the kill halves the survivors' recurrent
+    drive, errors go negative, and the integral controller re-inflates surviving weights
+    (watch w̄ climb — deafferentation-induced synaptic scaling from eq.&nbsp;5 alone) until the
+    spike rate f returns near its pre-kill level, while the frozen arm's activity stays
+    collapsed. Behavior is buffered by redundancy: at a 10% kill the frozen arm survives fine
+    (repair's transient churn can even cost more than the wound); at 50% the frozen arm loses
+    badly and only the learning arm claws its score back.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Spike rate f <span class="hint">240-step window mean (faint) with 5-window running mean (bold) · learning green · frozen orange dashed · kill marked pink · y-scale follows the running mean, raw bursts clip</span></h2>
+    <canvas id="fc" width="960" height="170"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Mean recurrent weight w̄ <span class="hint">surviving links · the repair channel: w̄ rises to re-earn the lost drive</span></h2>
+    <canvas id="wc" width="960" height="170"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Segment scores <span class="hint">within-45 fraction per 720-step segment · learning green, frozen orange, paired · 0.35 dashed</span></h2>
+    <canvas id="segc" width="960" height="140"></canvas>
+    <div class="hint mono" id="summary"></div>
+  </section>
+</main>
+
+<script src="/lab/static/lab_repair.js"></script>
+</body>
+</html>

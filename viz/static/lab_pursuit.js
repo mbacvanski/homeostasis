@@ -1,8 +1,8 @@
 /* Frontend for the pursuit viewer.
  *
  * All simulation happens server-side (/lab/api/pursuit runs the tested
- * `homeostasis` package with the exact scripts/lab/h34b_verify.py
- * construction); this file only renders the returned traces.
+ * `homeostasis` package with the exact scripts/lab/h34b_verify.py /
+ * h55b_horizon.py construction); this file only renders the returned traces.
  */
 
 "use strict";
@@ -13,11 +13,19 @@ const C = {
   pink: "#ff9ecb", accent: "#58a6ff",
 };
 
-const CAPTIONS = {
-  "perfect-pursuer":
+const CAPTIONS = {  // keyed genome|motion
+  "h34-champion|orbit":
     "the perfect pursuer does not chase — it orbits phase-locked inside the target's orbit (velocity entrainment in 2D)",
-  "pursuit-fails":
+  "h34-champion|waypoint":
     "the same agent on unpredictable motion: a resonator, not a follower",
+  "h34-champion|ballistic":
+    "interception needs time to lock: near chance at speed 0.15 (crossings end first), real catches at 0.04 (H55b's re-lock horizon)",
+  "h55-blind|ballistic":
+    "the GA's own ballistic champion — below the horizon vision had zero marginal fitness, so selection evolved a blind sweeper",
+  "h55-blind|orbit":
+    "the blind sweeper cruises its fixed beat whatever the stimulus does",
+  "h55-blind|waypoint":
+    "the blind sweeper cruises its fixed beat whatever the stimulus does",
 };
 
 const connEl = document.getElementById("conn");
@@ -27,10 +35,17 @@ let runSeq = 0;
 // ---------- fetch -----------------------------------------------------------
 function params() {
   return {
-    preset: document.getElementById("preset").value,
+    genome: document.getElementById("genome").value,
+    motion: document.getElementById("motion").value,
+    speed: parseFloat(document.getElementById("speed").value) || 0.15,
     seed: Math.max(parseInt(document.getElementById("seed").value) || 0, 0),
     steps: Math.min(Math.max(parseInt(document.getElementById("steps").value) || 3600, 200), 14400),
   };
+}
+
+function showSpeed() {
+  document.getElementById("v-speed").textContent =
+    (parseFloat(document.getElementById("speed").value) || 0.15).toFixed(3);
 }
 
 async function run() {
@@ -142,13 +157,15 @@ function drawArena(d) {
     arenaX.globalAlpha = 1;
   }
 
-  // stimulus trail (its actual path), faint red
+  // stimulus trail (its actual path), faint red; break at ballistic respawn
+  // jumps (>1 unit per raw step; way above per-step motion even subsampled)
   arenaX.strokeStyle = C.red;
   arenaX.globalAlpha = 0.28;
   arenaX.beginPath();
   for (let i = 0; i < n; i++) {
     const px = X(sx[i]), py = Y(sy[i]);
-    i ? arenaX.lineTo(px, py) : arenaX.moveTo(px, py);
+    const jump = i && Math.hypot(sx[i] - sx[i - 1], sy[i] - sy[i - 1]) > 1.0;
+    (i && !jump) ? arenaX.lineTo(px, py) : arenaX.moveTo(px, py);
   }
   arenaX.stroke();
   arenaX.globalAlpha = 1;
@@ -214,9 +231,28 @@ function drawDist(d) {
   // near-3 band and the scored (late) half
   distX.fillStyle = "rgba(63,214,143,0.12)";
   distX.fillRect(PAD.l, yFor(3), W - PAD.l - PAD.r, yFor(0) - yFor(3));
+  const ballistic = d.config.motion === "ballistic";
+  if (ballistic) {  // catch band (dist < 1.5) shaded stronger
+    distX.fillStyle = "rgba(63,214,143,0.16)";
+    distX.fillRect(PAD.l, yFor(1.5), W - PAD.l - PAD.r, yFor(0) - yFor(1.5));
+  }
   const lateX = xFor(Math.floor(t.length / 2));
   distX.fillStyle = "rgba(255,255,255,0.045)";
   distX.fillRect(lateX, PAD.t, W - PAD.r - lateX, H - PAD.t - PAD.b);
+
+  // crossing boundaries: faint verticals at respawn jumps of the stimulus
+  if (ballistic) {
+    const { sx, sy } = d.trace;
+    distX.strokeStyle = "rgba(255,93,93,0.35)";
+    for (let i = 1; i < sx.length; i++) {
+      if (Math.hypot(sx[i] - sx[i - 1], sy[i] - sy[i - 1]) > 1.0) {
+        const px = xFor(i);
+        distX.beginPath();
+        distX.moveTo(px, PAD.t); distX.lineTo(px, H - PAD.b);
+        distX.stroke();
+      }
+    }
+  }
 
   distX.strokeStyle = C.grid;
   distX.strokeRect(PAD.l + 0.5, PAD.t + 0.5, W - PAD.l - PAD.r - 1, H - PAD.t - PAD.b - 1);
@@ -225,6 +261,7 @@ function drawDist(d) {
   distX.textAlign = "right";
   distX.fillText(hi.toFixed(1), PAD.l - 4, PAD.t + 8);
   distX.fillText("3", PAD.l - 4, yFor(3) + 3);
+  if (ballistic) distX.fillText("1.5", PAD.l - 4, yFor(1.5) + 3);
   distX.fillText("0", PAD.l - 4, yFor(0));
   distX.textAlign = "left";
   distX.fillText("t=0", PAD.l, H - 5);
@@ -245,21 +282,29 @@ function drawDist(d) {
 function render(d) {
   drawArena(d);
   drawDist(d);
-  document.getElementById("caption").textContent = CAPTIONS[d.params.preset] || "";
+  document.getElementById("caption").textContent =
+    CAPTIONS[`${d.params.genome}|${d.params.motion}`] || "";
   document.getElementById("p-dist").textContent = d.summary.dist_late.toFixed(2);
   document.getElementById("p-near").textContent = `${(d.summary.near3_late * 100).toFixed(1)}%`;
+  document.getElementById("p-catch").textContent =
+    d.summary.catch_rate === undefined
+      ? "—"
+      : `${(d.summary.catch_rate * 100).toFixed(0)}% of ${d.summary.n_crossings}`;
   document.getElementById("p-hits").textContent = d.summary.hits_total;
-  const isChamp = d.params.seed === d.config.champ_seed;
+  const isChamp = d.config.champ_seed !== null && d.params.seed === d.config.champ_seed;
+  const seedTag = d.config.champ_seed === null ? "" : isChamp ? " (champion pair)" : " (fresh wiring)";
   document.getElementById("stat").textContent =
-    `${d.config.motion} · seed ${d.params.seed}${isChamp ? " (champion pair)" : " (fresh wiring)"}` +
+    `${d.config.motion} @ ${d.params.speed.toFixed(3)}/step · seed ${d.params.seed}${seedTag}` +
     ` · ${d.params.steps} steps · N=${d.config.n_nodes} wheel_base=${d.config.wheel_base}` +
-    ` intensity_scale=${d.config.intensity_scale}`;
+    ` intensity_scale=${d.config.intensity_scale} input_weight=${d.config.input_weight}`;
 }
 
 // ---------- wiring ----------------------------------------------------------
-for (const id of ["preset", "seed", "steps"]) {
+for (const id of ["genome", "motion", "speed", "seed", "steps"]) {
   document.getElementById(id).addEventListener("change", run);
 }
+document.getElementById("speed").addEventListener("input", showSpeed);
 document.getElementById("btn-run").addEventListener("click", run);
+showSpeed();
 fitWide();
 run();

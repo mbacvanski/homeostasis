@@ -25,7 +25,13 @@ function params() {
     seed: Math.max(parseInt(document.getElementById("seed").value) || 0, 0),
     steps: Math.min(Math.max(parseInt(document.getElementById("steps").value) || 7200, 720), 14400),
     swap_at: swapRaw === "" ? -1 : Math.max(parseInt(swapRaw) || 0, 0),
+    noise: parseFloat(document.getElementById("noise").value) || 0,
   };
+}
+
+function showNoise() {
+  document.getElementById("v-noise").textContent =
+    (parseFloat(document.getElementById("noise").value) || 0).toFixed(2);
 }
 
 async function run() {
@@ -228,15 +234,18 @@ function render(d) {
     `score ${s.score.toFixed(3)} · score_late ${s.score_late.toFixed(3)} · ` +
     `prop_spiked ${s.prop_spiked.toFixed(3)} · N=${cfg.n_nodes} leak=${p3(cfg.leak)} ` +
     `wlr=${p3(cfg.weight_lr)} tlr=${p3(cfg.target_lr)} gain=${cfg.gain.toFixed(1)}` +
-    (d.params.swap_at !== null && d.params.swap_at >= 0 ? ` · swap at t=${d.params.swap_at}` : "");
+    (d.params.swap_at !== null && d.params.swap_at >= 0 ? ` · swap at t=${d.params.swap_at}` : "") +
+    (d.params.sensor_noise > 0 ? ` · noise σ=${d.params.sensor_noise.toFixed(2)}` : "");
   document.getElementById("stat").textContent =
     `${d.params.variant} · seed ${d.params.seed} · ${d.params.steps} steps (every ${d.params.subsample}th shown)`;
 }
 
 // ---------- wiring ----------------------------------------------------------
-for (const id of ["variant", "seed", "steps", "swap"]) {
+for (const id of ["variant", "seed", "steps", "swap", "noise"]) {
   document.getElementById(id).addEventListener("change", run);
 }
+document.getElementById("noise").addEventListener("input", showNoise);
 document.getElementById("btn-run").addEventListener("click", run);
+showNoise();
 fitWide();
 run();

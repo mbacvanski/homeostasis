@@ -21,15 +21,25 @@
     <a href="/lab/wall">wall</a>
     <a href="/lab/pursuit" class="here">pursuit</a>
     <a href="/lab/ecology">ecology</a>
+    <a href="/lab/repair">repair</a>
   </span>
   <span class="ctl">
-    <label>preset</label>
-    <select id="preset">
-      <option value="perfect-pursuer">perfect-pursuer (orbit)</option>
-      <option value="pursuit-fails">pursuit-fails (waypoint)</option>
+    <label>genome</label>
+    <select id="genome">
+      <option value="h34-champion">H34 orbital champion</option>
+      <option value="h55-blind">H55 blind sweeper</option>
     </select>
   </span>
-  <span class="ctl"><label title="Wiring seed. The champion is a genome+seed PAIR; fresh seeds mostly fail (genome lottery)">seed</label><input id="seed" type="number" value="66777" min="0" step="1"></span>
+  <span class="ctl">
+    <label>stimulus</label>
+    <select id="motion">
+      <option value="orbit">orbit</option>
+      <option value="waypoint">waypoint</option>
+      <option value="ballistic">ballistic</option>
+    </select>
+  </span>
+  <span class="ctl"><label title="Stimulus speed, arena units per step. Ballistic crossings last ~70 steps at 0.15 and ~275 at 0.04 — either side of the 90–225-step re-entrainment horizon (H31/H55b)">speed</label><input id="speed" type="range" min="0.04" max="0.15" step="0.005" value="0.15"><span id="v-speed" class="mono val"></span></span>
+  <span class="ctl"><label title="Wiring seed. The H34 champion is a genome+seed PAIR; fresh seeds mostly fail (genome lottery). The H55 sweeper is wiring-insensitive">seed</label><input id="seed" type="number" value="66777" min="0" step="1"></span>
   <span class="ctl"><label>steps</label><input id="steps" type="number" value="3600" min="200" max="14400" step="200"></span>
   <button id="btn-run" class="primary">Run</button>
   <span class="status mono" id="stat"></span>
@@ -41,13 +51,19 @@
     The pursuit task joins the family's parts: the wall-avoidance body (differential drive,
     invisible walls that clamp and kick) with a tracking-style retina aimed at a moving
     stimulus — here a single full-circle eye of 91 sensors — whose activation falls off with
-    distance, so approach feeds the network and escape starves it. Both presets run the
-    <b>H34 jointly-evolved champion pair</b> (genome + wiring seed 66777, N=64; selection
-    minimized late distance on the <i>orbit</i> stimulus). <b class="st-spiking">perfect-pursuer</b>:
-    the champion on its evolved motion. <b class="st-frozen">pursuit-fails</b>: the same
-    champion, same wiring, with the stimulus switched to unpredictable waypoint motion.
-    The pair is also wiring-brittle: try a fresh seed and the genome lottery mostly fails
-    even on orbit.
+    distance, so approach feeds the network and escape starves it. Two stored genomes:
+    the <b class="st-spiking">H34 orbital champion</b> (a genome+seed PAIR, wiring seed 66777,
+    N=64; evolved to minimize late distance on <i>orbit</i> — phase-locked pursuit that
+    collapses on <i>waypoint</i> motion), and the <b class="st-frozen">H55 blind sweeper</b>
+    (the ballistic GA's champion: evolved below the re-lock horizon, where vision has zero
+    marginal fitness, its input_weight sits at the range floor — it cruises regardless of the
+    stimulus). On <b>ballistic</b> motion targets spawn on an edge, fly straight, and respawn
+    on exit; a <i>catch</i> is closing within 1.5 units during a crossing. The H55b story to
+    verify by eye: at speed 0.15 (~70-step crossings) both genomes sit near the blind-body
+    chance floor ≈0.2 — each crossing ends before entrainment can lock — while at 0.04
+    (~275-step crossings, past the 90–225-step re-lock horizon) the H34 champion catches
+    over half the crossings and the sweeper still just cruises. Slow speeds leave only
+    ~13 crossings in a 3600-step run, so give the catch rate 7200+ steps to settle.
     </p>
   </section>
 
@@ -58,6 +74,7 @@
     <div class="sumrow">
       <div class="sumstat"><div class="k">late mean distance</div><div class="v mono" id="p-dist">—</div></div>
       <div class="sumstat"><div class="k">near-3 fraction (late)</div><div class="v mono small" id="p-near">—</div></div>
+      <div class="sumstat" title="Ballistic only: fraction of crossings with closest approach < 1.5 (a crossing ends when the stimulus jumps >1 unit in one step, i.e. respawns)"><div class="k">catch rate (per crossing)</div><div class="v mono" id="p-catch">—</div></div>
       <div class="sumstat"><div class="k">wall hits</div><div class="v mono small" id="p-hits">—</div></div>
     </div>
   </section>

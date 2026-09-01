@@ -20,14 +20,21 @@ Pages:
   /lab/wall   arena viewer for the wall-avoidance case study (package
               run_wall, the scripts/lab/wall_rep.py arms), plus the H30
               evolved edge-holder — a TRACKING run — as a fifth variant.
-  /lab/pursuit  the pursuit task (package run_pursuit): the H34 champion
-              PAIR on its evolved orbit motion (phase-locked pursuit) and
-              on waypoint motion (the collapse). Protocol is exactly
-              scripts/lab/h34b_verify.py's run_one.
+  /lab/pursuit  the pursuit task (package run_pursuit): a champion genome
+              (the H34 orbital pair or the H55 blind sweeper) on orbit,
+              waypoint, or ballistic stimulus motion with adjustable speed.
+              Protocol is exactly scripts/lab/h34b_verify.py's run_one /
+              h55b_horizon.py's evaluate; ballistic runs also report the
+              per-crossing catch rate of scripts/lab/h55_intercept.py.
   /lab/ecology  the live two-agent homeostatic chain: a blind wall-circling
               pacemaker plus the H48e warm-started follower champion sensing
               its live position. Co-simulation loop is exactly
               scripts/lab/h48c_live_chain.py's cosim.
+  /lab/repair  the H53 self-repair exhibit: the ridge config with a mid-run
+              node kill, learning-on vs learning-frozen side by side. Runs
+              go straight through the lab harness (scripts/lab/common.py
+              run_closed_loop, arms kill-mid / kill-mid-frozen), so the
+              displayed numbers are the H53 campaign's numbers.
 
 Run via the main app:  uvicorn viz.server:app --port 8471  ->  /lab
 """
@@ -55,6 +62,17 @@ from homeostasis.simulation import (
 )
 from homeostasis.tracking import TrackingConfig, TrackingEnv
 from homeostasis.wall import WallConfig
+
+# The lab harness itself (scripts/lab is not a package, so load it by path).
+# The repair page replays H53 through run_closed_loop rather than duplicating
+# the kill surgery / freeze semantics here — same ground rule as model logic:
+# where a lab page replays a campaign experiment, it imports the harness.
+import importlib.util
+
+_COMMON_PATH = Path(__file__).resolve().parent.parent / "scripts/lab/common.py"
+_common_spec = importlib.util.spec_from_file_location("lab_common", _COMMON_PATH)
+lab_common = importlib.util.module_from_spec(_common_spec)
+_common_spec.loader.exec_module(lab_common)
 
 STATIC_DIR = Path(__file__).parent / "static"
 OUT_DIR = Path(__file__).resolve().parent.parent / "scripts/out"
@@ -230,6 +248,8 @@ def _traj_variants() -> dict[str, tuple[dict, dict]]:
     variants = {
         "default": ({}, {}),
         "ridge25": ({"leak": 0.25, "weight_lr": 0.1}, {}),
+        # H51's under-plastic "statue" cell: sensor noise sigma=0.1 rescues it
+        "statue03": ({"leak": 0.25, "weight_lr": 0.03}, {}),
     }
     sweep = OUT_DIR / "sweep/results.json"
     if sweep.exists():
@@ -247,13 +267,20 @@ def _traj_variants() -> dict[str, tuple[dict, dict]]:
 TRAJ_VARIANTS = _traj_variants()
 
 
-def run_traj(variant: str, seed: int, steps: int, swap_at: int | None) -> dict:
+def run_traj(
+    variant: str, seed: int, steps: int, swap_at: int | None,
+    sensor_noise: float = 0.0,
+) -> dict:
     """One closed-loop tracking run, the exact scripts/lab/common.py
     run_closed_loop step order (sense -> net.step -> apply_action ->
     advance_stimulus). The optional effector swap is the "swap-mid" arm
     generalized: from step swap_at on, the two outputs are exchanged before
-    being passed to apply_action. The simulation itself is entirely the
-    tested package; this function only records observables.
+    being passed to apply_action. sensor_noise is common.py's "sensor_noise"
+    task key — environment/harness logic, not model logic: uniform(+-sigma)
+    added to the sensed activations, clamped at 0, from its own rng stream
+    seed+900001, so numbers match the H51 harness runs bit for bit. The
+    simulation itself is entirely the tested package; this function only
+    records observables.
     """
     res_over, trk_over = TRAJ_VARIANTS[variant]
     tcfg = TrackingConfig(**trk_over)
@@ -262,6 +289,7 @@ def run_traj(variant: str, seed: int, steps: int, swap_at: int | None) -> dict:
     rcfg = ReservoirConfig(**res_kwargs)
     net = HomeostaticReservoir(rcfg, seed=seed)
     env = TrackingEnv(tcfg)
+    noise_rng = np.random.default_rng(seed + 900001) if sensor_noise > 0 else None
 
     heading = np.empty(steps)
     stim = np.empty(steps)
@@ -278,6 +306,9 @@ def run_traj(variant: str, seed: int, steps: int, swap_at: int | None) -> dict:
         stim[i] = env.stimulus_angle
         err[i] = herr
         inputs = env.sense()
+        if noise_rng is not None:  # common.py's exact noise convention
+            inputs = np.maximum(inputs + noise_rng.uniform(
+                -sensor_noise, sensor_noise, inputs.shape), 0.0)
         state = net.step(inputs)
         e_left, e_right = state.outputs
         if swap_at is not None and i >= swap_at:
@@ -300,7 +331,8 @@ def run_traj(variant: str, seed: int, steps: int, swap_at: int | None) -> dict:
     return {
         "params": {
             "variant": variant, "seed": seed, "steps": steps,
-            "swap_at": swap_at, "subsample": TRAJ_SUBSAMPLE, "seg_len": SEG,
+            "swap_at": swap_at, "sensor_noise": sensor_noise,
+            "subsample": TRAJ_SUBSAMPLE, "seg_len": SEG,
         },
         "config": {
             "n_nodes": rcfg.n_nodes, "leak": rcfg.leak,
@@ -450,13 +482,14 @@ def run_flank_champion(seed: int, steps: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Pursuit viewer (/lab/pursuit): the H34 champion pair, orbit vs waypoint.
+# Pursuit viewer (/lab/pursuit): champion genomes on orbit/waypoint/ballistic.
 # ---------------------------------------------------------------------------
 
 PURSUIT_MAX_STEPS = 14_400
 PURSUIT_DEFAULT_STEPS = 3_600
 PURSUIT_SUBSAMPLE = 2
 H34_FILE = OUT_DIR / "lab/h34_joint.json"
+H55_FILE = OUT_DIR / "lab/h55_champion.json"
 
 # The H34 jointly-evolved champion PAIR: genome (ReservoirConfig fields plus
 # wheel_base / intensity_scale for PursuitConfig) and its wiring seed.
@@ -464,39 +497,82 @@ _H34_LAST = json.loads(H34_FILE.read_text())[-1] if H34_FILE.exists() else None
 H34_CHAMPION = _H34_LAST["champion"] if _H34_LAST else None
 H34_CHAMP_SEED = int(_H34_LAST["champ_seed"]) if _H34_LAST else 0
 
-# preset -> stimulus motion; the champion was evolved on orbit
-PURSUIT_PRESETS = {"perfect-pursuer": "orbit", "pursuit-fails": "waypoint"}
+# The H55 ballistic-GA champion: evolved below the re-lock horizon, it is a
+# functionally blind sweeper (input_weight at the range floor, drowned by
+# recurrence; LEDGER H55/H55b). No champ seed — it is wiring-insensitive.
+H55_CHAMPION = (
+    json.loads(H55_FILE.read_text())["champion"] if H55_FILE.exists() else None
+)
+
+# genome preset -> (champion dict, wiring seed it was evolved with, source)
+PURSUIT_GENOMES = {
+    "h34-champion": (H34_CHAMPION, H34_CHAMP_SEED, H34_FILE),
+    "h55-blind": (H55_CHAMPION, None, H55_FILE),
+}
+PURSUIT_MOTIONS = ("orbit", "waypoint", "ballistic")
+CATCH_R = 1.5  # a catch = closest approach < 1.5, as scripts/lab/h55_intercept.py
 _PURSUIT_RES_KEYS = (  # scripts/lab/h34b_verify.py RES_KEYS
     "n_nodes", "p_link", "input_weight", "weight_init_mean",
     "leak", "target_lr", "threshold_ratio", "weight_lr",
 )
 
 
-def run_pursuit_preset(preset: str, seed: int, steps: int) -> dict:
-    """One pursuit run of the H34 champion pair — the exact construction of
-    scripts/lab/h34b_verify.py run_one (single 91-sensor full-circle eye;
-    wheel_base and intensity_scale from the genome). Summary uses the same
-    late window (second half) and definitions as that script."""
-    if H34_CHAMPION is None:
-        return {"error": f"{H34_FILE} not found"}
-    motion = PURSUIT_PRESETS[preset]
+def _crossing_stats(sx, sy, dist) -> tuple[float, int]:
+    """Per-crossing catch rate on ballistic runs — exactly
+    scripts/lab/h55_intercept.py crossing_stats: a crossing ends when the
+    stimulus jumps >1 unit in one step (a respawn); crossings shorter than
+    20 steps are skipped; a catch is any step with dist < CATCH_R."""
+    jump = np.hypot(np.diff(sx), np.diff(sy)) > 1.0
+    bounds = [0] + (np.flatnonzero(jump) + 1).tolist() + [len(sx)]
+    catches, n = 0, 0
+    for a, b in zip(bounds[:-1], bounds[1:]):
+        if b - a < 20:
+            continue
+        n += 1
+        if float(dist[a:b].min()) < CATCH_R:
+            catches += 1
+    return (catches / max(n, 1)), n
+
+
+def run_pursuit_variant(
+    genome_key: str, motion: str, speed: float, seed: int, steps: int
+) -> dict:
+    """One pursuit run of a stored champion genome — the exact construction of
+    scripts/lab/h34b_verify.py run_one and h55b_horizon.py evaluate (single
+    91-sensor full-circle eye; wheel_base and intensity_scale from the
+    genome; stimulus_speed passed through to the config). Summary uses the
+    same late window (second half) and definitions as h34b_verify; ballistic
+    runs add h55_intercept.py's per-crossing catch stats."""
+    champ, champ_seed, src = PURSUIT_GENOMES[genome_key]
+    if champ is None:
+        return {"error": f"{src} not found"}
     pc = PursuitConfig(
         eye_offsets=(0.0,), sensors_per_eye=91,
-        wheel_base=H34_CHAMPION["wheel_base"],
-        intensity_scale=H34_CHAMPION["intensity_scale"],
+        wheel_base=champ["wheel_base"],
+        intensity_scale=champ["intensity_scale"],
         stimulus_motion=motion,
+        stimulus_speed=speed,
     )
     res = ReservoirConfig(
-        n_inputs=pc.n_sensors, **{k: H34_CHAMPION[k] for k in _PURSUIT_RES_KEYS}
+        n_inputs=pc.n_sensors, **{k: champ[k] for k in _PURSUIT_RES_KEYS}
     )
     h = run_pursuit(n_steps=steps, seed=seed, reservoir_config=res, pursuit_config=pc)
     late = slice(steps // 2, None)
     sl = slice(0, steps, PURSUIT_SUBSAMPLE)
+    summary = {  # full resolution, definitions of h34b_verify.py
+        "dist_late": round(float(h.dist[late].mean()), 4),
+        "near3_late": round(float((h.dist[late] < 3).mean()), 4),
+        "hits_total": int(h.hit.sum()),
+    }
+    if motion == "ballistic":
+        catch, n_cross = _crossing_stats(h.sx, h.sy, h.dist)
+        summary["catch_rate"] = round(catch, 4)
+        summary["n_crossings"] = n_cross
     return {
         "kind": "pursuit",
         "params": {
-            "preset": preset, "seed": seed, "steps": steps,
-            "subsample": PURSUIT_SUBSAMPLE,
+            "genome": genome_key, "motion": motion, "speed": speed,
+            "seed": seed, "steps": steps, "subsample": PURSUIT_SUBSAMPLE,
         },
         "config": {
             "motion": motion,
@@ -506,7 +582,8 @@ def run_pursuit_preset(preset: str, seed: int, steps: int) -> dict:
             "n_nodes": res.n_nodes,
             "wheel_base": round(pc.wheel_base, 3),
             "intensity_scale": round(pc.intensity_scale, 3),
-            "champ_seed": H34_CHAMP_SEED,
+            "input_weight": round(res.input_weight, 3),
+            "champ_seed": champ_seed,
         },
         "trace": {
             "t": np.arange(steps)[sl].tolist(),
@@ -519,11 +596,7 @@ def run_pursuit_preset(preset: str, seed: int, steps: int) -> dict:
             "hit": _pair_any(h.hit, PURSUIT_SUBSAMPLE).astype(int).tolist(),
             "prop": np.round(h.prop_spiked[sl], 4).tolist(),
         },
-        "summary": {  # full resolution, definitions of h34b_verify.py
-            "dist_late": round(float(h.dist[late].mean()), 4),
-            "near3_late": round(float((h.dist[late] < 3).mean()), 4),
-            "hits_total": int(h.hit.sum()),
-        },
+        "summary": summary,
     }
 
 
@@ -622,6 +695,57 @@ def run_ecology(seed: int, steps: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Self-repair exhibit (/lab/repair): H53's mid-run node kill, both arms.
+# ---------------------------------------------------------------------------
+
+REPAIR_MAX_STEPS = 21_600
+REPAIR_DEFAULT_STEPS = 14_400  # H53's length; the kill lands at the midpoint
+REPAIR_RES = {"weight_lr": 0.1, "target_lr": 0.01}  # the ridge cell, as h53_selfrepair.py
+REPAIR_KILLS = (0.1, 0.3, 0.5)
+
+
+def run_repair(kill: float, seed: int, steps: int) -> dict:
+    """Both H53 arms for one seed, straight through the lab harness
+    (scripts/lab/common.py run_closed_loop). The kill surgery — adjacency-level
+    removal of kill*N nodes at the midpoint, caches rebuilt, dead nodes left in
+    the output-pool denominators — and the frozen variant's learning shutoff
+    live in the harness, not here; this function only slims the returned
+    observables. pre/drop/rec are h53_selfrepair.py's segment windows (the 5
+    segments before the kill, the 2 after, the last 5)."""
+    arms = {}
+    for key, arm in (("learning", "kill-mid"), ("frozen", "kill-mid-frozen")):
+        r = lab_common.run_closed_loop(dict(
+            res=dict(REPAIR_RES), seed=seed, n_steps=steps, arm=arm,
+            kill_frac=kill))
+        ss = r["seg_scores"]
+        ks = len(ss) // 2  # first segment after the kill
+        arms[key] = {
+            "seg_scores": ss,
+            "snaps": r["snaps"],
+            "score": round(r["score"], 4),
+            "score_late": round(r["score_late"], 4),
+            "prop_spiked": round(r["prop_spiked"], 4),
+            "pre": round(float(np.mean(ss[max(ks - 5, 0):ks])), 4),
+            "drop": round(float(np.mean(ss[ks:ks + 2])), 4),
+            "rec": round(float(np.mean(ss[-5:])), 4),
+        }
+    rcfg, _ = lab_common.make_configs(dict(REPAIR_RES))
+    return {
+        "kind": "repair",
+        "params": {
+            "kill": kill, "seed": seed, "steps": steps,
+            "kill_at": steps // 2, "seg_len": lab_common.SEG,
+        },
+        "config": {
+            "n_nodes": rcfg.n_nodes, "leak": rcfg.leak,
+            "weight_lr": rcfg.weight_lr, "target_lr": rcfg.target_lr,
+            "n_killed": int(round(kill * rcfg.n_nodes)),
+        },
+        "arms": arms,
+    }
+
+
+# ---------------------------------------------------------------------------
 # App and routes
 # ---------------------------------------------------------------------------
 
@@ -656,6 +780,11 @@ async def pursuit_page():
 @lab_app.get("/ecology")
 async def ecology_page():
     return FileResponse(STATIC_DIR / "lab_ecology.html")
+
+
+@lab_app.get("/repair")
+async def repair_page():
+    return FileResponse(STATIC_DIR / "lab_repair.html")
 
 
 lab_app.mount("/static", StaticFiles(directory=STATIC_DIR), name="lab-static")
@@ -710,13 +839,15 @@ def traj(
     seed: int = 0,
     steps: int = TRAJ_DEFAULT_STEPS,
     swap_at: int = -1,
+    noise: float = 0.0,
 ):
     if variant not in TRAJ_VARIANTS:
         return {"error": f"unknown variant {variant!r}; have {sorted(TRAJ_VARIANTS)}"}
     steps = min(max(int(steps), SEG), TRAJ_MAX_STEPS)
     seed = min(max(int(seed), 0), 1_000_000)
     swap = None if swap_at < 0 else min(int(swap_at), steps)
-    return run_traj(variant, seed, steps, swap)
+    noise = min(max(float(noise), 0.0), 0.25)
+    return run_traj(variant, seed, steps, swap, noise)
 
 
 @lab_app.get("/api/wall")
@@ -743,16 +874,21 @@ def wall(
 
 @lab_app.get("/api/pursuit")
 def pursuit(
-    preset: str = "perfect-pursuer",
+    genome: str = "h34-champion",
+    motion: str = "orbit",
+    speed: float = 0.15,
     seed: int = H34_CHAMP_SEED,
     steps: int = PURSUIT_DEFAULT_STEPS,
 ):
-    if preset not in PURSUIT_PRESETS:
-        return {"error": f"unknown preset {preset!r}; have {sorted(PURSUIT_PRESETS)}"}
+    if genome not in PURSUIT_GENOMES:
+        return {"error": f"unknown genome {genome!r}; have {sorted(PURSUIT_GENOMES)}"}
+    if motion not in PURSUIT_MOTIONS:
+        return {"error": f"unknown motion {motion!r}; have {sorted(PURSUIT_MOTIONS)}"}
+    speed = min(max(float(speed), 0.01), 0.3)
     steps = min(max(int(steps), 200), PURSUIT_MAX_STEPS)
     steps -= steps % PURSUIT_SUBSAMPLE
     seed = min(max(int(seed), 0), 1_000_000)
-    return run_pursuit_preset(preset, seed, steps)
+    return run_pursuit_variant(genome, motion, speed, seed, steps)
 
 
 @lab_app.get("/api/ecology")
@@ -761,3 +897,13 @@ def ecology(seed: int = H48E_CHAMP_SEED, steps: int = ECOLOGY_DEFAULT_STEPS):
     steps -= steps % ECOLOGY_SUBSAMPLE
     seed = min(max(int(seed), 0), 1_000_000)
     return run_ecology(seed, steps)
+
+
+@lab_app.get("/api/repair")
+def repair(kill: float = 0.3, seed: int = 0, steps: int = REPAIR_DEFAULT_STEPS):
+    kill = min(max(float(kill), 0.0), 0.9)
+    # even segment count keeps the kill on a segment boundary, as in H53
+    steps = min(max(int(steps), 2 * SEG), REPAIR_MAX_STEPS)
+    steps -= steps % (2 * SEG)
+    seed = min(max(int(seed), 0), 1_000_000)
+    return run_repair(kill, seed, steps)
