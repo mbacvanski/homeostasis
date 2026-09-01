@@ -24,6 +24,10 @@ Pages:
               PAIR on its evolved orbit motion (phase-locked pursuit) and
               on waypoint motion (the collapse). Protocol is exactly
               scripts/lab/h34b_verify.py's run_one.
+  /lab/ecology  the live two-agent homeostatic chain: a blind wall-circling
+              pacemaker plus the H48e warm-started follower champion sensing
+              its live position. Co-simulation loop is exactly
+              scripts/lab/h48c_live_chain.py's cosim.
 
 Run via the main app:  uvicorn viz.server:app --port 8471  ->  /lab
 """
@@ -40,10 +44,11 @@ from fastapi.staticfiles import StaticFiles
 
 import dataclasses
 
-from homeostasis.pursuit import PursuitConfig
+from homeostasis.pursuit import PursuitConfig, PursuitEnv
 from homeostasis.reservoir import HomeostaticReservoir, ReservoirConfig
 from homeostasis.simulation import (
     WALL_RESERVOIR_CONFIG,
+    WallSimulation,
     run_pursuit,
     run_tracking,
     run_wall,
@@ -523,6 +528,100 @@ def run_pursuit_preset(preset: str, seed: int, steps: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Ecology viewer (/lab/ecology): the live two-agent homeostatic chain.
+# ---------------------------------------------------------------------------
+
+ECOLOGY_MAX_STEPS = 21_600
+ECOLOGY_DEFAULT_STEPS = 7_200
+ECOLOGY_SUBSAMPLE = 3  # cosim's own record stride
+H48E_FILE = OUT_DIR / "lab/h48e_warm.json"
+
+# Pacemaker: a blind wall circler, exactly scripts/lab/h48c_live_chain.py
+ECOLOGY_PACE_CFG = WallConfig(box_size=30.0, initial_x=15.0, initial_y=15.0,
+                              wheel_base=2.5)
+ECOLOGY_PACE_SEED = 3
+
+# Follower: the H48e warm-started champion pair (genome + wiring seed)
+_H48E = json.loads(H48E_FILE.read_text()) if H48E_FILE.exists() else None
+H48E_CHAMPION = _H48E["champion"] if _H48E else None
+H48E_CHAMP_SEED = int(_H48E["champ_seed"]) if _H48E else 0
+
+
+def run_ecology(seed: int, steps: int) -> dict:
+    """The live chain, the exact co-simulation loop of h48c_live_chain.cosim:
+    each step the pacemaker (an unmodified WallSimulation) moves first, the
+    follower's stimulus is set to the pacemaker's live position, then the
+    follower senses/steps/acts. Both agents are pure package objects; this
+    function only records observables."""
+    if H48E_CHAMPION is None:
+        return {"error": f"{H48E_FILE} not found"}
+    pace = WallSimulation(wall_config=ECOLOGY_PACE_CFG, seed=ECOLOGY_PACE_SEED)
+    pc = PursuitConfig(
+        eye_offsets=(0.0,), sensors_per_eye=91, box_size=30.0,
+        initial_agent_x=15.0, initial_agent_y=10.0,
+        wheel_base=H48E_CHAMPION["wheel_base"],
+        intensity_scale=H48E_CHAMPION["intensity_scale"],
+    )
+    res = ReservoirConfig(
+        n_inputs=pc.n_sensors, **{k: H48E_CHAMPION[k] for k in _PURSUIT_RES_KEYS}
+    )
+    net = HomeostaticReservoir(res, seed=seed)
+    env_b = PursuitEnv(pc, rng=net.rng)
+
+    dist = np.empty(steps)
+    ax = np.empty(steps)
+    ay = np.empty(steps)
+    bx = np.empty(steps)
+    by = np.empty(steps)
+    b_hit = np.zeros(steps, dtype=bool)
+    pace_dh = np.empty(steps)
+    for i in range(steps):
+        _, dh_a, _ = pace.step()
+        env_b.sx, env_b.sy = pace.env.x, pace.env.y
+        dist[i] = env_b.distance()
+        state = net.step(env_b.sense())
+        _, hit_b = env_b.apply_action(*map(float, state.outputs))
+        env_b.steps += 1
+        ax[i], ay[i] = pace.env.x, pace.env.y
+        bx[i], by[i] = env_b.x, env_b.y
+        b_hit[i] = hit_b
+        pace_dh[i] = dh_a
+
+    late = slice(steps // 2, None)
+    sl = slice(0, steps, ECOLOGY_SUBSAMPLE)
+    return {
+        "kind": "ecology",
+        "params": {"seed": seed, "steps": steps, "subsample": ECOLOGY_SUBSAMPLE},
+        "config": {
+            "box_size": ECOLOGY_PACE_CFG.box_size,
+            "agent_radius": ECOLOGY_PACE_CFG.agent_radius,
+            "pace_seed": ECOLOGY_PACE_SEED,
+            "pace_wheel_base": ECOLOGY_PACE_CFG.wheel_base,
+            "n_nodes": res.n_nodes,
+            "wheel_base": round(pc.wheel_base, 3),
+            "intensity_scale": round(pc.intensity_scale, 3),
+            "champ_seed": H48E_CHAMP_SEED,
+        },
+        "trace": {
+            "t": np.arange(steps)[sl].tolist(),
+            "ax": np.round(ax[sl], 3).tolist(),
+            "ay": np.round(ay[sl], 3).tolist(),
+            "bx": np.round(bx[sl], 3).tolist(),
+            "by": np.round(by[sl], 3).tolist(),
+            "dist": np.round(dist[sl], 3).tolist(),
+            "b_hit": _pair_any(b_hit, ECOLOGY_SUBSAMPLE).astype(int).tolist(),
+        },
+        "summary": {  # full resolution; h48c cosim's late-half definitions
+            "near4_late": round(float((dist[late] < 4).mean()), 4),
+            "dist_late": round(float(dist[late].mean()), 4),
+            "b_hits_total": int(b_hit.sum()),
+            # pacemaker turn rate, for the label (deg/step, late half)
+            "pace_turn_deg": round(float(np.rad2deg(np.abs(pace_dh[late]).mean())), 2),
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # App and routes
 # ---------------------------------------------------------------------------
 
@@ -552,6 +651,11 @@ async def wall_page():
 @lab_app.get("/pursuit")
 async def pursuit_page():
     return FileResponse(STATIC_DIR / "lab_pursuit.html")
+
+
+@lab_app.get("/ecology")
+async def ecology_page():
+    return FileResponse(STATIC_DIR / "lab_ecology.html")
 
 
 lab_app.mount("/static", StaticFiles(directory=STATIC_DIR), name="lab-static")
@@ -649,3 +753,11 @@ def pursuit(
     steps -= steps % PURSUIT_SUBSAMPLE
     seed = min(max(int(seed), 0), 1_000_000)
     return run_pursuit_preset(preset, seed, steps)
+
+
+@lab_app.get("/api/ecology")
+def ecology(seed: int = H48E_CHAMP_SEED, steps: int = ECOLOGY_DEFAULT_STEPS):
+    steps = min(max(int(steps), 300), ECOLOGY_MAX_STEPS)
+    steps -= steps % ECOLOGY_SUBSAMPLE
+    seed = min(max(int(seed), 0), 1_000_000)
+    return run_ecology(seed, steps)

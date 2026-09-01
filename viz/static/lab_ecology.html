@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Ecology</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Ecology <span class="sub">the live two-agent homeostatic chain · lab viewer</span></h1>
+  <div id="conn" class="conn">idle</div>
+</header>
+
+<div id="controls">
+  <span class="ctl labnav">
+    <a href="/lab">single node</a>
+    <a href="/lab/phase">phase maps</a>
+    <a href="/lab/traj">trajectories</a>
+    <a href="/lab/wall">wall</a>
+    <a href="/lab/pursuit">pursuit</a>
+    <a href="/lab/ecology" class="here">ecology</a>
+  </span>
+  <span class="ctl"><label title="Follower wiring seed. Default = the H48e warm-started champion pair">seed</label><input id="seed" type="number" value="77164" min="0" step="1"></span>
+  <span class="ctl"><label>steps</label><input id="steps" type="number" value="7200" min="300" max="21600" step="300"></span>
+  <button id="btn-run" class="primary">Run</button>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main>
+  <div class="headline">the first sustained two-agent homeostatic system: comfort-seeking + selection, nothing else.</div>
+
+  <section class="panel explainer">
+    <p>
+    Two coupled agents in one 30×30 arena, co-simulated live. The <b>pacemaker</b> is an
+    unmodified wall-avoidance agent (blind to the follower, wheel_base 2.5, wiring seed 3):
+    pure comfort-seeking that settles into a steady circle. The <b>follower</b> is the
+    H48e-evolved pursuit agent (N=64, single 91-sensor full-circle eye), which senses the
+    pacemaker's live position each step — its stimulus is another homeostatic agent's
+    behavior, not a scripted path. Every step: pacemaker moves, follower senses, follower
+    moves. Nothing coordinates them beyond the sensing link; the follower phase-locks inside
+    the pacemaker's orbit and holds ≈3.8 units of distance indefinitely. Change the seed to
+    play the wiring lottery with the same genome.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Arena <span class="hint">30×30 · trails fade with age · follower wall hits ×</span></h2>
+    <canvas id="arena" width="500" height="500"></canvas>
+    <div class="legend">
+      <span class="sw red"></span>pacemaker — blind wall-avoider, circles at 1.9°/step
+      <span class="sw blue"></span>follower — senses the pacemaker; evolved, phase-locks inside its orbit
+    </div>
+    <div class="sumrow">
+      <div class="sumstat"><div class="k">late mean distance</div><div class="v mono" id="e-dist">—</div></div>
+      <div class="sumstat"><div class="k">near-4 fraction (late)</div><div class="v mono small" id="e-near">—</div></div>
+      <div class="sumstat"><div class="k">follower wall hits</div><div class="v mono small" id="e-hits">—</div></div>
+      <div class="sumstat"><div class="k">pacemaker turn (late)</div><div class="v mono small" id="e-turn">—</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Pacemaker–follower distance <span class="hint">4-unit band shaded · late window (scored half) tinted · follower wall hits ticked red</span></h2>
+    <canvas id="distc" width="960" height="160"></canvas>
+  </section>
+</main>
+
+<script src="/lab/static/lab_ecology.js"></script>
+</body>
+</html>

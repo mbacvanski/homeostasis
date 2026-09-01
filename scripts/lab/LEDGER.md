@@ -1244,3 +1244,35 @@ cascades down a sensing chain of comfort-seeking agents. The rings shrink
 successive orbits contract until curvature/speed leaves the entrainment
 band — an open, quantitative prediction for the multi-agent program
 (measure max depth vs pacemaker radius).
+
+## H50 (preregistered): the telephone-game law — chain depth and jitter accumulation
+
+Extend the chain link by link (D follows live C, E follows live D...), each
+link warm-started from its predecessor's genome. The phase-locked angular
+rate is constant down the chain, so the band-rate criterion does not break
+it; the candidate failure mode is JITTER ACCUMULATION (each follower's
+orbit is noisier than its target's). Predictions: (a) D locks (near4 >=
+0.8); (b) per-link orbit jitter (sd of distance-to-target) increases
+monotonically with depth; (c) the chain fails at the depth where
+accumulated jitter exceeds the follower band — reported as the measured
+depth limit (or "no break by depth 5" if it holds).
+
+## H50 first pass: CONFOUNDED — established links are start-position sensitive
+
+Moving link C's start from its native y=5.0 to 7.5 unlocked it entirely
+(C-B dist 8.74 vs native 2.88): the locks are BASIN-dependent in initial
+position as well as wiring — the IC-sensitivity theme again, now measured
+at the collective level. Rerun with per-link native starts pinned.
+
+## H50 verdict (clean): chain depth 4, and the jitter law is a threshold, not a ramp
+
+With per-link native starts pinned: B (dist 3.77, sd 0.048) -> C (2.88, sd
+0.055) -> D LOCKS (3.16, sd 0.38) -> E fails (0.39). (a) D locks ✓ — after
+one false start from an inside-the-rings position: link evolvability is
+START-BASIN sensitive, like everything else in this family. (b) Jitter is
+NEGLIGIBLE for two links then jumps 6x at the third — threshold
+amplification, not linear accumulation; (c) the fourth evolution fails on
+that noisier target. Measured chain depth at this budget/scale: a pacemaker
+plus THREE followers. The telephone-game law: entrainment chains are nearly
+lossless until a link's orbit noise crosses the band, then the next link
+cannot form.

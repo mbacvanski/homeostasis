@@ -105,3 +105,12 @@ main {
 /* pursuit viewer */
 .panel canvas#distc { width: 100%; }
 .caption { text-align: center; color: var(--yellow); font-size: 12px; margin: 8px 0 2px; }
+
+/* ecology viewer */
+.headline {
+  text-align: center;
+  color: var(--yellow);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 2px 0 0;
+}
