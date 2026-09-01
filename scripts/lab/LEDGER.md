@@ -632,3 +632,35 @@ median 0 hits, behavior unchanged. Wall-adjacent orbits are dynamically
 UNSTABLE (input variation along them exceeds the absorbable band); flat-
 region orbits persist. Wall avoidance = stability selection among orbits,
 with collisions as near-invisible perturbations — not punishment learning.
+
+## H29 (preregistered): the boundary of homeostatic competence is absorbability, not difficulty
+
+The edge-hold task: success = keeping the stimulus at |heading error| in
+[50, 90] degrees (the steep Gaussian flank of the retina; the fovea plateau
+|err|<=4 is FLAT and hence perfectly absorbable, the flank is not).
+Homeostatic dynamics are score-blind, so occupancy under standard dynamics
+IS the agent's best "performance" on any re-scored task. Predictions over
+the 4800-run cluster R1 grid (policy occupancy histograms already
+recorded): (a) NO (leak, wlr) cell reaches mean flank-band occupancy above
+~0.30, while many cells exceed 0.50 fovea-band occupancy (uniform baselines:
+0.222 flank, 0.25 fovea) — the family can hold the flat region but not the
+steep one; (b) flank occupancy does not correlate positively with the ridge
+(the best tracking configs are no better at edge-holding). If confirmed:
+"reward becomes necessary" exactly where success requires operating outside
+the absorbable band — and evolution's role (the input-flow work) is to
+build bodies that fold tasks INTO that band.
+
+## H29 verdict: SUPPORTED at the design level, with a repertoire wrinkle
+
+Over the 4800-run R1 grid: max CELL flank-band ([50,90] deg) occupancy is
+0.303 (1/100 cells above 0.30; uniform 0.222) vs fovea-band max 0.530 (6
+cells > 0.50); flank occupancy is uncorrelated with the tracking ridge
+(+0.11). No design knob aims the family at the steep band. BUT one run
+reaches 0.782 — (leak .12, wlr .05, seed 33) parks at +65 deg with 56%
+single-bin occupancy and within45 = 0.000: an offset-entrained orbit with a
+large locked lag. Refined conclusion: **edge-holding exists in the
+dynamical repertoire but homeostasis cannot select for it** — the offset is
+a comfort-blind per-seed constant. "Reward becomes necessary" precisely as
+a SELECTOR among dynamically available orbits (and evolution's role, per
+the flow work, is to build bodies whose available orbits already fold the
+task into the absorbable band).
