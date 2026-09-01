@@ -476,3 +476,21 @@ rho1.5 0.289, win0.83 0.534, gain+rho 0.373 vs base 0.633): the best-known
 config is a jointly-tuned whole — ingredient attribution by grafting fails
 (epistasis). The "what lifts the wander floor" question stays open and is
 now known to be non-additive.
+
+## H25 (preregistered): the transplantable core is {high leak, matched wlr, high gain}
+
+From the existing reversion table (w1 loses most when gain, leak, or n_nodes
+revert) + H24b (gain grafted at LOW leak hurts): prediction — (leak .574,
+wlr 1.0, gain 28.35) on an otherwise-default N=200 network scores ≥ 0.65
+(near w1-level), i.e. the epistatic core is gain x leak x lr-matching and
+small N is not required.
+
+## H25 verdict: PARTIALLY REFUTED — w1' resists reduction
+
+essence (leak .574 + gain 28.35, N=200 defaults-else): 0.534±0.319 (62%),
+short of the ≥0.65 prediction and far from w1's 0.84. With H24b: necessity
+analysis names {gain, leak, N} as load-bearing, but NO subset tried is
+sufficient — the best configs are non-decomposable in this design space.
+gain-only 0.308, leak-only 0.456, essence+wlr0.65 no better. The wander-floor
+question stays open and is now known to live in ≥3-way interactions
+(plausibly: small N ↔ per-node input share ↔ authority ↔ damping).
