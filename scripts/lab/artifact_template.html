@@ -65,8 +65,8 @@ td.num,th.num{text-align:right; font-variant-numeric:tabular-nums;
 <div class="kicker">homeostasis · design-space campaign · 2026-09-01</div>
 <h1>Three Laws and a Ridge</h1>
 <p class="sub">Why homeostatic reservoir networks work, where they work, and what they are
-actually doing — an overnight preregistered investigation (~25,000 runs, 81 hypotheses
-H1–H81, every number re-derivable from <code>scripts/out/lab/</code>; running log in
+actually doing — an overnight preregistered investigation (~25,000 runs, 85 hypotheses
+H1–H85, every number re-derivable from <code>scripts/out/lab/</code>; running log in
 <code>scripts/lab/LEDGER.md</code>, synthesis in <code>docs/design_space.md</code>, interactive
 verification at <code>/lab</code> in the repo visualizer).</p>
 
@@ -318,7 +318,7 @@ duty law holds at N=2000 (corr 0.988). The organizing variables of this family a
 <em>degrees and rates, not counts</em>.</p>
 
 <h2>Night two: robustness, the third clause, and the static cliff
-<span class="chip ok">H51–H81</span></h2>
+<span class="chip ok">H51–H85</span></h2>
 
 <figure><img src="{{FIG_NIGHT2}}" alt="Night-two results: noise rescue, synaptic scaling repair, sparse pre-adaptation, the lock horizon">
 <figcaption>Four arcs from the second half of the night: (a) moderate sensor noise rescues
@@ -452,7 +452,17 @@ sensing restriction was load-bearing. With the ~1% jitter tolerance, a knife-edg
 closes the campaign: perfect locks, self-repair, and N-invariance inside the single-source
 clean-flow manifold; collapse at every measured edge. <em>Selective attention, not
 prediction, looks like the first structural addition a real multi-agent homeostatic ecology
-needs.</em></p>
+needs</em> — and the campaign closed by building it (H82–H85b). Evolution over the genome
+space cannot find attention (GA plateau 0.21); a <em>memoryless</em> winner-take-all filter
+fails too (0.074 — selection flickers, teleporting the effective stimulus); winner-take-all
+<strong>with persistence</strong> restores the lock completely (1.000). In the full
+shared-visibility test — every agent seeing every other — sticky attention lets a follower
+lock a follower (a genuine all-visible chain), exposes one final emergent pathology (<em>the
+follower seduces the leader</em>: orbiting close, it becomes its leader's brightest source
+and captures its attention away from the pacemaker — naive salience inverts hierarchies),
+and a conservative switching threshold (5× for 300 steps) cures that as well: <strong>B
+holds the pacemaker at 1.000 while C holds B at 1.000, zero switches — the first stable
+all-visible homeostatic ecology, running on one latched selection bit per agent.</strong></p>
 
 <h2>Refuted along the way <span class="chip bad">all preregistered</span></h2>
 <ol>
@@ -492,7 +502,7 @@ curve is now clearly worth one clean experiment.</li>
 
 <div class="provenance">
 <span style="font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">provenance</span>
-— Hypotheses H1–H81 preregistered before their experiments in
+— Hypotheses H1–H85 preregistered before their experiments in
 <code>scripts/lab/LEDGER.md</code> (refutations, wrong premises, and two confounded designs
 caught by their own controls all kept on the record); common-random-number seeds; laws
 verified to stated precision; chance = 0.25; score = within-45° occupancy, segments 6–10.
