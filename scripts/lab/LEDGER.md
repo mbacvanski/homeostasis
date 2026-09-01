@@ -1742,3 +1742,64 @@ circle. The flow-sign law reappears inside the sparsity chapter: whether
 the storm is a pathology to skip or the search to keep depends on the
 body's sign. Also: ProcessPool-in-heredoc trap hit again — workers must
 live in real files. (h62_wall_sparse.json, h62b_window.json)
+
+## H63 (preregistered): a heavy-wheeled link is a repeater — chains extend past 4
+
+Mechanism-guided design: wheel_base is a morphological low-pass (turn
+rate = effector asymmetry / wheel_base), so a big-wheel follower cannot
+reproduce its pacemaker's flutter and should re-periodize the signal.
+Protocol: evolve link E onto the depth-4 chain with wheel_base
+constrained to [8,16] (everything else free, warm-started from D's
+genome at wheel_base 10; same GA budget H60's free-genome attempt had
+when it FAILED at 0.46). Predictions: (a) constrained-heavy E locks
+(near4 >= 0.6); (b) E's ring sd < D's 0.38 (regeneration, sd_E <= 0.2);
+(c) an ORDINARY (free-genome) link F then evolves on E (near4 >= 0.6) —
+depth 6, impossible by H60's amplification account without regeneration.
+Any of (a)-(c) failing bounds the repeater idea honestly.
+
+## H63 verdict: REFUTED — the low-pass body filters the signal too
+
+Heavy-wheel E (wheel_base constrained [8,16], warm-started, same GA
+budget) does WORSE than H60's free attempt: near4 0.24 vs 0.46, sd 3.78.
+Turn-rate capability is not the binder (0.074 rad/step available vs
+~0.014 needed at D's ring); the plausible reading is lag — a
+morphological low-pass delays response to the very bearing changes that
+hold the lock. Regeneration by passive body filtering fails; the depth-4
+ceiling stands. (h63_repeater.json)
+
+## H64 (preregistered): the dense-fast competence loss is a flattened policy
+
+p=0.8/wlr=0.3 renormalizes physiology (w*p*N 2.41, f 0.23) yet scores
+0/16 (H54b). If the loss is carrier dilution below the readout's
+threshold, the behavioral policy curve (turn response dh vs heading
+error, recorded by run_closed_loop) should be FLAT: prediction — mean
+|dh| response amplitude at p=0.8/wlr=0.3 is < 30% of the p=0.1/wlr=0.3
+amplitude on the same seeds, while f and w*p*N match within 30%.
+
+## H65 (preregistered): information per spike rises as wiring sparsifies
+
+Open-loop reconstruction (sine P=120) at p {0.02, 0.1, 0.4} x wlr
+{0.03, 0.1}, input wiring pinned: define info-per-spike proxy =
+recon_gain / f. Prediction: gain/f increases monotonically as p falls at
+matched wlr (sparse spikes are individually more informative), and the
+p=0.02/wlr=0.1 cell beats p=0.4/wlr=0.1 by >= 3x on gain/f.
+
+## H64 verdict: CONFIRMED — dense-fast dies at the policy, physiology intact
+
+amp(p=.8) = 0.147 vs amp(p=.1) = 0.514 (28.5% < 30% threshold) at
+matched f (0.233 vs 0.209) and w*p*N (2.43 vs 2.20). The carrier loss is
+behaviorally a flattened turn-response curve: the network still spikes
+and renormalizes but the effector policy no longer differentiates
+heading error. (h64_policy.json)
+
+## H65 verdict: REFUTED, backwards — density SHARPENS the spike code
+
+gain/f at wlr=0.1: p=.02 -> 1.42, p=.1 -> 3.65, p=.4 -> 9.02 (dense is
+6x the sparse value; absolute gain also rises 0.183 -> 0.296 while f
+falls 0.128 -> 0.033). Dense wiring lowers per-node drive variance ->
+fewer nodes clear threshold -> a sparser, sharper CODE: wiring density
+and code sparsity anti-correlate. The sparse-WIRING advantage (H54/H58)
+is dynamical (pre-adaptation, wide plasticity window), not
+informational. At wlr=.03 dense saturates (f~1, gain 0) and only sparse
+survives — the two virtues never co-occur below the ridge.
+(h65_infospike.json)
