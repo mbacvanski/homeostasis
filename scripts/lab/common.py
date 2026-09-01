@@ -144,6 +144,8 @@ def run_closed_loop(task: dict) -> dict:
         elif arm == "freeze-T-only":
             net.targets = t0.copy()
         e_left, e_right = state.outputs
+        if arm == "swap-mid" and i >= half:
+            e_left, e_right = e_right, e_left
         dh = env.apply_action(e_left, e_right)
         env.advance_stimulus()
 
@@ -224,6 +226,10 @@ def scripted_theta(schedule: dict, n_steps: int) -> np.ndarray:
         return th
     if kind == "dark":
         return np.full(n_steps, 180.0)
+    if kind == "sine":
+        amp = float(schedule.get("amp", 20.0))
+        period = float(schedule["period"])
+        return amp * np.sin(2 * np.pi * np.arange(n_steps) / period)
     raise ValueError(f"unknown schedule kind {kind!r}")
 
 
@@ -250,6 +256,11 @@ def run_open_loop(task: dict) -> dict:
     E_t = np.empty(n_steps)
     T_t = np.empty(n_steps)
     xprime_t = np.empty(n_steps)
+    recon = bool(task.get("recon", False))
+    if recon:
+        in_deg = np.maximum(net.input_adjacency.sum(axis=0), 1)
+        node_centers = (net.input_adjacency.T @ offs) / in_deg  # (N,)
+        theta_hat = np.full(n_steps, np.nan)
     if per_node:
         drive_w = np.zeros((n_win, N))   # total drive per node, window mean
         spike_w = np.zeros((n_win, N))
@@ -266,6 +277,8 @@ def run_open_loop(task: dict) -> dict:
         E_t[i] = float(np.mean(np.abs(state.error)))
         T_t[i] = float(np.mean(state.targets))
         xprime_t[i] = float(np.mean(state.x))
+        if recon and state.spiked.any():
+            theta_hat[i] = float(node_centers[state.spiked].mean())
         if per_node and i < n_win * WIN:
             w = i // WIN
             drive_w[w] += drive / WIN
@@ -285,6 +298,31 @@ def run_open_loop(task: dict) -> dict:
         silence_step=int(np.argmax(np.convolve(f_t == 0, np.ones(50), "valid") >= 50))
         if (np.convolve(f_t == 0, np.ones(50), "valid") >= 50).any() else -1,
     )
+    if recon:
+        sched = task["schedule"]
+        if sched.get("kind") == "sine":
+            period = float(sched["period"])
+            amp = float(sched.get("amp", 20.0))
+            half = slice(n_steps // 2, n_steps)
+            t = np.arange(n_steps)[half]
+            th_h = theta_hat[half]
+            ok = ~np.isnan(th_h)
+            if ok.sum() > 50:
+                ph = 2 * np.pi * t[ok] / period
+                c = np.cos(ph); s = np.sin(ph)
+                y = th_h[ok] - th_h[ok].mean()
+                a = 2 * np.mean(y * s); b = 2 * np.mean(y * c)
+                out["recon_gain"] = float(np.hypot(a, b) / amp)
+                out["recon_phase"] = float(np.arctan2(b, a))
+                fy = f_t[half] - f_t[half].mean()
+                fa = 2 * np.mean(fy * np.sin(2 * np.pi * np.arange(n_steps)[half] / period))
+                fb = 2 * np.mean(fy * np.cos(2 * np.pi * np.arange(n_steps)[half] / period))
+                out["rate_gain"] = float(np.hypot(fa, fb))
+            else:
+                out["recon_gain"] = 0.0
+                out["recon_phase"] = float("nan")
+                out["rate_gain"] = 0.0
+            out["recon_valid_frac"] = float(np.mean(~np.isnan(theta_hat[half])))
     if per_node:
         out["law"] = dict(
             drive=drive_w.round(4).tolist(),

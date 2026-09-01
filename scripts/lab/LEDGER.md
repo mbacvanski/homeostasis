@@ -227,3 +227,89 @@ minimum ~0.8, secondary bump at 1.3-2.0, collapse by 8.0 (0.016). Fast slip
 is absorbed as if stationary (averages out inside the absorption window) —
 **spiking requires non-stationarity ON the plasticity timescale: a bandpass.**
 Secondary bump near sensor-spacing/speed resonance — open thread.
+
+## H13 (preregistered before K4): the seed lottery is structural
+
+The wiring-only reflex-kernel slope (sensor→node→effector, no simulation)
+predicts per-seed tracking: sign(slope) → above/below-chance; |slope|
+correlates with |score-0.25|; prediction strongest in reflex-leaning regimes
+(defaults), weaker at w1' (medium), intermediate at the new best regime
+(wlr=0.1).
+
+## H13 verdict (K4): UNSUPPORTED at defaults — the lottery is not the static kernel
+
+48 seeds/variant: default sign-agreement 0.44 (≤ chance), Spearman(slope,
+score) −0.175; wlr=0.1 weak support (+0.32 score, +0.41 dir-agree, sign 0.62);
+w1' nothing (and 48/48 seeds ≥0.35 there — w1' is essentially lottery-free:
+0.819±0.189 score_late). The initial wiring's direct reflex kernel is largely
+overwritten by adaptation; the lottery's microfoundation stays OPEN.
+New 48-seed anchors (score_late): defaults 0.386±0.138 (58% work),
+wlr=0.1-only 0.467±0.200 (73%), w1' 0.819±0.189 (100%).
+
+## H14 (preregistered before the cluster ridge grid)
+
+Fine (leak x wlr) grid at tlr=0.01, 48 CRN seeds, 25% checkerboard held out:
+(a) the ridge is 1-D: argmax_wlr score(leak) follows a power law
+wlr* = c * leak^b with b in [0.8, 1.5]; (b) fitting c,b on 75% of cells
+predicts the held-out cells' argmax within one grid step; (c) the ridge's
+peak height decays toward high leak; (d) N-line at matched (leak=0.25,
+ridge wlr): score and ridge position are N-stable from N=100 to 800
+(the lr-ratio, not N, is the organizing variable).
+
+## H15-H17 (preregistered before Act II batch 2)
+
+- **H15 (nulls)**: a saturated P-controller on the retinal centroid scores
+  near-ceiling (>0.9) — large headroom above every homeostatic config; the
+  1-step flow-greedy controller lands within a few points of the
+  P-controller (flow maximization ≈ centering); random-turn ≈ 0.25.
+- **H16 (tlr=0)**: at the ridge (leak .25/wlr .1 and leak .05/wlr .03),
+  target_lr = 0 exactly matches or beats tlr=0.01 — target adaptation is
+  vestigial-to-harmful for tracking in the absorption regime (in-task
+  version of K3's freeze-T-only result).
+- **H17 (transfer function)**: the spike-readout reconstruction gain G(P)
+  of a sinusoidal slip (amp 20°) is bandpass in period P: low at short P
+  (averaging), low at long P (absorbed), peaked at P* that scales inversely
+  with wlr (higher plasticity rate → faster absorption → peak moves to
+  shorter periods).
+
+## H18 (preregistered): the flow-ratchet — behavioral self-repair after effector inversion
+
+Mechanism claim: tracking self-organizes because turns that kill input flow
+self-terminate (darkness → silence → no turning, per A2) while turns that
+keep flow continue — a ratchet needing no correct innate kernel (consistent
+with K4's negative). Decisive test: SWAP the effectors at t=3600 (left spikes
+now turn right). Predictions: (a) on the absorption ridge (leak .25, wlr .1)
+and at w1', score collapses at the swap then RECOVERS within ~the absorption
+timescale (hundreds of steps), ending well above chance in segments 9-10;
+(b) recovery is weaker/absent at 2024 defaults (churn regime, wlr=1.0);
+(c) in the policy sufficient statistics, out-of-view heading-error bins show
+near-zero |dH| (the silence-stops-turning ratchet pawl), already checkable
+in recorded A1/K3 runs.
+
+## H15 verdict (B1): CONFIRMED — ceiling is 0.999, flow-greedy ≈ centering
+
+P-controller on the retinal centroid: 0.999 (flow 4.23). 1-step flow-greedy:
+0.898 (flow 3.94). Random: 0.251. The embodiment supports near-perfect
+tracking; w1' reaches 82% of ceiling, paper defaults 39%. Flow maximization
+and centering are behaviorally near-equivalent in this embodiment — the
+geometric basis of the input-flow thesis, now quantified.
+
+## H16 verdict (B2): CONFIRMED — target adaptation is vestigial in-task
+
+tlr=0 vs 0.01 (24 seeds): ridge25 0.571/0.503, ridge05 0.586/0.606, default
+0.375/0.376 — no benefit anywhere. With K3's freeze-T-only>full and A4's w1'
+counterexample: targets matter only as slow gain-normalization where
+target_init is mis-set for the (leak, drive) point (testable: target_init
+sweep at w1' with tlr=0).
+
+## H17 verdict (B3): the ridge is a SIGNAL-TO-NOISE optimum
+
+Spike-readout reconstruction gain of a 20-deg sinusoidal slip:
+wlr=0.1 → 0.22-0.23 flat over P=30-120, absorbed above P≈240-480 (0.04 at
+1920). wlr=0.03 → ≈0 (saturation destroys selectivity; f≈1 ceiling).
+wlr=1.0 → ≈0.02 at all P (endogenous churn buries the stimulus).
+**wlr=0.1 carries 3-10x more stimulus information in its spikes than any
+other regime probed** — the matched-timescale ridge is where plasticity
+whitens saturation away without self-noise. (Highpass corner below P=30 not
+reached; absorption cutoff confirmed; P*-vs-wlr scaling untestable on this
+flat-top — refine with shorter periods if needed.)

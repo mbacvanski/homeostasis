@@ -71,7 +71,8 @@ def main():
                    target_lr=w1p_cfg["target_lr"], threshold_ratio=w1p_cfg["threshold_ratio"])
     w1p_trk = dict(gain=w1p_cfg["gain"])
 
-    variants = {"default": ({}, {}), "w1prime": (w1p_res, w1p_trk)}
+    variants = {"default": ({}, {}), "wlr0.1": ({"weight_lr": 0.1}, {}),
+                "w1prime": (w1p_res, w1p_trk)}
     tasks = []
     for name, (res, trk) in variants.items():
         for s in SEEDS:

@@ -1,0 +1,120 @@
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.3}, "trk": {}, "seed": 2, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.3, "_held": false}
+{"mode": "closed", "res": {"leak": 0.08, "weight_lr": 0.5}, "trk": {}, "seed": 0, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.08, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.01, "target_lr": 0.001}, "trk": {}, "seed": 11, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.01, "_tlr": 0.001}
+{"mode": "closed", "res": {"weight_lr": 0.01, "target_lr": 0.001}, "trk": {}, "seed": 10, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.01, "_tlr": 0.001}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.001}, "trk": {}, "seed": 0, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.1, "_tlr": 0.001}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.02}, "trk": {}, "seed": 31, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.01, "target_lr": 0.001}, "trk": {}, "seed": 6, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.01, "_tlr": 0.001}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.3}, "trk": {}, "seed": 45, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.3, "_held": false}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.2}, "trk": {}, "seed": 20, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.2, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.2}, "trk": {}, "seed": 0, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.2, "_held": true}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 1.0}, "trk": {}, "seed": 37, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.5}, "trk": {}, "seed": 19, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.5, "_held": true}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.2}, "trk": {}, "seed": 24, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.2, "_held": true}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.001}, "trk": {}, "seed": 3, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.03, "_tlr": 0.001}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.03}, "trk": {}, "seed": 29, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.03, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.12}, "trk": {}, "seed": 21, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.12, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.01}, "trk": {}, "seed": 37, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.03, "_tlr": 0.01}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.03}, "trk": {}, "seed": 28, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.03, "_held": false}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.01}, "trk": {}, "seed": 33, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.12}, "trk": {}, "seed": 4, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.12, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.01}, "trk": {}, "seed": 33, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.05}, "trk": {}, "seed": 12, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.0, "target_lr": 0.01}, "trk": {}, "seed": 1, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.0, "_tlr": 0.01}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.02}, "trk": {}, "seed": 39, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01}, "trk": {}, "seed": 34, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.1, "_tlr": 0.01}
+{"mode": "closed", "res": {"n_nodes": 50, "weight_lr": 0.1}, "trk": {}, "seed": 6, "arm": "full", "snap_every": 2400, "_tag": "R3", "_n": 50, "_wlr": 0.1}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.05}, "trk": {}, "seed": 20, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.05, "weight_lr": 1.0}, "trk": {}, "seed": 25, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.05, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.3, "target_lr": 0.1}, "trk": {}, "seed": 43, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.3, "_tlr": 0.1}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.08}, "trk": {}, "seed": 28, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.08, "_held": true}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.01}, "trk": {}, "seed": 32, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.02}, "trk": {}, "seed": 43, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.08}, "trk": {}, "seed": 46, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.08, "_held": false}
+{"mode": "closed", "res": {"n_nodes": 100, "weight_lr": 0.1}, "trk": {}, "seed": 7, "arm": "full", "snap_every": 2400, "_tag": "R3", "_n": 100, "_wlr": 0.1}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.05}, "trk": {}, "seed": 33, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.5}, "trk": {}, "seed": 1, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.05}, "trk": {}, "seed": 28, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.5}, "trk": {}, "seed": 29, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.03}, "trk": {}, "seed": 15, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.03, "_held": false}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.5}, "trk": {}, "seed": 28, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.08, "weight_lr": 0.02}, "trk": {}, "seed": 24, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.08, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.03}, "trk": {}, "seed": 36, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.03, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01}, "trk": {}, "seed": 25, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.1, "_tlr": 0.01}
+{"mode": "closed", "res": {"leak": 0.05, "weight_lr": 0.3}, "trk": {}, "seed": 33, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.05, "_wlr": 0.3, "_held": true}
+{"mode": "closed", "res": {"weight_lr": 0.0, "target_lr": 0.01}, "trk": {}, "seed": 42, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.0, "_tlr": 0.01}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.05}, "trk": {}, "seed": 40, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"n_nodes": 200, "weight_lr": 0.05}, "trk": {}, "seed": 9, "arm": "full", "snap_every": 2400, "_tag": "R3", "_n": 200, "_wlr": 0.05}
+{"mode": "closed", "res": {"weight_lr": 1.0, "target_lr": 0.001}, "trk": {}, "seed": 7, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 1.0, "_tlr": 0.001}
+{"mode": "closed", "res": {"leak": 0.08, "weight_lr": 0.2}, "trk": {}, "seed": 22, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.08, "_wlr": 0.2, "_held": true}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.01}, "trk": {}, "seed": 0, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.01}, "trk": {}, "seed": 25, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.01}, "trk": {}, "seed": 47, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.08}, "trk": {}, "seed": 11, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.08, "_held": false}
+{"mode": "closed", "res": {"leak": 0.08, "weight_lr": 0.3}, "trk": {}, "seed": 30, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.08, "_wlr": 0.3, "_held": false}
+{"mode": "closed", "res": {"leak": 0.08, "weight_lr": 0.02}, "trk": {}, "seed": 36, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.08, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.5}, "trk": {}, "seed": 20, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.05, "weight_lr": 0.02}, "trk": {}, "seed": 44, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.05, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.08, "weight_lr": 0.5}, "trk": {}, "seed": 1, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.08, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.3}, "trk": {}, "seed": 29, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.3, "_held": true}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.3}, "trk": {}, "seed": 39, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.3, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.12}, "trk": {}, "seed": 47, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.12, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.3}, "trk": {}, "seed": 9, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.3, "_held": true}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.05}, "trk": {}, "seed": 20, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.02}, "trk": {}, "seed": 0, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.02, "_held": true}
+{"mode": "closed", "res": {"n_nodes": 50, "weight_lr": 0.1}, "trk": {}, "seed": 0, "arm": "full", "snap_every": 2400, "_tag": "R3", "_n": 50, "_wlr": 0.1}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.01}, "trk": {}, "seed": 46, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.01, "_held": true}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.08}, "trk": {}, "seed": 21, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.08, "_held": true}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.01}, "trk": {}, "seed": 28, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.01, "_held": true}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 1.0}, "trk": {}, "seed": 41, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.05, "weight_lr": 0.2}, "trk": {}, "seed": 5, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.05, "_wlr": 0.2, "_held": false}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.02}, "trk": {}, "seed": 9, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.03}, "trk": {}, "seed": 7, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.03, "_held": true}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.12}, "trk": {}, "seed": 40, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.12, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.01, "target_lr": 0.01}, "trk": {}, "seed": 34, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.01, "_tlr": 0.01}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.001}, "trk": {}, "seed": 14, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.03, "_tlr": 0.001}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.5}, "trk": {}, "seed": 11, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.5, "_held": true}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.03}, "trk": {}, "seed": 4, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.03, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.3, "target_lr": 0.001}, "trk": {}, "seed": 14, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.3, "_tlr": 0.001}
+{"mode": "closed", "res": {"weight_lr": 0.3, "target_lr": 0.001}, "trk": {}, "seed": 8, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.3, "_tlr": 0.001}
+{"mode": "closed", "res": {"weight_lr": 1.0, "target_lr": 0.01}, "trk": {}, "seed": 11, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 1.0, "_tlr": 0.01}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.01}, "trk": {}, "seed": 45, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.02}, "trk": {}, "seed": 17, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.5, "weight_lr": 0.5}, "trk": {}, "seed": 32, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.5, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.05}, "trk": {}, "seed": 40, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.05, "_held": true}
+{"mode": "closed", "res": {"leak": 0.05, "weight_lr": 0.01}, "trk": {}, "seed": 21, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.05, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 1.0}, "trk": {}, "seed": 11, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.01}, "trk": {}, "seed": 40, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.05, "weight_lr": 0.02}, "trk": {}, "seed": 5, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.05, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.05}, "trk": {}, "seed": 45, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.02}, "trk": {}, "seed": 7, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.02, "_held": true}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.5}, "trk": {}, "seed": 7, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.05, "weight_lr": 1.0}, "trk": {}, "seed": 6, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.05, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.05}, "trk": {}, "seed": 23, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.01}, "trk": {}, "seed": 5, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.01, "_held": true}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.12}, "trk": {}, "seed": 39, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.12, "_held": true}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.02}, "trk": {}, "seed": 10, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 0.08}, "trk": {}, "seed": 30, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 0.08, "_held": true}
+{"mode": "closed", "res": {"n_nodes": 200, "weight_lr": 0.1}, "trk": {}, "seed": 14, "arm": "full", "snap_every": 2400, "_tag": "R3", "_n": 200, "_wlr": 0.1}
+{"mode": "closed", "res": {"n_nodes": 400, "weight_lr": 0.1}, "trk": {}, "seed": 22, "arm": "full", "snap_every": 2400, "_tag": "R3", "_n": 400, "_wlr": 0.1}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.05}, "trk": {}, "seed": 24, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.35, "weight_lr": 0.12}, "trk": {}, "seed": 41, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.35, "_wlr": 0.12, "_held": false}
+{"mode": "closed", "res": {"weight_lr": 0.01, "target_lr": 0.001}, "trk": {}, "seed": 13, "arm": "full", "snap_every": 2400, "_tag": "R2", "_wlr": 0.01, "_tlr": 0.001}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.05}, "trk": {}, "seed": 36, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.01}, "trk": {}, "seed": 17, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 1.0}, "trk": {}, "seed": 39, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.01}, "trk": {}, "seed": 46, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.01, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.02}, "trk": {}, "seed": 35, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.18, "weight_lr": 1.0}, "trk": {}, "seed": 30, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.18, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.02}, "trk": {}, "seed": 40, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.02, "_held": false}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 1.0}, "trk": {}, "seed": 1, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.9, "weight_lr": 0.2}, "trk": {}, "seed": 24, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.9, "_wlr": 0.2, "_held": false}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.08}, "trk": {}, "seed": 15, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.08, "_held": true}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 1.0}, "trk": {}, "seed": 13, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 1.0, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.03}, "trk": {}, "seed": 22, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.03, "_held": false}
+{"mode": "closed", "res": {"leak": 0.12, "weight_lr": 0.5}, "trk": {}, "seed": 26, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.12, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.5}, "trk": {}, "seed": 38, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.5, "_held": false}
+{"mode": "closed", "res": {"leak": 0.25, "weight_lr": 0.2}, "trk": {}, "seed": 0, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.25, "_wlr": 0.2, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.05}, "trk": {}, "seed": 39, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.05, "_held": false}
+{"mode": "closed", "res": {"leak": 0.7, "weight_lr": 0.08}, "trk": {}, "seed": 29, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.7, "_wlr": 0.08, "_held": true}
+{"mode": "closed", "res": {"leak": 0.03, "weight_lr": 0.03}, "trk": {}, "seed": 44, "arm": "full", "snap_every": 2400, "_tag": "R1", "_leak": 0.03, "_wlr": 0.03, "_held": false}
