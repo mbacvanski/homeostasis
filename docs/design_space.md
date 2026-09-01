@@ -225,18 +225,41 @@ Diagnosis: tracking's success rested on an effector-to-slip map that is
 churn forces a cruise so the ratchet's waiting state is unreachable, and
 dark poses exist).
 
-**Selection changes the answer — partially** (H33): a GA over the design
-space reaches near3 = 0.71 within 7 generations (subcritical recipe:
-w₀≈0.11, wlr at the floor 0.02, fast targets 0.06, agile wheel base), and
-one fresh wiring of the champion is a *perfect* pursuer (near3 = 1.00) —
-but the fresh-seed median is 0.00. Combined with H29/H30 (reward selects
-orbits homeostasis cannot aim at) and the H30 addendum (the evolved
-edge-holder is likewise seed-brittle): **the repertoire contains the
-competence; homeostasis cannot aim at it; genome-level selection finds it
-but cannot yet fix the wiring lottery.** The sharpest current form of "when
-does reward become necessary": reward/selection is needed as an *orbit- and
-genome-selector*, and something beyond both (wiring-level selection,
-development, scale) is needed for reliability.
+**Selection changes the answer — and reveals what the solution IS** (H33,
+H34): genome-level GA reaches near3 = 0.71 in 7 generations; *joint*
+(genome, wiring-seed) evolution finds a **perfect pursuer in 3 generations**
+(near3 1.00, dist 0.80 — matching the P-controller), stable for 14,400 steps.
+The autopsy
+([fig_perfect_pursuer](../scripts/out/lab/fig_perfect_pursuer.png)) is the
+campaign's most beautiful exhibit: the agent runs a **concentric circle
+phase-locked just inside the stimulus's orbit** (revolution rate +1.9°/step
+= the target's own angular rate; bearing pinned at 34°; f = 0.08). It does
+not chase — it found the co-moving frame in which its retina is *static*:
+the wall task's stability-selected circle transported into the target's
+moving frame. Velocity entrainment (tracking), orbit selection (wall), and
+pursuit are one mechanism.
+
+**And the boundary holds against everything tried:**
+- The perfect pursuer scores **0.12 on unpredictable waypoint motion** and
+  **0.02 on a perfectly predictable straight-line shuttle** — it is a
+  resonator tuned to one closed manifold (a shuttle's co-moving frame has
+  heading-flip discontinuities absorption cannot smooth), not a follower.
+- Reward-*scaled* homeostasis does nothing (H35: 0.14 vs 0.13 control —
+  scaling the drive servo changes *when* it learns, never *what*).
+- One-step reward-*directed* three-factor credit does nothing either (H36:
+  best 0.14; time-shuffled-reward control identical). Caveats on record
+  (N=64, scalar reward, no eligibility traces).
+- The wiring lottery persists through genome selection (fresh-seed medians
+  0.00–0.11, with rare perfect jackpots).
+
+Final rung-3 statement: **the homeostatic family produces target-specific
+resonators** — competence exists exactly where a stationary-izable sensory
+manifold exists and is found; homeostasis cannot aim at one, selection can
+find one, and nothing tested yields motion-*general* pursuit. That, plus
+H29/H30 (reward as orbit-selector), is the sharpest current answer to "when
+does reward become necessary" — and it says the interesting machinery
+question is what *minimal structural* addition (eligibility traces?
+prediction?) buys generality.
 
 ## What the two homeostatic channels actually do
 
