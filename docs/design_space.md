@@ -252,14 +252,37 @@ pursuit are one mechanism.
 - The wiring lottery persists through genome selection (fresh-seed medians
   0.00–0.11, with rare perfect jackpots).
 
-Final rung-3 statement: **the homeostatic family produces target-specific
-resonators** — competence exists exactly where a stationary-izable sensory
-manifold exists and is found; homeostasis cannot aim at one, selection can
-find one, and nothing tested yields motion-*general* pursuit. That, plus
-H29/H30 (reward as orbit-selector), is the sharpest current answer to "when
-does reward become necessary" — and it says the interesting machinery
-question is what *minimal structural* addition (eligibility traces?
-prediction?) buys generality.
+**The constant-control law** (H38–H38c) completes the picture. Evolving
+against other target shapes: a 4:1 ellipse and a straight-line shuttle both
+yield **toll-booths** — champions that *park* at a favorable point (the
+shuttle's at speed exactly 0.000) and let the passing target pay them near3
+credit — while a *near-circular* ellipse (curvature ratio 1.27) evolves a
+genuine velocity-matched follower (near3 1.00, dist 0.58, agent speed 0.159
+≈ the target's 0.15). The full hierarchy:
+
+| target motion | curvature ratio | evolved solution |
+|---|---|---|
+| circle | 1.0 | follower (dist 0.80) |
+| near-circle | 1.27 | follower (dist 0.58, near3 1.00) |
+| ellipse | 1.6 | follower, degraded (dist 2.39, 0.96) |
+| ellipse | 2.5 | toll-booth, parked (0.43) |
+| ellipse | 4.0 | toll-booth (0.69) |
+| shuttle | discontinuous | toll-booth, parked (0.54) |
+| waypoint | aperiodic | nothing (0.12) |
+
+**Entrainment reaches exactly those motions whose co-moving frame can be
+held with ~constant control** (constant curvature ⇒ constant turn rate ⇒
+the control signal is itself stationary and absorbable); past that
+tolerance (boundary in ratio (1.6, 2.5) — about 2x control modulation, with
+a soft edge: follower quality degrades smoothly toward it), selection
+substitutes stillness
+at favorable points; without periodicity, nothing. This is the quantitative
+form of the mentors' rung 3, and of the "prediction vs Gibsonian loops"
+question: within the law's reach the baseball intuition is exactly right —
+no prediction is needed; beyond it, the family cannot go, and neither
+reward-scaled (H35) nor one-step reward-directed (H36) plasticity crosses,
+leaving *minimal structural additions* (eligibility traces? prediction?) as
+the live question.
 
 ## What the two homeostatic channels actually do
 

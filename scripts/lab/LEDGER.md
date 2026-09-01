@@ -963,3 +963,13 @@ open interval, bisectable later. This is the quantitative form of the
 mentors' ladder rung 3 and of "prediction vs Gibsonian loops": within the
 law's reach, no prediction is needed (the baseball intuition); beyond it,
 the family cannot go.
+
+## H38d verdict: the tolerance is ~2x control modulation, with a soft edge
+
+Curvature ratio 1.6: FOLLOWER (near3 0.96, dist 2.39, speed 0.096, spread
+2.39 — degraded but genuine). Ratio 2.5: toll-booth, parked at speed 0.000
+(near3 0.43). The constant-control boundary sits in (1.6, 2.5), and the
+follower's quality degrades smoothly toward it (dist 0.58 → 2.39 over
+1.27 → 1.6): an absorbability TOLERANCE, not a cliff. Final hierarchy:
+1.0 follower 0.80 | 1.27 follower 0.58 | 1.6 follower 2.39 | 2.5 toll-booth
+| 4.0 toll-booth | discontinuous toll-booth | aperiodic nothing.
