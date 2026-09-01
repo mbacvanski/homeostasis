@@ -76,3 +76,16 @@ the competence law is two-clause (constant-control shape AND frame rate in
 the entrainment band), and collective entrainment needs a slow periodic
 pacemaker. (3) Duty law verified at N=2000 (corr 0.988); full N-scaling
 ridge batch on the cluster.
+
+**The capstone: a live multi-agent homeostatic ecology.** The family cannot
+pace itself at the paper's scale (absorption wall-agents are dead statues;
+churn circlers turn too fast to follow) — but with a wider wheel base in a
+doubled arena, a wall-avoider circles cleanly at 1.9 deg/step, inside the
+entrainment band, and an evolved follower locks onto it LIVE (dist 3.77,
+stable 10,800 steps). Then a third agent locks onto the follower: **three
+concentric phase-locked circles — a blind pacemaker's periodicity cascading
+down a sensing chain of comfort-seeking agents** (figs in the artifact and
+scripts/out/lab/). The rings contract ~15% per link, predicting a finite
+chain depth. This is a constructive answer to "what if agents interact":
+interaction alone gives stillness or unfollowable churn (measured); add one
+band-compatible pacemaker and entrainment propagates.
