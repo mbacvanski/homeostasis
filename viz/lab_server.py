@@ -30,6 +30,13 @@ Pages:
               pacemaker plus the H48e warm-started follower champion sensing
               its live position. Co-simulation loop is exactly
               scripts/lab/h48c_live_chain.py's cosim.
+  /lab/ecology3  the shared-visibility three-agent ecology (H81 -> H85b):
+              pacemaker + two followers, every follower sensing ALL other
+              agents, under the four measured attention regimes (summed
+              retina / memoryless WTA / sticky 2x100 / sticky 5x300). The
+              attention rule is scripts/lab/h85_shared.py's StickyFollower,
+              imported — not duplicated — and the co-simulation loop is
+              exactly h85_shared.run's.
   /lab/repair  the H53 self-repair exhibit: the ridge config with a mid-run
               node kill, learning-on vs learning-frozen side by side. Runs
               go straight through the lab harness (scripts/lab/common.py
@@ -42,6 +49,7 @@ Run via the main app:  uvicorn viz.server:app --port 8471  ->  /lab
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -73,6 +81,20 @@ _COMMON_PATH = Path(__file__).resolve().parent.parent / "scripts/lab/common.py"
 _common_spec = importlib.util.spec_from_file_location("lab_common", _COMMON_PATH)
 lab_common = importlib.util.module_from_spec(_common_spec)
 _common_spec.loader.exec_module(lab_common)
+
+# The H85 harness (StickyFollower — the sticky-attention rule — plus the
+# pacemaker config and champion pair it runs). It imports its lab-script
+# siblings (h50_depth -> h48c_live_chain -> common / h33_evolve_pursuit) by
+# bare name, so the lab dir must be importable while it loads; it is removed
+# again right after so the server's import space stays clean.
+_H85_PATH = _COMMON_PATH.parent / "h85_shared.py"
+_h85_spec = importlib.util.spec_from_file_location("lab_h85_shared", _H85_PATH)
+lab_h85 = importlib.util.module_from_spec(_h85_spec)
+sys.path.insert(0, str(_H85_PATH.parent))
+try:
+    _h85_spec.loader.exec_module(lab_h85)
+finally:
+    sys.path.remove(str(_H85_PATH.parent))
 
 STATIC_DIR = Path(__file__).parent / "static"
 OUT_DIR = Path(__file__).resolve().parent.parent / "scripts/out"
@@ -695,6 +717,132 @@ def run_ecology(seed: int, steps: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Shared-visibility ecology (/lab/ecology3): H81 -> H85b, sticky attention.
+# ---------------------------------------------------------------------------
+
+ECOLOGY3_MAX_STEPS = 21_600
+ECOLOGY3_DEFAULT_STEPS = 10_800  # the H85/H85b campaign length
+ECOLOGY3_SUBSAMPLE = 3
+ECOLOGY3_B_START = (15.0, 10.0)
+ECOLOGY3_C_START = (15.0, 8.0)  # the twin@15,8 geometry of H85/H85b
+ECOLOGY3_MAX_SWITCHES = 200  # switch *times* shipped per follower (counts exact)
+
+# mode -> (label, sticky, ratio, patience): the four measured attention
+# regimes of the H81 -> H85b progression. "wta" is StickyFollower at
+# ratio 1 / patience 1 — selection follows argmax every step, i.e. H82's
+# memoryless per-step WTA filter expressed in the same imported rule.
+ECOLOGY3_MODES = {
+    "off": ("off (summed retina)", False, 2.0, 100),
+    "wta": ("memoryless WTA", True, 1.0, 1),
+    "sticky": ("sticky 2×/100", True, 2.0, 100),
+    "resist": ("sticky 5×/300 (capture-resistant)", True, 5.0, 300),
+}
+
+
+def _running_lock(near: np.ndarray) -> np.ndarray:
+    """Running late-half lock fraction: after step i, mean(near[t//2:t]), t=i+1.
+
+    Presentation math only — its final value is exactly the h85_shared.run
+    late-half lock the summary reports.
+    """
+    s = np.concatenate(([0.0], np.cumsum(near)))
+    t = np.arange(1, len(near) + 1)
+    half = t // 2
+    return (s[t] - s[half]) / np.maximum(t - half, 1)
+
+
+def run_ecology3(mode: str, steps: int) -> dict:
+    """The shared-visibility three-agent ecology under one attention regime.
+
+    Exactly scripts/lab/h85_shared.py run(): pacemaker A (an unmodified
+    WallSimulation, the h48c PACE_CFG, seed 3) moves first each step; then
+    follower B (h48e champion genome+wiring, start (15,10)) and follower C
+    (same champion pair, start (15,8)) each sense BOTH other agents from the
+    previous step's positions and move. The attention rule (winner-take-all
+    source selection with persistence) is lab_h85.StickyFollower — imported,
+    never duplicated here — and the loop mirrors run() bit for bit, including
+    its initial view of C at (15,5). This function only records observables;
+    the sticky-mode summaries reproduce the H85/H85b ledger numbers exactly.
+    """
+    label, sticky, ratio, patience = ECOLOGY3_MODES[mode]
+    champ_seed = lab_h85.CHAMP["champ_seed"]
+    A = WallSimulation(wall_config=lab_h85.PACE_CFG, seed=lab_h85.A_SEED)
+    B = lab_h85.StickyFollower(champ_seed, ECOLOGY3_B_START, 2, sticky,
+                               ratio=ratio, patience=patience)
+    C = lab_h85.StickyFollower(champ_seed, ECOLOGY3_C_START, 2, sticky,
+                               ratio=ratio, patience=patience)
+
+    ax = np.empty(steps)
+    ay = np.empty(steps)
+    bx = np.empty(steps)
+    by = np.empty(steps)
+    cx = np.empty(steps)
+    cy = np.empty(steps)
+    D = np.zeros((steps, 3))  # B-A, C-A, C-B, as h85_shared.run's columns
+    sel_b = np.full(steps, -1, dtype=int)  # 0 = A, 1 = C; -1 = summed (off)
+    sel_c = np.full(steps, -1, dtype=int)  # 0 = A, 1 = B; -1 = summed (off)
+    pos_b, pos_c = ECOLOGY3_B_START, (15.0, 5.0)  # run()'s exact init
+    for i in range(steps):
+        A.step()
+        pa = (A.env.x, A.env.y)
+        new_b = B.step([pa, pos_c], i)
+        new_c = C.step([pa, pos_b], i)
+        pos_b, pos_c = new_b, new_c
+        if sticky:
+            sel_b[i] = B.sel
+            sel_c[i] = C.sel
+        ax[i], ay[i] = pa
+        bx[i], by[i] = pos_b
+        cx[i], cy[i] = pos_c
+        D[i] = (np.hypot(pos_b[0] - pa[0], pos_b[1] - pa[1]),
+                np.hypot(pos_c[0] - pa[0], pos_c[1] - pa[1]),
+                np.hypot(pos_c[0] - pos_b[0], pos_c[1] - pos_b[1]))
+
+    late = D[steps // 2:]
+    sl = slice(0, steps, ECOLOGY3_SUBSAMPLE)
+    return {
+        "kind": "ecology3",
+        "params": {"mode": mode, "steps": steps, "subsample": ECOLOGY3_SUBSAMPLE},
+        "config": {
+            "label": label, "sticky": sticky, "ratio": ratio, "patience": patience,
+            "box_size": lab_h85.PACE_CFG.box_size,
+            "agent_radius": lab_h85.PACE_CFG.agent_radius,
+            "pace_seed": lab_h85.A_SEED,
+            "champ_seed": champ_seed,
+            "n_nodes": lab_h85.CHAMP["champion"]["n_nodes"],
+            "b_start": ECOLOGY3_B_START,
+            "c_start": ECOLOGY3_C_START,
+        },
+        "trace": {
+            "t": np.arange(steps)[sl].tolist(),
+            "ax": np.round(ax[sl], 3).tolist(),
+            "ay": np.round(ay[sl], 3).tolist(),
+            "bx": np.round(bx[sl], 3).tolist(),
+            "by": np.round(by[sl], 3).tolist(),
+            "cx": np.round(cx[sl], 3).tolist(),
+            "cy": np.round(cy[sl], 3).tolist(),
+            "d_ba": np.round(D[sl, 0], 3).tolist(),
+            "d_ca": np.round(D[sl, 1], 3).tolist(),
+            "d_cb": np.round(D[sl, 2], 3).tolist(),
+            "lock_ba": np.round(_running_lock(D[:, 0] < 4)[sl], 4).tolist(),
+            "lock_ca": np.round(_running_lock(D[:, 1] < 4)[sl], 4).tolist(),
+            "lock_cb": np.round(_running_lock(D[:, 2] < 4)[sl], 4).tolist(),
+            "sel_b": sel_b[sl].tolist(),
+            "sel_c": sel_c[sl].tolist(),
+        },
+        "summary": {  # full resolution — h85_shared.run's exact definitions
+            "B_A": round(float((late[:, 0] < 4).mean()), 4),
+            "C_A": round(float((late[:, 1] < 4).mean()), 4),
+            "C_B": round(float((late[:, 2] < 4).mean()), 4),
+            "b_switches": len(B.switches),
+            "c_switches": len(C.switches),
+            "b_switch_times": B.switches[:ECOLOGY3_MAX_SWITCHES],
+            "c_switch_times": C.switches[:ECOLOGY3_MAX_SWITCHES],
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # Self-repair exhibit (/lab/repair): H53's mid-run node kill, both arms.
 # ---------------------------------------------------------------------------
 
@@ -780,6 +928,11 @@ async def pursuit_page():
 @lab_app.get("/ecology")
 async def ecology_page():
     return FileResponse(STATIC_DIR / "lab_ecology.html")
+
+
+@lab_app.get("/ecology3")
+async def ecology3_page():
+    return FileResponse(STATIC_DIR / "lab_ecology3.html")
 
 
 @lab_app.get("/repair")
@@ -897,6 +1050,15 @@ def ecology(seed: int = H48E_CHAMP_SEED, steps: int = ECOLOGY_DEFAULT_STEPS):
     steps -= steps % ECOLOGY_SUBSAMPLE
     seed = min(max(int(seed), 0), 1_000_000)
     return run_ecology(seed, steps)
+
+
+@lab_app.get("/api/ecology3")
+def ecology3(mode: str = "resist", steps: int = ECOLOGY3_DEFAULT_STEPS):
+    if mode not in ECOLOGY3_MODES:
+        return {"error": f"unknown mode {mode!r}; have {sorted(ECOLOGY3_MODES)}"}
+    steps = min(max(int(steps), 600), ECOLOGY3_MAX_STEPS)
+    steps -= steps % ECOLOGY3_SUBSAMPLE
+    return run_ecology3(mode, steps)
 
 
 @lab_app.get("/api/repair")

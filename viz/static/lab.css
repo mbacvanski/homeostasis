@@ -114,3 +114,20 @@ main {
   font-weight: 600;
   padding: 2px 0 0;
 }
+
+/* ecology³ viewer (shared visibility + sticky attention) */
+.sw.green { background: var(--green); }
+.playrow { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.playrow button {
+  background: #2a313c;
+  color: var(--text);
+  border: 1px solid #39424f;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.playrow button:hover { background: #343d4a; }
+.playrow input[type="range"] { flex: 1; min-width: 120px; }
+.playrow .mono { color: var(--dim); font-size: 12px; white-space: nowrap; }
+.panel canvas#attc, .panel canvas#lockc { width: 100%; }

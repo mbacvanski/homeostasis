@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Ecology³</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Ecology³ <span class="sub">shared visibility &amp; sticky attention · lab viewer</span></h1>
+  <div id="conn" class="conn">idle</div>
+</header>
+
+<div id="controls">
+  <span class="ctl labnav">
+    <a href="/lab">single node</a>
+    <a href="/lab/phase">phase maps</a>
+    <a href="/lab/traj">trajectories</a>
+    <a href="/lab/wall">wall</a>
+    <a href="/lab/pursuit">pursuit</a>
+    <a href="/lab/ecology">ecology</a>
+    <a href="/lab/ecology3" class="here">ecology³</a>
+    <a href="/lab/repair">repair</a>
+  </span>
+  <span class="ctl"><label title="The four measured attention regimes of the H81→H85b campaign">attention</label>
+    <select id="mode">
+      <option value="off">off (summed retina)</option>
+      <option value="wta">memoryless WTA</option>
+      <option value="sticky">sticky 2×/100</option>
+      <option value="resist" selected>sticky 5×/300 (capture-resistant)</option>
+    </select>
+  </span>
+  <span class="ctl"><label>steps</label><input id="steps" type="number" value="10800" min="600" max="21600" step="600"></span>
+  <button id="btn-run" class="primary">Run</button>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main>
+  <div class="headline">figure-ground is one latched bit: without it a shared world collapses; with it, chains — and seduction.</div>
+
+  <section class="panel explainer">
+    <p>
+    The <a href="/lab/ecology">two-agent chain</a> worked because each follower saw <i>only</i> its own
+    target — and H81 showed that was load-bearing: give the h48e follower a second visible moving bump
+    and entrainment is abolished (lock 1.000 alone → 0.034). This exhibit is the cure, measured. One
+    30×30 arena, fully shared visibility: blind wall-circling <b>pacemaker A</b> (wiring seed 3),
+    <b>follower B</b> (h48e champion genome+wiring, start (15,10)) and <b>follower C</b> (same champion
+    pair, start (15,8)); every follower senses <i>all</i> other agents as separate retinal bumps.
+    The attention rule — imported from the H85 harness, not re-implemented — is winner-take-all source
+    selection with persistence: keep attending the current source unless a rival is <i>ratio</i>× brighter
+    for <i>patience</i> consecutive steps. The four regimes are the campaign's progression:
+    <b>no attention</b> (bumps summed) → collapse; <b>memoryless WTA</b> (argmax each step) → collapse;
+    <b>sticky 2×/100</b> → the chain forms, then C orbits close to B, becomes B's brightest stimulus and
+    <i>captures</i> B's attention — the follower seduces the leader and the pair goes adrift;
+    <b>sticky 5×/300</b> → capture-resistant: the first stable all-visible homeostatic chain
+    (B→A 1.000, C→B 1.000, zero switches).
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Arena <span class="hint">30×30 · replay of the co-simulation · attention drawn follower→selected source, colored by the selected agent</span></h2>
+    <canvas id="arena" width="500" height="500"></canvas>
+    <div class="playrow">
+      <button id="btn-play">⏸ pause</button>
+      <span class="ctl"><label>speed</label>
+        <select id="speed">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+          <option value="4">4×</option>
+          <option value="8">8×</option>
+        </select>
+      </span>
+      <input id="scrub" type="range" min="0" max="1" value="0" step="1">
+      <span class="mono" id="tlab">t = 0</span>
+    </div>
+    <div class="legend">
+      <span class="sw red"></span>A — pacemaker, blind wall-avoider
+      <span class="sw blue"></span>B — follower, h48e champion
+      <span class="sw green"></span>C — follower, twin champion wiring
+    </div>
+    <div class="caption" id="caption">—</div>
+    <div class="sumrow">
+      <div class="sumstat"><div class="k">B→A lock (late, dist&lt;4)</div><div class="v mono" id="e-ba">—</div></div>
+      <div class="sumstat"><div class="k">C→B lock (late)</div><div class="v mono" id="e-cb">—</div></div>
+      <div class="sumstat"><div class="k">C→A lock (late)</div><div class="v mono small" id="e-ca">—</div></div>
+      <div class="sumstat"><div class="k">attention switches</div><div class="v mono small" id="e-sw">—</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Attention <span class="hint">who each follower is attending, per step · dashed vertical = a switch, colored by the follower that switched · gray = summed retina (no selection)</span></h2>
+    <canvas id="attc" width="960" height="84"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Pairwise distances <span class="hint">4-unit lock band shaded · late window (scored half) tinted · dashed verticals = attention switches</span></h2>
+    <canvas id="distc" width="960" height="170"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Running lock fraction <span class="hint">fraction of the trailing late-half window with dist&lt;4 · final value = the scored lock</span></h2>
+    <canvas id="lockc" width="960" height="140"></canvas>
+  </section>
+</main>
+
+<script src="/lab/static/lab_ecology3.js"></script>
+</body>
+</html>

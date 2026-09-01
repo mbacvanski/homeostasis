@@ -21,6 +21,7 @@
     <a href="/lab/wall">wall</a>
     <a href="/lab/pursuit">pursuit</a>
     <a href="/lab/ecology" class="here">ecology</a>
+    <a href="/lab/ecology3">ecology³</a>
     <a href="/lab/repair">repair</a>
   </span>
   <span class="ctl"><label title="Follower wiring seed. Default = the H48e warm-started champion pair">seed</label><input id="seed" type="number" value="77164" min="0" step="1"></span>
@@ -42,7 +43,9 @@
     behavior, not a scripted path. Every step: pacemaker moves, follower senses, follower
     moves. Nothing coordinates them beyond the sensing link; the follower phase-locks inside
     the pacemaker's orbit and holds ≈3.8 units of distance indefinitely. Change the seed to
-    play the wiring lottery with the same genome.
+    play the wiring lottery with the same genome. This chain works because the follower sees
+    <i>only</i> its target — what happens when every agent sees every other (and what attention
+    machinery it takes to survive that) is the <a href="/lab/ecology3">ecology³ exhibit</a>.
     </p>
   </section>
 
