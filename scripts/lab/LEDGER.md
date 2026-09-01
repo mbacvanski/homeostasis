@@ -2283,3 +2283,28 @@ engagements, out-of-band speeds). Selective attention / figure-ground
 is the missing machinery for any real multi-agent ecology — arguably
 ahead of "prediction" in the structural-additions queue.
 (h81b_tolerance.json)
+
+## H82 (preregistered): is figure-ground reachable by selection over parameters?
+
+Two arms on the full-salience two-pacemaker world (A1 seed 3, A2 seed
+33): (i) WTA positive control — harness-level retinal preprocessing
+keeps only the strongest source's bump each step (explicit attention;
+expected to restore lock, reported quantitatively); (ii) GA over the
+h33 genome space (8 gens, pop 16, warm-started from the h48e champion)
+with fitness = max(lock-A1, lock-A2) - dist/60. Predictions: (a) WTA
+restores lock >= 0.8; (b) the GA question proper: if some champion
+reaches lock >= 0.6 under raw two-bump sensing, attention is
+parameter-reachable and its autopsy should show an input-weight
+receptive-field mask (per-sensor input-weight variance >= 2x the h48e
+champion's); (c) if the GA plateaus <= 0.3, figure-ground needs
+ARCHITECTURE, not parameters — the sharpest version of the
+structural-additions conclusion.
+
+## Suite check (03:30): 161 passed, including slow behavioral tests
+
+All of tonight's core and harness edits (sensor noise, kill arms,
+pin_output_p, freeze_T_at, per-segment duty, ballistic + kink stimulus
+modes, 4 new ballistic mechanics tests) leave every validated anchor
+intact. Artifact source template checked into
+scripts/lab/artifact_template.html (figures resolve from
+scripts/out/lab at build time).

@@ -1,0 +1,505 @@
+<title>Three Laws and a Ridge</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#FAFAF8; --ink:#1C2025; --muted:#5C6570; --accent:#0E6E63;
+  --rule:#D9DDD9; --card:#F1F3F0; --code-bg:#EDEFEC;
+  --ok:#1C6E33; --ok-bg:#E4EFE6; --warn:#9A6A00; --warn-bg:#F5EDDA;
+  --bad:#A3382F; --bad-bg:#F5E2DF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14181B; --ink:#E7EAEA; --muted:#9AA4A8; --accent:#4FB3A5;
+    --rule:#2C3236; --card:#1B2125; --code-bg:#1E2529;
+    --ok:#7FC98F; --ok-bg:#1B2B20; --warn:#D9B36A; --warn-bg:#2C2517;
+    --bad:#DE8B80; --bad-bg:#2E1C19;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14181B; --ink:#E7EAEA; --muted:#9AA4A8; --accent:#4FB3A5;
+  --rule:#2C3236; --card:#1B2125; --code-bg:#1E2529;
+  --ok:#7FC98F; --ok-bg:#1B2B20; --warn:#D9B36A; --warn-bg:#2C2517;
+  --bad:#DE8B80; --bad-bg:#2E1C19;
+}
+body{background:var(--paper); color:var(--ink); margin:0; padding:0 20px;
+  font:16px/1.65 "Source Sans 3", system-ui, sans-serif;}
+main{max-width:78ch; margin:0 auto; padding:48px 0 96px;}
+h1,h2,h3{font-family:"Source Serif 4", Georgia, serif; line-height:1.25; text-wrap:balance;}
+h1{font-size:2.1rem; font-weight:600; margin:0 0 6px;}
+h2{font-size:1.45rem; font-weight:600; margin:2.4em 0 .5em; padding-top:1.1em; border-top:1px solid var(--rule);}
+h3{font-size:1.08rem; font-weight:600; margin:1.7em 0 .35em;}
+.kicker{font-family:"JetBrains Mono", ui-monospace, monospace; font-size:.72rem;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:14px;}
+.sub{color:var(--muted); margin:0 0 8px; font-size:1.02rem;}
+p{margin:.7em 0;} a{color:var(--accent);}
+ul,ol{padding-left:1.3em;} li{margin:.35em 0;} strong{font-weight:600;}
+code{font-family:"JetBrains Mono", ui-monospace, monospace; font-size:.84em;
+  background:var(--code-bg); padding:1px 5px; border-radius:3px;}
+.law{background:var(--card); border-left:3px solid var(--accent); border-radius:0 6px 6px 0;
+  padding:12px 18px; margin:1em 0;}
+.law .name{font-family:"JetBrains Mono", ui-monospace, monospace; font-size:.72rem;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--accent);}
+.law p{margin:.35em 0;}
+figure{margin:1.2em 0;}
+figure img{max-width:100%; border-radius:6px; border:1px solid var(--rule); background:#fff;}
+figcaption{font-size:.86rem; color:var(--muted); margin-top:6px;}
+.tablewrap{overflow-x:auto; margin:.8em 0;}
+table{border-collapse:collapse; font-size:.9rem; min-width:100%;}
+th,td{padding:6px 12px 6px 0; text-align:left; border-bottom:1px solid var(--rule); vertical-align:top;}
+th{font-family:"JetBrains Mono", ui-monospace, monospace; font-size:.72rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:600;}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums;
+  font-family:"JetBrains Mono", ui-monospace, monospace; font-size:.84rem;}
+.chip{display:inline-block; font-family:"JetBrains Mono", ui-monospace, monospace;
+  font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; border-radius:99px;
+  padding:2px 9px; vertical-align:2px; margin-left:6px;}
+.chip.ok{color:var(--ok); background:var(--ok-bg);}
+.chip.bad{color:var(--bad); background:var(--bad-bg);}
+.stands{background:var(--card); border-radius:8px; padding:20px 24px; margin:1.2em 0;}
+.provenance{font-size:.88rem; color:var(--muted); border-top:1px solid var(--rule);
+  margin-top:3em; padding-top:1.2em;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+</style>
+
+<main>
+<div class="kicker">homeostasis · design-space campaign · 2026-09-01</div>
+<h1>Three Laws and a Ridge</h1>
+<p class="sub">Why homeostatic reservoir networks work, where they work, and what they are
+actually doing — an overnight preregistered investigation (~25,000 runs, 81 hypotheses
+H1–H81, every number re-derivable from <code>scripts/out/lab/</code>; running log in
+<code>scripts/lab/LEDGER.md</code>, synthesis in <code>docs/design_space.md</code>, interactive
+verification at <code>/lab</code> in the repo visualizer).</p>
+
+<p>The model: leaky integrate-and-fire nodes, each keeping its own activation near a target by
+two local rules — weights of recently-active afferents absorb the error (eq. 5), and the
+target itself drifts toward comfort (eq. 4). No reward, no objective. The campaign asked:
+what do these rules actually do, which design parameters matter, and what kind of controller
+emerges when the loop closes through a body?</p>
+
+<h2>The three exact laws</h2>
+
+<div class="law"><span class="name">Law 1 · comfort split</span>
+<p>A node under stationary drive μ ends <em>silent-comfortable</em> (target T → μ/leak, error
+→ 0) iff μ ≥ leak·T_floor, and <em>dead at the floor</em> below. Verified 674/674 cells.
+Spiking onset from a cold start sits at μ ≈ ρ·leak·T₀ (86%; the residue is the race between
+activation rising and the threshold chasing it).</p></div>
+
+<div class="law"><span class="name">Law 2 · duty law</span>
+<p>Where spiking persists, the spike fraction is <strong>f = (μ/T − leak)/ρ</strong> with zero
+free parameters — median residual 0.0000 on 419 single-node cells, and corr +0.999 per
+(node, window) <em>inside the full recurrent network in its most violent regime</em>.
+Activity is fully slaved to (drive, target); all dynamics live in how W moves μ and how T
+moves.</p></div>
+
+<div class="law"><span class="name">Law 3 · gated integral controller</span>
+<p>Each node's <em>total incoming weight</em> changes by exactly −weight_lr·E per step when
+any afferent spiked, else not at all (verified to 1e−14 in closed loop). Eq. 5, for all its
+per-synapse bookkeeping, is a pure drive servo. The reduced model is therefore derived, not
+fitted: two coupled integral controllers per node — fast drive servo (wlr), slow set-point
+servo (tlr) — sharing one spike-gating fabric. Its predicted absorption corner
+P* ≈ 2π/(wlr·f̄) ≈ 420 steps matches the measured 240–960.</p></div>
+
+<figure><img src="{{FIG_PHASES}}" alt="Single-node phase map with analytic boundaries">
+<figcaption>The single-node phase map (ρ=2, cold vs hot start). The two analytic lines are
+Laws 1's boundaries; orange stripes are mode-locked frozen-|E| cycles — generic, not a
+leak-0.25 curiosity. The hot panel's wider blue region is the bistability band: overdrive
+inflates T into silence (the "statue" cheat's mechanism).</figcaption></figure>
+
+<h2>The ridge: where tracking lives</h2>
+<p>The historic 241-config sweep never varied <code>weight_lr</code> — and that turns out to
+be <em>the</em> axis. wlr = 0 is the statue (targets can only relabel drive as comfortable,
+so the network sits at f ≈ 1.0, blind); wlr ≥ 3 explodes numerically; and in between, one
+parameter change from the 2024 defaults (weight_lr 1.0 → 0.1, the 2021 paper's value)
+<strong>doubles tracking and removes the wiring lottery</strong> (0.633, 12/12 seeds ≥ 0.35,
+vs 0.325, 4/12).</p>
+
+<figure><img src="{{FIG_PLANES}}" alt="A1 and A3 phase planes">
+<figcaption>Left: channel competition — fast targets (right column) starve the weight servo
+and collapse behavior. Right: the matched-timescale ridge in (leak × wlr); both historic
+sweep winners chose leak ≈ 0.57 because they were pinned to the wlr = 1.0 column of this
+plane.</figcaption></figure>
+
+<figure><img src="{{FIG_RIDGE}}" alt="Fine ridge at 48 seeds per cell">
+<figcaption>Cluster confirmation (4,800 runs, 48 common-random-number seeds per cell, 25%
+of cells held out of the fit): <strong>wlr* = 1.04·leak<sup>1.41</sup></strong> rides the
+crest across the plane; 7/10 held-out rows land within a factor of 2, the misses being
+flat-crest rows where the argmax is ill-defined. The dead-statue triangle's escape
+threshold rises with leak; the crest is broad at low leak and narrow at high. Bonus check:
+the cluster's paper-default cell reproduced the local machine's 48-seed value exactly
+(0.386) — cross-machine determinism. The whole batch ran in 4m19s of cluster time.</figcaption></figure>
+
+<p>Why a ridge? <strong>Signal-to-noise.</strong> Reconstructing stimulus position from
+spikes under sinusoidal slip: the ridge regime carries 3–10× more stimulus information than
+anything else probed. Below it, saturation destroys selectivity; above it, the servo's own
+churn buries the signal (at 2024 defaults, activity sits at f ≈ 0.3–0.4 for <em>every</em>
+input schedule, stationary included — input-powered, but input-statistics-independent).</p>
+
+<figure><img src="{{FIG_TRANSFER}}" alt="Transfer function">
+<figcaption>Spike-readout reconstruction gain of a 20° sinusoidal slip. wlr = 0.1 passes the
+stimulus band; slower plasticity saturates, faster plasticity self-noises. The dotted line is
+Law 3's predicted absorption corner.</figcaption></figure>
+
+<h2>What the agent actually is: entrainment, not servo control</h2>
+<p>A hand-written P-controller on the same 62 sensors scores <strong>0.999</strong>; a 1-step
+flow-greedy controller 0.898 (flow-maximization ≈ centering in this embodiment — the
+input-flow thesis's geometric basis, measured). The best homeostatic config (w1′) reaches
+0.82 — but not by doing worse P-control:</p>
+<ul>
+<li><strong>It follows without position feedback.</strong> Velocity-follow ratio 0.84 at w1′
+(0.98 late), through every reversal — while the signed response to heading error is
++0.0006 (zero) or even −0.12 (anti-corrective). There is no servo inside.</li>
+<li><strong>It is swap-immune.</strong> Invert the effectors mid-run and performance recovers
+within one segment everywhere (ratios 0.93–1.03) — and the wiring's innate reflex kernel
+does not predict per-seed success (sign agreement 0.44). Nothing about "which wire turns
+left" matters for long.</li>
+<li><strong>The ratchet pawl:</strong> out of view the agent goes still (RMS turn 0.17 vs
+1.20 in view; dark-stall 93% on the ridge) and the periodic world returns the stimulus to
+it. Periodicity is load-bearing, exactly as the earlier toy-world impossibility result
+predicted.</li>
+</ul>
+<figure><img src="{{FIG_REENTRAIN}}" alt="Re-entrainment curves">
+<figcaption>Velocity re-locking after each stimulus reversal: w1′ re-entrains in ~30 steps to
+0.94; high-wlr regimes start with a negative momentum lobe — the old bias briefly persists
+(behavioral entrenchment).</figcaption></figure>
+<p><strong>The mechanism, assembled:</strong> slip passes the plasticity bandpass and drives
+spikes; spikes drive turning; the <em>turn bias</em> is the slow learned variable dragged
+along by the stimulus. Tracking is <em>velocity entrainment with a flow ratchet</em>. The
+paper's phrase "Gibsonian resonance" turns out to be mechanically accurate — and the
+error-correcting-servo reading is wrong.</p>
+<p><strong>Where the bias lives:</strong> decomposing the output pools' duty difference (which
+<em>is</em> the turn command, corr +1.000) into input vs recurrent components: at w1′ the
+bias is carried by the <strong>recurrent drive</strong> (+0.37 with stimulus direction; input
+pathway nil) — genuinely written into W by the servo and rewritten at each reversal. The
+lag-servo alternative is dead: heading error keeps a constant +7–9° offset in <em>both</em>
+directions. At ridge25 the carrier is mixed — even the bias's storage medium is a place in
+design space.</p>
+<p><strong>And the bandpass is in activity, not information:</strong> at slip period P=8
+(~16°/step) activity collapses to f = 0.003 while reconstruction gain <em>rises</em> to 0.505
+— fast slip sparsifies spiking into hyper-selective events. Absorption kills slow signals'
+activity and information together; fast signals lose activity but keep information.</p>
+
+<h2>What the two homeostatic rules contribute</h2>
+<div class="tablewrap"><table>
+<tr><th>intervention (defaults / w1′)</th><th class="num">score</th><th>reading</th></tr>
+<tr><td>full loop</td><td class="num">0.325 / 0.850</td><td>baselines (12 seeds)</td></tr>
+<tr><td>freeze W only</td><td class="num">0.250 / 0.250</td><td><strong>weight servo necessary everywhere</strong></td></tr>
+<tr><td>freeze T only</td><td class="num">0.404 / 0.654</td><td>targets <em>hurt</em> at defaults, help at w1′</td></tr>
+<tr><td>shuffle learned W mid-run</td><td class="num">0.394 / 0.762</td><td><strong>ongoing process ≥ learned structure</strong></td></tr>
+<tr><td>lesion all recurrence</td><td class="num">0.478 / 0.250</td><td>reflex vs medium is a <em>place</em>, not a property</td></tr>
+</table></div>
+<p>The channels <strong>compete for the same error</strong>: fast targets absorb E before the
+weights can act (protecting the very gain the weights should erode), which is visible as the
+dead right-hand column of the A1 plane. And the target channel's role resolved cleanly:
+freezing T at its <em>evolved heterogeneous</em> per-node values costs nothing (0.789 vs full
+0.791) while homogeneous T=1 costs ~0.09 — <strong>targets are a calibration channel</strong>
+that builds a static per-node dynamic-range profile and can then stop; weights are the
+computation channel and must keep running.</p>
+
+<h2>The night extensions: three new arenas <span class="chip ok">wall replicated · pursuit bounded · Pong resolved</span></h2>
+<p><strong>Case study 3 (wall avoidance) — implemented, replicated, and it flips the sign.</strong>
+The paper's third task now exists in the repo (all five qualitative anchors pass: collisions
+0.168 → 0.004/step, 96% of seeds collision-free late, constant-direction circling,
+learning-off bounces forever, inversion re-stabilizes). Across a 91-config screen the
+flow–success correlation is <strong>−0.86</strong> among living configs (vs +0.77 tracking,
++0.95 Pong) with flow <em>stability</em> at +0.88 — the input-flow thesis's preregistered
+counterexample confirmed: <em>the body decides the sign</em>. Two structural findings: this is
+the family's only task solvable by death (40/91 dead configs score perfectly by never
+moving), and stabilization is <em>stability selection</em>, not punishment learning —
+collisions are nearly invisible to the network (1.04× baseline plasticity; the saturated
+statue is literally deaf to them), and a settled agent teleported wall-adjacent drifts back
+to flat sensory territory.</p>
+<p><strong>Pong at 48-seed cluster resolution — channel competition is <em>signed</em>.</strong>
+The published cell reproduces exactly (0.600±0.111, second bit-identical cross-machine
+check). wlr 0.3 / tlr 0.01 beats it at 0.658; but (wlr 1.0, tlr 0.01) collapses to 0.346:
+in Pong's <em>subcritical</em> init the fast targets are a <em>damper</em> on weight-growth
+overshoot, not a competitor. Supercritical → targets harm; subcritical → targets stabilize.
+One learning-rate change improves all three published case-study configs.</p>
+<p><strong>Pursuit (ladder rung 3) — the family's competence boundary, fully mapped.</strong> A
+new task (tracking's retina on the wall-avoidance body, moving stimulus) that a P-controller
+solves near-perfectly defeats every hand-designed configuration through five theory-guided
+rescue rounds (absorbing dead basin in space; wall-pinned dark poses; churn-forced cruise
+that abolishes the ratchet's waiting state). But <em>joint (genome, wiring) evolution finds a
+perfect pursuer in three generations</em> — and the autopsy is the campaign's most beautiful
+exhibit:</p>
+<figure><img src="{{FIG_PURSUER}}" alt="The perfect pursuer's co-rotating orbit">
+<figcaption>The perfect pursuer does not chase. It runs a concentric circle phase-locked just
+inside the stimulus's orbit (revolution rate +1.9°/step = the target's own; bearing pinned at
+34°; stable for 14,400 steps) — the co-moving frame in which its retina is <em>static</em>.
+Tracking's velocity entrainment, wall-avoidance's stability-selected circle, and pursuit are
+one mechanism: behavior settles on absorbable sensory manifolds.</figcaption></figure>
+<p>And the boundary resolves into a law. The perfect pursuer scores 0.12 on unpredictable
+motion and <strong>0.02 on a perfectly predictable straight-line shuttle</strong>;
+reward-<em>scaled</em> homeostasis does nothing; one-step reward-<em>directed</em> three-factor
+credit does nothing (shuffled-reward control identical). Evolving against other shapes:
+a 4:1 ellipse and the shuttle both yield <strong>toll-booths</strong> — champions that
+<em>park</em> at a favorable point (the shuttle's at speed exactly 0.000) and let the passing
+target pay them proximity credit — while a <em>near-circular</em> ellipse (curvature ratio
+1.27) evolves a genuine velocity-matched follower (near-target 1.00, dist 0.58, agent speed
+0.159 ≈ the target's 0.15).</p>
+<div class="tablewrap"><table>
+<tr><th>target motion</th><th class="num">curvature ratio</th><th>evolved solution</th></tr>
+<tr><td>circle</td><td class="num">1.0</td><td>follower (dist 0.80)</td></tr>
+<tr><td>near-circle</td><td class="num">1.27</td><td><strong>follower (dist 0.58, 1.00)</strong></td></tr>
+<tr><td>ellipse</td><td class="num">1.6</td><td>follower, degraded (2.39, 0.96)</td></tr>
+<tr><td>ellipse</td><td class="num">2.5</td><td>toll-booth, parked (0.43)</td></tr>
+<tr><td>ellipse</td><td class="num">4.0</td><td>toll-booth (0.69)</td></tr>
+<tr><td>shuttle</td><td class="num">discontinuous</td><td>toll-booth, parked (0.54)</td></tr>
+<tr><td>waypoint</td><td class="num">aperiodic, loitering</td><td>entrainment fails — vision <em>harms</em> (night two, below)</td></tr>
+</table></div>
+<p><strong>The constant-control law: entrainment reaches exactly those motions whose co-moving
+frame can be held with ~constant control</strong> — constant curvature means a constant turn
+rate, so the control signal is itself stationary and absorbable; past the tolerance
+(measured: ratio 1.6–2.5, about 2× control modulation, with a soft edge), selection substitutes stillness at favorable points; without
+periodicity, nothing. This is the quantitative form of the mentors' ladder rung 3 and of the
+prediction-vs-Gibsonian question: within the law's reach the baseball intuition is exactly
+right — no prediction needed. Beyond it, nothing tested crosses, and the live question is
+what minimal <em>structural</em> addition buys generality.</p>
+<p><strong>And the entrainment model closed:</strong> open-loop synaptic rewrite takes 15–60
+steps at every wlr while closed-loop re-locking takes 90–225 — <em>the body, not the synapse,
+is the slow variable</em>. A 2-ODE model with both parameters derived from measurements (and
+the aperture ratchet as geometry) predicts re-entrainment times for 3/4 regimes within ~15%,
+including the counterintuitive slowness at high wlr.</p>
+
+<p><strong>The two-body problem, and the band clause.</strong> Two mutually-tracking
+homeostats collapse to collective stillness (a static partner is already a stationary
+stimulus); churn pairs chase without locking; a mixed pair shows the churner animating the
+absorber but not leading it — churn motion is aperiodic, the forbidden class. And the
+pacemaker test closes the loop on the family's own artifacts: a recorded wall-circler orbit
+is unfollowable at its native 6.4°/step yet <em>perfectly followed at 2.1°/step</em>
+(near-target 1.00 by generation 5). The competence law is two-clause: constant-control
+<em>shape</em> (tolerance ≈ 2× curvature modulation) AND frame <em>rate</em> inside the
+entrainment band. Ecology corollary: collective entrainment needs a <strong>slow periodic
+pacemaker</strong>. Also measured: the wiring lottery lives in the frozen adjacency (no
+weight-space operation fixes it: 0/16), a minimal grow/prune structural rule is the first
+within-life mechanism to cross it (3/16), lifelong rewiring destroys solved tasks, and a
+<em>developmental window</em> — structural exploration that closes — captures the benefit at
+zero cost. The family, minimally extended, rediscovers why development exists.</p>
+
+<figure><img src="{{FIG_CHAIN}}" alt="The live two-agent homeostatic chain">
+<figcaption><strong>And then the ecology was built.</strong> The paper-scale family cannot pace
+itself (absorption wall-agents are dead statues; churn circlers turn too fast) — but a wall
+circler with a wider wheel base in a doubled arena circles cleanly at 1.9°/step, inside the
+band, and a warm-start-evolved follower locks onto it <em>live</em>: near-target 1.00, dist
+3.77, stable through 10,800 steps. A blind pacemaker, circling because of walls it avoids,
+entrains a follower that senses it — the first sustained two-agent homeostatic system.
+(Cold-start evolution finds toll-booths; the recipe needs a band-compatible pacemaker,
+one-way coupling, and warm-started selection.)</figcaption></figure>
+
+<figure><img src="{{FIG_CHAIN3}}" alt="The depth-4 entrainment chain">
+<figcaption><strong>And entrainment propagates — to depth four, with the ceiling's
+mechanism now closed.</strong> A blind pacemaker's periodicity cascades down a sensing chain
+of comfort-seeking agents: three followers phase-locked on concentric rings about a shared
+<em>off-center</em> point (this caption's original radii 7.8 → 6.5 → 5.6 → 2.6 were right;
+a night of measuring them about the arena center produced eccentric-frame artifacts —
+caught, retracted, and re-retracted on the ledger). All four agents co-rotate at the same
+ω ≈ 1.9°/step, so ring contraction converts directly into linear-speed loss
+(0.255 → 0.212 → 0.184 → 0.086 = ω·r at every link), and the fifth agent fails because its
+target now crawls below the followable speed band — <strong>the depth limit is a speed
+floor, not noise</strong>. Controlled replays proved the rest: phase-aligned residuals
+<em>shrink</em> down the chain (0.31 → 0.11 — each follower is a regularizer), a follower
+tolerates the pacemaker's entire deterministic waveform but almost no stochastic jitter
+(OU sd 0.1, ~1% of ring radius, kills the lock), and the band's edges got measured:
+followable target speed ≈ 0.09–0.28 units/step (0.184 and 0.237 lock; 0.086 and 0.313
+don't). A heavy-wheeled "repeater" link fails too — a low-pass body filters the signal
+along with the noise. One evolution round was also caught chasing a moved start
+position — the locks are basin-dependent in initial conditions as well as wiring, at the
+collective level too.</figcaption></figure>
+
+<figure><img src="{{FIG_CHAIN_TRUTH}}" alt="The chain's true geometry: concentric off-center rings">
+<figcaption>The picture that settled it: steps 7,200–14,400 of the live chain. Four concentric
+rings about a shared off-center point, radii 7.8 → 6.5 → 5.6 → 2.6 — co-rotating at one
+angular rate, so the innermost agent crawls. Every earlier "radius about the arena center"
+was an eccentric-frame artifact.</figcaption></figure>
+
+<p><strong>And scaling is inert.</strong> A cluster N-line (N = 200 → 2000, in-degree and
+input wiring pinned, 24 seeds/cell): the ridge does not move, scores show no trend (N=2000 is
+nominally the best cell), internal coordinates are constant across the 10× range, and the
+duty law holds at N=2000 (corr 0.988). The organizing variables of this family are
+<em>degrees and rates, not counts</em>.</p>
+
+<h2>Night two: robustness, the third clause, and the static cliff
+<span class="chip ok">H51–H81</span></h2>
+
+<figure><img src="{{FIG_NIGHT2}}" alt="Night-two results: noise rescue, synaptic scaling repair, sparse pre-adaptation, the lock horizon">
+<figcaption>Four arcs from the second half of the night: (a) moderate sensor noise rescues
+under-plastic networks; (b) Law 3 acts as deafferentation-induced synaptic scaling;
+(c) sparse wiring is pre-adapted; (d) interception skill appears exactly past the
+re-entrainment horizon.</figcaption></figure>
+
+<p><strong>Noise is a resource for the under-plastic — via the loop, not the reservoir.</strong>
+Uniform sensor noise σ=0.1 rescues the statue regime (wlr 0.03: score 0.367 → 0.533,
+reliability 0.44 → 0.81) and even lifts wlr 1.0; σ=0.2 hurts everywhere. The mechanism is
+not desaturation — open-loop, σ=0.1 changes nothing (reconstruction gain 0.001) while σ=0.2
+does desaturate. It is a <em>dark-trap escape</em>: the failing agent spends 35% of steps in
+darkness, where zero input flow means zero learning signal, an absorbing sensory dead state.
+σ=0.1 abolishes darkness (input duty 0.65 → 1.00) while barely touching the motor; σ=0.2
+keeps duty at 1.00 but washes out contrast. The optimum sits exactly where darkness is
+abolished and contrast survives.</p>
+
+<p><strong>Node death: the physiology always repairs; behavior only needs it for big
+wounds.</strong> Kill 10–50% of nodes mid-run (true adjacency removal — plasticity cannot
+regrow it). Spike rate recovers under learning and stays collapsed frozen; the repair channel
+is Law 3 itself: the kill halves each survivor's total input, the error goes persistently
+negative, and the integral controller re-inflates surviving weights (w̄ 0.106 → 0.210 at 50%
+kill — a near-exact 2× for the halved in-degree). This is Turrigiano-style compensatory
+synaptic scaling, from eq. 5 with nothing added. Behaviorally though, redundancy buffers:
+a <em>frozen</em> network shrugs off 10% death entirely, and at small wounds the repair
+transient is net <em>harmful</em> (the inflammation costs more than the injury) — repair
+pays only at 50% kill (median 0.432 vs 0.295), though learning abolishes the catastrophic
+tail even at 10% (0/16 dead vs 3/16).</p>
+
+<p><strong>Sparsity relocates the starting point — and the conservation law is exact.</strong>
+With input and output wiring pinned, total recurrent input after adaptation is conserved
+across a 40× density range (w̄·p·N = 2.01–2.17; recurrent gain 0.93–1.02): criticality is
+wiring-invariant. Performance at the ridge is flat — but at wlr 0.03, <strong>p=0.02 scores
+0.566 with 15/16 reliability at 16 seeds, the best tracking cell of the campaign</strong>
+(48-seed cluster calibration: 0.509/0.79 — still +0.05 and +0.18 reliability over the dense
+pair, with a third bit-identical cross-machine check): 4-link columns
+<em>start</em> at g≈1.5 instead of 7.5, so nearly-frozen plasticity suffices and churn never
+enters. Sparse wiring is pre-adapted. Density narrows the viable plasticity window instead
+of shifting it (at p=0.8, wlr 0.3 and 1.0 both collapse to 0/16 — one by a carrier-level
+loss with physiology fully renormalized, one by runaway potentiation); sparse is forgiving,
+dense is brittle. And it transfers: on Pong (mean-zero weights — there the controller
+<em>grows</em> input to comfort, the mirror image of tracking's erosion) the best cell is
+again sparse+slow, hit rate 0.679 vs the published 0.600, running nearly silent at f≈0.02.
+The best Pong players use about ten active neurons in five hundred.</p>
+
+<p><strong>The baseball test, run forward — and the competence law's third clause.</strong>
+New ballistic mode: targets fly straight through the arena. A constant-bearing approach is
+constant-control, so the law seems to promise interception — yet a 10-generation GA stays at
+the blind-body chance level. The timescales say why: crossings last ~70 steps, re-entrainment
+takes 90–225 (the body-clock measurement) — each encounter ends before a lock can form. Slow
+the targets and skill appears on schedule: the orbital champion's edge over blind grows
++0.03 → +0.21 → <strong>+0.31</strong> as crossings stretch past the horizon (catch 0.535
+while blind <em>falls</em>). Clause (iii): <strong>the engagement must outlast the re-lock
+horizon</strong> — periodicity is just the easiest way to satisfy it forever. The
+evolutionary footnote: the GA champion bred below the horizon is numerically identical to
+its own blinded control — selection drove input weight to the floor and evolved a blind
+sweeper. Vision without lockable engagements has zero marginal fitness.</p>
+
+<p><strong>What aperiodicity actually forbids — three failed predictions that narrowed the
+truth.</strong> Slowing aperiodic waypoint legs past the horizon does <em>not</em> produce
+following; worse, the sighted champion (0.17) loses to a <em>parked</em> blind statue (0.43)
+that the loitering target keeps visiting. It is not the kinks: randomized mid-flight ±90°
+redirects leave interception untouched (+0.007, n=422, placebo clean; an earlier
+hazard-classified design was caught as duration-confounded by its own preregistered blind
+control). At matched engagement length, traversal works (+0.21) and loitering fails (+0.00):
+a through-flying target offers a monotone looming ramp the flow-ratchet can climb — the
+champion catches a third of crossings inside 100 steps; the blind control, none — while a
+loitering target flutters at mid-range and offers no ramp. And the harm mechanism is
+measured (H61): entrained turning is not an internal motor program but a closed-loop product
+of <em>stable bearing geometry</em> — the true champion turns 6.14°/step on orbit with its
+bearing pinned and 0.00°/step (median, two-sided) under loitering flow, where fluttering
+bearings cancel and only mean forward throttle survives. It cruises near-straight, ends
+wall-pinned, far from where the target loiters, while a parked blind statue wins passively.
+<strong>Flow is a throttle; stable geometry is the steering</strong> — vision under
+rampless flow unparks the agent without aiming it.</p>
+
+<p><strong>The reward ladder, completed — the barrier is task-side.</strong> Eligibility
+traces (two decay constants) sit exactly at the η=0 baseline, like reward-scaling and
+one-step three-factor credit before them. The decisive arm: traces with the homeostatic
+channel <em>switched off</em> mid-run — so nothing could erode what reward installs — also
+does nothing. Neither credit delay nor absorbability was the blocker; the task the ladder
+was aimed at (waypoint pursuit) violates the competence law's own clauses, so there is no
+gradient any weight rule could climb. Reward = selector, not shaper, now with its
+mechanism.</p>
+
+<p><strong>And the laws compose into a predictor — which exposed a cliff.</strong> Freeze
+both channels and cold-start network fate is computable from the wiring file alone: iterate
+the per-node duty law gated by the Law-1 reachability condition (drive ≥ leak·ρ·T).
+Result: <strong>r = 1.0000, median error 0.0%</strong> over 72 frozen runs (the two bugs on
+the way each turned out to be a missing law — the branch clip, then the reachability gate).
+But inverting it to <em>design</em> an interior rate fails constructively: predicted f is
+discontinuous — homogeneous frozen networks have <em>no stable interior rates at all</em>,
+only dead and saturated. Every competent behavior in this campaign lives at f ≈ 0.1–0.3: a
+state that exists only as the homeostat's dynamically maintained equilibrium. Adaptation
+holds the network on the cliff face — and manufactures the heterogeneous per-node target
+profile that, once frozen, is the only static design that works. Self-organized marginality,
+made precise.</p>
+
+<figure><img src="{{FIG_NIGHT2B}}" alt="Second wind: speed band, target liability, bits per spike">
+<figcaption>The second wind: (a) the followable speed band's full psychometric; (b) target
+adaptation harms at 48-seed power; (c) information per spike rises ~11× with wiring
+density.</figcaption></figure>
+
+<p><strong>And a second wind of overturned expectations (H69–H78).</strong> Long-horizon
+runs sag everywhere (−0.109 over 21,600 steps at the ridge, t=−3.6, n=48). The wander's bad
+segments are <em>dark excursions</em> (r(segment score, segment duty) = +0.52–0.81 — the
+noise-rescue trap, visited transiently by healthy agents), but the sag is not accumulating
+darkness — and it is not plasticity churn either: <em>freezing everything makes it worse</em>
+(lock decay is metastable, and the weight channel is the re-locking mechanism). The culprit
+is the target channel: <strong>freezing T at birth beats full homeostasis by +0.115
+(t=+3.24, 48 seeds), and even the first 3,600 steps of target adaptation do lasting damage
+(+0.090, t=+2.65)</strong> — on the flagship task at its best operating point, eq. 4, the
+family's namesake set-point mechanism, is a pure liability (its harmful component boxed by
+three preregistered nulls: not the mean, not anatomically-selective, not
+activity-selective). The competence law's band clause got its full psychometric (lock
+plateau at target speeds 0.10–0.26 units/step; the low edge is jointly speed and
+speed-<em>regularity</em>). Information-per-spike is now in units: wiring density buys code
+sparsity buys ~11× bits/spike, and dense-quiet networks carry more information
+<em>absolutely</em> at a third of the spikes — the sparse-wiring advantage is dynamical,
+never informational. And the DNA question got its first generative answer: a GA over
+wiring-<em>statistics</em> generators (density, degree regularity, input-targeting bias,
+reciprocity) improves fresh-wiring reliability only +0.08 over Bernoulli at the ridge —
+topology statistics beyond density are nearly inert, though selection did keep inventing
+anti-hub input targeting (a quasi-feedforward sensory layer). And the closing boundary:
+<strong>there is no figure-ground.</strong> Give the proven follower two visible pacemakers —
+even one it cannot follow anyway — and it locks <em>nothing</em> (1.000 alone → 0.034 with
+the second bump; a distractor at 10% salience already abolishes the lock). Superposed flows
+leave no constant-control co-moving frame, and the architecture has no source separation.
+The depth-4 chain worked only because each link sees exclusively its own target — that
+sensing restriction was load-bearing. With the ~1% jitter tolerance, a knife-edge theme
+closes the campaign: perfect locks, self-repair, and N-invariance inside the single-source
+clean-flow manifold; collapse at every measured edge. <em>Selective attention, not
+prediction, looks like the first structural addition a real multi-agent homeostatic ecology
+needs.</em></p>
+
+<h2>Refuted along the way <span class="chip bad">all preregistered</span></h2>
+<ol>
+<li>"Homeostasis silences stationary input" — only the weight channel regulates; the statue
+is the target channel's own fixed point.</li>
+<li>"Spiking tracks stimulus statistics" at defaults — it is churn-set (the canonical
+prop_spiked ≈ 0.34 included).</li>
+<li>"The network self-excites" — darkness silences every regime.</li>
+<li>"The seed lottery is the innate kernel" — no; its microfoundation is open.</li>
+<li>"g_init organizes performance" — it organizes activity only.</li>
+<li>"Re-entrainment time ∝ 1/wlr" — higher wlr raises the ceiling but slows locking.</li>
+<li>"Bigger networks fail" — mostly a wiring confound: with in-degree and input wiring held
+fixed, N=100–800 is roughly stable (N=800: 0.536, 92% of seeds).</li>
+<li>"The seed lottery is a fixed wiring fate" — late segment scores within a run are
+mutually uncorrelated (+0.03): performance <em>wanders</em>, and much of the "lottery" is
+sampling noise of that wander. w1′'s 100%-seed reliability is a wander floor above
+threshold.</li>
+</ol>
+
+<h2>Open, ranked</h2>
+<ol>
+<li>Traversal geometry, one level deeper: the loitering harm is now mechanistic (H61 —
+throttle without steering), but what makes a looming ramp <em>sufficient</em> for
+acquisition within 100 steps on fresh wirings is still unmodeled.</li>
+<li>What sets the <em>wander</em> itself — H66 showed it is universal (SD ≈ 0.26–0.28 in
+every cell tested; design moves the mean, and reliability is threshold-crossing statistics
+around it) — so what microdynamics generate that invariant?</li>
+<li>A speed regenerator for chains: the depth-4 ceiling turned out to be a speed floor
+(rings contract, co-rotation slows the target below the followable band) — can a link be
+designed to hold radius, where the heavy-wheel repeater failed?</li>
+<li>The dense-fast carrier loss (p=0.8, wlr=0.3: physiology fully renormalized, competence
+zero) — what structure in the weights dies when the same total is spread over 160 links?</li>
+<li>Formalize information-per-spike: the best Pong players run at f≈0.02 — a bits/spike
+curve is now clearly worth one clean experiment.</li>
+<li>Why does the bias carrier regionalize (pure W-storage at w1′, mixed on the ridge)?</li>
+</ol>
+
+<div class="provenance">
+<span style="font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">provenance</span>
+— Hypotheses H1–H81 preregistered before their experiments in
+<code>scripts/lab/LEDGER.md</code> (refutations, wrong premises, and two confounded designs
+caught by their own controls all kept on the record); common-random-number seeds; laws
+verified to stated precision; chance = 0.25; score = within-45° occupancy, segments 6–10.
+Night-two additions are interactively verifiable at <code>/lab/repair</code> (self-repair,
+both arms), <code>/lab/traj</code> (sensor-noise rescue), and <code>/lab/pursuit</code>
+(ballistic interception, both champions) — each page reproduces its campaign JSON
+bit-exactly. Companions: <a href="https://claude.ai/code/artifact/0f95ff68-5ce5-4717-bda9-33e43f5a9f1c">Language
+Track Findings</a>, <a href="https://claude.ai/code/artifact/46eebcc0-8ec8-4f03-8dcb-17f3d5693b3d">Language Track Audit</a>.
+</div>
+</main>
