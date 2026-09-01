@@ -1126,3 +1126,31 @@ Per-(node, window) fit over 46,000 points: corr +0.9881 (a shade under the
 preregistered 0.99), median |resid| 0.021 (vs 0.0025 at N=200). The law is
 N-robust; the extra residual is consistent with more heterogeneous
 within-window drift at 10x nodes.
+
+## H46 (preregistered): the two-body problem — mutual tracking
+
+Two tracking agents on the circle, each sensing the OTHER's heading
+direction as its stimulus (rotation-only bodies, standard retina; no
+external stimulus). Predictions from the entrainment/absorption theory:
+(a) at ridge params (wlr 0.1) the pair ALIGNS (|h_A − h_B| → small) and
+then goes quiet (mutual absorption: alignment is a stationary manifold —
+a two-body statue), f dropping well below the solo-tracking level;
+(b) at churn params (wlr 1.0) alignment is looser and activity persists
+(mutual chase); (c) no sustained anti-alignment or drift regime at either.
+
+## H46 verdict: the two-body ground state is stillness; churn animates but cannot lead
+
+(Design lesson first: an out-of-view start freezes the pair forever —
+mutual darkness is absorbing; rerun with in-view start.) Homogeneous
+absorption pair (wlr 0.1): INSTANT mutual statue — f 0.000, zero motion,
+gap frozen at its initial value; no aligning phase (a static partner is
+already a stationary stimulus, so stillness is self-consistent from t=0;
+prereg (a) half-wrong, recorded). Homogeneous churn pair (1.0): perpetual
+weak mutual chase (f 0.13, 18% aligned, no lock). Mixed pair (churner +
+absorber): the churner ANIMATES the absorber (f_B 0.000 -> 0.038, 20%
+aligned) but no leader-follower lock — because churn motion is APERIODIC,
+exactly the class the constant-control law says the family cannot follow.
+Coherent multi-agent conclusion: interaction alone generates no sustained
+dynamics; collective entrainment needs a periodically-moving member (e.g.,
+a wall-avoidance circler as the "pacemaker") — a concrete, testable design
+principle for the mentors' multi-agent program.
