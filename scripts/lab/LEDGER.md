@@ -2169,3 +2169,65 @@ actively harms". SCOPE: ridge tracking (wlr=.1); Pong sparse-slow says
 tlr is neutral there (H74); the historic claim that frozen homogeneous
 T is death was config-specific (defaults/w1' era) and does not hold at
 the ridge. (twin48_results.jsonl, job 21731397)
+
+## H80 (preregistered): is the damage in the T profile or the co-adapted W?
+
+H76's freezeT3600 still sags (-0.069) while freezeT0 does not (+0.038).
+Discriminator arm: at step 3600, RESET T to init (homogeneous 1.0) and
+freeze it — wiping the adapted profile but keeping the W state that
+co-adapted with it during 0-3600. 12 CRN seeds, n=21600. Predictions:
+(a) if reset-at-3600 recovers freezeT0 behavior (late >= 0.45, sag
+>= -0.02), the damage lives entirely IN the adapted T profile;
+(b) if it still sags like freezeT3600 (late ~0.38), the W state carries
+the damage co-adaptively.
+
+## H80 verdict: the damage lives in the T profile alone
+
+Reset-and-freeze at 3600 -> late 0.444, sag +0.064 — recovers the
+freeze-at-birth trajectory despite W having co-adapted with the bad
+profile for 3600 steps. (a) confirmed: the harm is portable and
+wipeable, carried entirely by the adapted target profile; W bears no
+scar and re-locks once the profile is gone. Eq. 4 = a slowly
+manufactured toxin; eq. 5 = the healer. (h80_reset.json)
+
+## H79 (preregistered): eq. 4 is the wall task's death mechanism
+
+Wall statues die by target inflation (the k2 bistability). Freeze T at
+birth on the wall task (paper config otherwise, 16 seeds, n=3600) vs
+full. Predictions: (a) freeze-T abolishes most statue deaths: alive
+fraction (late speed > 0.02) rises from ~0.9 full (paper config is
+mostly alive) — WAIT, paper wall is 16/16 alive at wlr=1.0; the statue
+deaths appear at slow wlr. So: at (p=.1, wlr=.03) where H62 found 16/16
+DEAD, freeze-T-at-birth revives >= 8/16 (the death was T inflation, not
+W); (b) revived agents collide more initially but some (>= 4/16) reach
+alive+clean — recovering competence the T channel was destroying;
+(c) if still 16/16 dead, the wall death is W-erosion, not T-inflation.
+
+## H79 verdict: CONFIRMED beyond prediction — eq. 4 IS the wall death
+
+freeze-T at (p=.1, wlr=.03): alive 16/16 (vs 0/16 full; predicted only
+>= 8), alive+clean 7/16 (predicted >= 4), f 0.000 -> 0.123. The
+slow-wlr wall death was entirely target inflation. Cross-task ledger of
+eq. 4 so far: harmful-from-birth on ridge tracking (H76), neutral at
+sparse-slow Pong (H74), THE death mechanism on slow wall (H79), useful
+only as a damper at fast-weight Pong. (h79_wall_t.json)
+
+## H79b (preregistered): was the storm ever the search?
+
+If wall's "storm = the search" (H62) was really just outrunning
+T-poisoning, then sparse+slow+freeze-T should match the paper cell.
+(p=.02, wlr=.03, tlr=0) x 16 seeds. Predictions: (a) alive >= 14/16;
+(b) alive+clean >= 10/16 (vs paper cell 15/16, sparse-full 3/16);
+(c) if alive+clean stays <= 5/16, the storm retains a genuine search
+role beyond T-avoidance.
+
+## H79b verdict: the storm story survives, halved
+
+sparse+freeze-T: alive 16/16 ((a) confirmed) but alive+clean 6/16 —
+(b) not met (predicted >= 10). Revision of H62: the wall's slow-wlr
+DEATHS were all T-poisoning (freeze-T cures aliveness at any density),
+but the CLEAN circling attractor is still reached ~2x as often with
+fast weight erosion (paper cell 15/16 vs ~6-7/16 slow): the storm is
+not the guardian of aliveness (that was eq. 4's victim count) but it
+remains a genuine search accelerator for attractor quality. With tlr=0
+the wall task runs on eq. 5 alone — and works. (h79_wall_t.json)

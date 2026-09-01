@@ -479,11 +479,16 @@ FAILS, and the failure is the flow-sign law resurfacing: wall's
 "perfect" slow-wlr cells are dead statues (the task's degenerate death
 solution; an aliveness check caught the confounded metric), and the best
 sparse cell (wlr 0.3) reaches only 8/16 alive-and-clean versus the paper
-cell's 15/16. On the flow-negative embodiment the supercritical storm is
-*functional* — the exploration that finds the live circling attractor
-before eroding into it; pre-adapted weak-drive starts fall still before
-finding the circle. Whether the storm is a pathology to skip (tracking,
-Pong) or the search to keep (wall) depends on the body's sign.
+cell's 15/16. The follow-up (H79/H79b) then split this in two: the
+slow-wlr wall *deaths* were entirely eq. 4's doing — freeze targets at
+birth and 16/16 revive at any density (f 0.000 → 0.12–0.17) — while
+the *clean-circling* rate still roughly doubles with fast weight
+erosion (paper cell 15/16 vs ~6–7/16 slow, frozen-T). So the storm is
+not the guardian of aliveness (that was T-poisoning's victim count),
+but it remains a genuine search accelerator for attractor quality on
+the flow-negative embodiment. Whether the storm helps or hurts still
+depends on the body's sign — but the death toll everywhere belongs to
+the target channel.
 
 ## The two-body problem, and the band clause
 

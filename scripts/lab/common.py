@@ -162,7 +162,8 @@ def run_closed_loop(task: dict) -> dict:
         elif arm == "freeze-T-mid" and i == half:
             t_mid = net.targets.copy()
         if freeze_T_at is not None and i == int(freeze_T_at):
-            t_mid = net.targets.copy()
+            t_mid = (np.full(rcfg.n_nodes, rcfg.target_init)
+                     if task.get("reset_T_on_freeze") else net.targets.copy())
         elif arm == "shuffle-mid" and i == half:
             mask = net.adjacency
             vals = net.weights[mask]
