@@ -127,12 +127,26 @@ kind of controller altogether (b6):
   the old bias persists briefly (behavioral entrenchment; b6b).
 
 Mechanism, assembled: retinal slip passes the plasticity bandpass (Law 3
-absorbs anything slower than P*; integration averages anything much faster)
-and drives spiking; spikes drive turning; the *turn bias* is the slow learned
-variable, dragged along by the stimulus. Tracking is **velocity entrainment
-with a flow ratchet** — the 2024 paper's phrase "Gibsonian resonance" is
-mechanically accurate, and the classical reading of the agent as an
-error-correcting servo is wrong.
+absorbs anything slower than P*) and drives spiking; spikes drive turning;
+the *turn bias* is the slow learned variable, dragged along by the stimulus.
+Tracking is **velocity entrainment with a flow ratchet** — the 2024 paper's
+phrase "Gibsonian resonance" is mechanically accurate, and the classical
+reading of the agent as an error-correcting servo is wrong.
+
+**Where the bias lives** (b8): decomposing the pools' duty difference (which
+*is* the turn command, corr +1.000) into input vs recurrent components: at
+w1′ the bias is carried by the **recurrent drive** (+0.37 with direction;
+input pathway nil) — genuinely W-stored, written by the servo and rewritten
+at each reversal. At ridge25 the carrier is mixed (input +0.53, recurrent
++0.39); at defaults, churn-carried. And the lag-servo alternative is dead:
+heading error keeps a constant +7–9° offset in *both* directions (corr with
+direction ≈ 0) — there is no direction-flipping lag anywhere tested.
+
+**The bandpass is in activity, not information** (h22): at slip period P=8
+(peak speed ~16°/step) activity collapses to f = 0.003, yet reconstruction
+gain *rises* to 0.505 — fast slip sparsifies spiking into hyper-selective
+events. Absorption kills slow signals' activity and information together;
+fast signals lose activity but keep information.
 
 ## What the two homeostatic channels actually do
 
@@ -146,9 +160,13 @@ error-correcting servo is wrong.
   *improves* defaults (0.404 vs 0.325; k3). The channels **compete for the
   same error**: fast targets absorb E before the weights can act (at wlr=0.1,
   tlr=0.1 the gain never erodes; f stays 0.98 and score collapses to 0.267).
-  But at w1′ target adaptation genuinely adds ~0.2 — and NOT as static gain
-  normalization (any raised constant T is death by Law 2; b5). What dynamic
-  targets contribute there is the sharpest open question.
+  At w1′ target adaptation genuinely adds ~0.1–0.2 — and NOT as static
+  *homogeneous* gain normalization (any raised constant T is death by Law 2;
+  b5). The resolution (h21): freezing T at its **evolved heterogeneous**
+  per-node values costs nothing (0.789 vs full 0.791; homogeneous T=1 costs
+  ~0.09). **Targets are a calibration channel** — they build a static
+  per-node dynamic-range profile and can then stop; weights are the
+  computation channel and must keep running.
 - **The learned structure is not the computation — the ongoing process is**:
   shuffling all learned weights mid-run (learning on) recovers to or above
   the unshuffled run everywhere (defaults 0.394 vs 0.325; w1′ 0.762 vs
@@ -177,21 +195,22 @@ error-correcting servo is wrong.
 
 ## Open questions, ranked
 
-1. **What do dynamic targets contribute at w1′** (high leak, ρ=1.5) that no
-   constant T can? (Per-node dynamic range allocation? Test: per-node T
-   variance vs tracking, and a heterogeneous-T̄-frozen arm.)
-2. **The seed lottery's microfoundation** at defaults — not the static
+(Former #1 — dynamic targets — answered by h21: calibration channel. Former
+#3 — the turn-bias variable — answered by b8: W-stored at w1′, carrier
+regional. Former upper-edge question answered by h22: no averaging corner;
+the fast edge is sparse-and-informative.)
+
+1. **The seed lottery's microfoundation** at defaults — not the static
    kernel; plausibly realized-gain disorder after adaptation. (Regress
    per-seed outcome on realized in-degree × w̄ trajectories.)
-3. **The turn-bias variable**: where does the follower's velocity live
-   physically? (Candidate: the asymmetry of the two output pools' upstream
-   drive; measurable per step. Finding it would complete the entrainment
-   story at the synapse level.)
-4. **The slip-frequency bandpass's upper edge** (highpass corner below P=30
-   never reached) and the secondary resonance near sensor-spacing/speed.
-5. **Why the exact retinal drive formula underperforms the proxy** for the
+2. **Formalize information-per-spike**: the h22 sparse-informative fast edge
+   suggests an efficiency curve (bits/spike vs slip frequency) worth one
+   clean experiment; also the secondary resonance near sensor-spacing/speed.
+3. **Why does the carrier regionalize** — pure W-storage at w1′ vs mixed at
+   ridge25? (Candidate: leak sets how long input context persists in x.)
+4. **Why the exact retinal drive formula underperforms the proxy** for the
    dead boundary — a closed-loop selection effect worth one figure.
-6. Cluster-scale confirmations in flight: 48-seed fine ridge (H14: ridge
+5. Cluster-scale confirmations in flight: 48-seed fine ridge (H14: ridge
    follows wlr* = c·leak^b; held-out checkerboard), N-line dual-scaling.
 
 ## Instruments

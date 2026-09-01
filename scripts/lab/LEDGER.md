@@ -381,3 +381,35 @@ directions (corr with direction ≈ 0) — there is no direction-flipping lag.
 The entrainment loop is now specified end-to-end: stimulus direction →
 drive-servo writes pool-asymmetric recurrent drive → duty law reads it out
 as the turn command → reversal rewrites it in ~30–200 steps.
+
+## H21 (preregistered): what dynamic targets do at w1'
+
+Arms at w1', 24 seeds: full vs freeze-T-mid (T frozen at its EVOLVED
+heterogeneous per-node values at t=3600, W keeps learning) vs freeze-T-only
+(T pinned homogeneous at 1.0 from init; prior: 0.654) vs full. Prediction:
+if targets' contribution is building a static heterogeneous dynamic-range
+profile, freeze-T-mid ≈ full (0.85); if T must keep moving (per-window gain
+control), freeze-T-mid ≈ freeze-T-only.
+
+## H22 (preregistered): the bandpass upper edge
+
+Extending B3 at wlr=0.1 with P ∈ {8, 15}: reconstruction gain falls at short
+periods (integration/averaging highpass corner), locating the passband's
+other side.
+
+## H21 verdict: SUPPORTED — targets are a CALIBRATION channel
+
+w1', 24 seeds: full 0.791±0.205 | freeze-T-mid (T frozen at its evolved
+heterogeneous values, W learning on) 0.789±0.195 | freeze-T-only (homogeneous
+T=1) 0.700±0.248. Freezing the evolved profile costs NOTHING. The target
+channel's entire contribution is building a static per-node dynamic-range
+profile; after calibration it can stop. Weights = computation (must keep
+running); targets = one-shot-ish calibration.
+
+## H22 verdict: no averaging corner — the fast edge is sparse-and-informative
+
+recon gain at wlr=0.1 RISES to 0.505 at P=8 (peak slip ~16 deg/step) while
+activity collapses (f 0.003, spikes on 30% of steps): fast slip sparsifies
+spiking into hyper-selective events. Absorption kills slow signals' activity
+AND information; fast signals lose activity but keep information (fewer,
+sharper spikes). The bandpass is a property of ACTIVITY, not information.

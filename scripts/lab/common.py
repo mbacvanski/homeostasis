@@ -124,6 +124,7 @@ def run_closed_loop(task: dict) -> dict:
     snaps = {"t": [], "w_mean": [], "neg_frac": [], "T_mean": [], "g": [], "f_win": []}
     f_win_acc = 0.0
 
+    t_mid = None
     for i in range(n_steps):
         if arm.startswith("freeze-mid") and i == half:
             net.learning_enabled = False
@@ -131,6 +132,8 @@ def run_closed_loop(task: dict) -> dict:
                 net.targets = np.full(rcfg.n_nodes, rcfg.target_init)
             elif arm == "freeze-mid-resetW":
                 net.weights = w0.copy()
+        elif arm == "freeze-T-mid" and i == half:
+            t_mid = net.targets.copy()
         elif arm == "shuffle-mid" and i == half:
             mask = net.adjacency
             vals = net.weights[mask]
@@ -143,6 +146,8 @@ def run_closed_loop(task: dict) -> dict:
             net.weights = w0.copy()
         elif arm == "freeze-T-only":
             net.targets = t0.copy()
+        elif arm == "freeze-T-mid" and t_mid is not None:
+            net.targets = t_mid.copy()
         e_left, e_right = state.outputs
         if arm == "swap-mid" and i >= half:
             e_left, e_right = e_right, e_left
