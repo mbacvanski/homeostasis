@@ -343,3 +343,21 @@ agent (ridge25 dark-stall 0.93) and the periodic world returns the stimulus
 (periodicity is load-bearing, as the toy-world result predicted). Swap
 immunity follows: inversion just re-learns the bias. "Gibsonian resonance"
 is mechanically accurate: entrainment, not servo control.
+
+## B6b: re-entrainment after reversal (measured, prereg partially wrong)
+
+Windowed dH toward the new direction: w1' re-locks in ~30 steps to asymptote
+0.94; wlr=0.1 tau~180/asym 0.68; wlr=0.3 and 1.0 tau~270/asym 0.82 with an
+initial NEGATIVE lobe (-0.14/-0.40: the old bias persists — behavioral
+entrenchment); wlr=0.03 fast but weak (asym 0.36, near-statue). tau does NOT
+scale as 1/wlr (H19b wrong): higher churn raises the entrainment ceiling but
+slows re-locking. Score again tracks the SNR compromise.
+
+## B7: LAW 3 — the weight channel is a gated integral controller (exact)
+
+d(sum_in W)_n = -wlr * E_n per step on nodes with >=1 presynaptic spike,
+else 0 — verified to <=1.2e-14 across defaults/ridge25/w1', 600 closed-loop
+steps each. The reduced model is now DERIVED: per node, f slaved by the duty
+law; drive servo integrates -wlr*E (spike-gated); target servo integrates
+tlr*E (floored). Closure check: predicted absorption cutoff P* ~ 2pi/(wlr*f)
+= ~420 steps at (wlr .1, f .15) vs observed 240-960 in B3.
