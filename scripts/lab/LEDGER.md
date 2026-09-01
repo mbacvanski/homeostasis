@@ -1629,3 +1629,25 @@ adaptation both HOLDS the network on the cliff face and MANUFACTURES the
 heterogeneous target profile that turns interior rates into a valid
 static design. Self-organized marginality, made precise.
 (h59_dial.json, h59_design.json)
+
+## H58 verdict: transfers — after correcting my own wrong premise
+
+PREREG ERROR, on the record: "Pong starts at Sigma-w=80" was the WALL
+config misremembered. Pong is weight_init_mean=0.0, sd 0.2, 25%
+inhibitory, N=500, input 2.75: it starts at Sigma-w ~ 0 and the
+controller GROWS input to comfort (final w*p*N 1.5-3.3) — the mirror
+image of tracking's erosion; this is what "subcritical" has meant.
+Prediction (b), derived from the wrong premise, failed accordingly
+(p=.1 low-wlr cells are fine: 100k steps give even wlr=.03 time to
+finish; wpn 1.66 fully grown).
+
+What held: (c) CONFIRMED — sparse+slow p=.02/wlr=.03 is the best cell,
+hit 0.679 (SD 0.159; published 0.600, SD 0.100; +1.7 SE — consistent
+with the 48-seed wlr-0.3 improvement 0.658, not independently
+conclusive). (a) conservation across p holds at wlr<=0.1 (1.53 vs 1.66;
+2.18 vs 1.76) and BREAKS by overshoot for fast-sparse (wlr .3, p .02:
+3.32). At tlr=0.01 every wlr<=0.3 cell (0.609-0.679) roughly doubles the
+wlr=1.0 cells (0.282-0.333) — the slow-weights result generalizes.
+Striking: the best Pong players are nearly silent, f_end ~ 0.019 (~10
+active nodes of 500) vs 0.11 at p=.1. Sparse quiet networks play Pong
+best. (h58_pong_sparse.json)
