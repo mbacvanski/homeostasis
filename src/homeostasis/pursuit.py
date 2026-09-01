@@ -55,7 +55,9 @@ class PursuitConfig:
     # to the retina's angular grain.
     wheel_base: float | None = None
     # stimulus
-    stimulus_motion: str = "orbit"        # orbit | waypoint | still | wander
+    stimulus_motion: str = "orbit"        # orbit | waypoint | still | wander | ellipse
+    ellipse_a: float = 5.0                # ellipse semi-axes (ellipse mode)
+    ellipse_b: float = 2.5
     wander_sigma: float = 0.05            # per-step heading diffusion (rad), wander mode
     stimulus_speed: float = 0.15          # arena units per step
     orbit_radius: float = 4.5
@@ -97,6 +99,10 @@ class PursuitEnv:
             self.sx = center + 2.0
             self.sy = center
             self._sphi = 0.0
+        elif c.stimulus_motion == "ellipse":
+            self._phase = 0.0
+            self.sx = center + c.ellipse_a
+            self.sy = center
         else:
             self.sx = center
             self.sy = center + 3.0
@@ -163,6 +169,14 @@ class PursuitEnv:
             self._phase += c.stimulus_speed / c.orbit_radius
             self.sx = center + c.orbit_radius * np.cos(self._phase)
             self.sy = center + c.orbit_radius * np.sin(self._phase)
+        elif c.stimulus_motion == "ellipse":
+            # advance phase for ~constant arc speed
+            a, b = c.ellipse_a, c.ellipse_b
+            center = c.box_size / 2.0
+            r = np.hypot(a * np.sin(self._phase), b * np.cos(self._phase))
+            self._phase += c.stimulus_speed / max(r, 1e-6)
+            self.sx = center + a * np.cos(self._phase)
+            self.sy = center + b * np.sin(self._phase)
         elif c.stimulus_motion == "wander":
             self._sphi += float(self.rng.normal(0.0, c.wander_sigma))
             nx = self.sx + c.stimulus_speed * np.cos(self._sphi)

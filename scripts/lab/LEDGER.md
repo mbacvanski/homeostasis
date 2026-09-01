@@ -916,3 +916,50 @@ yields motion-general pursuit. Theory note: a shuttle also has a periodic
 co-moving frame, but with heading-flip discontinuities at the turning
 points that absorption cannot smooth — shape-specificity is
 absorbability-of-the-frame, consistent with everything above.
+
+## H38 (preregistered): the manifold theory's discriminator
+
+If competence = entrainment onto a smooth closed absorbable manifold, joint
+(genome, wiring) evolution should find a resonator for an ELLIPSE orbit
+(smooth, curvature varying 4:1) but NOT for the straight-line SHUTTLE
+(heading-flip discontinuities at the turning points). Predictions: 10-gen
+joint GA reaches best near3 >= 0.8 on ellipse and stays < 0.4 on shuttle.
+Both succeeding would weaken the smoothness requirement; both failing would
+mean the circle itself is special (constant curvature).
+
+## H38 verdict: NO following evolved for either shape — both champions are TOLL-BOOTHS
+
+Autopsy: shuttle champion speed 0.000/spread 0.00 (perfectly parked at a
+favorable point, near3 0.54 as the target passes); ellipse champion speed
+0.039/spread 0.98 (parked with wobble, 0.69). The prereg dichotomy was
+mis-posed: for non-circular periodic motion, selection finds STILLNESS at a
+good location, not co-motion. Refined law: **entrainable manifolds are
+those requiring CONSTANT CONTROL** — the circular orbit is special because
+its co-moving frame is reachable by an agent turning at a constant rate
+(constant curvature); an ellipse's frame demands modulated turning, so the
+control signal itself is non-stationary and unabsorbable. Sensing
+stationarity AND control stationarity must hold simultaneously.
+Figure: fig_h38_champions.png.
+
+## H38c (preregistered): the constant-control interpolation
+
+A nearly-circular ellipse (a=4.5, b=4.0; curvature ratio ~1.27) should be
+within the constant-control tolerance: 10-generation joint GA finds a
+GENUINE FOLLOWER (agent speed > 0.05, positional spread > 1, near3 >= 0.8),
+unlike the 4:1 ellipse's toll-booth.
+
+## H38c verdict: CONFIRMED — the constant-control law completes
+
+Near-circular ellipse (ratio 1.27): joint GA evolves a GENUINE FOLLOWER in
+8 generations — near3 1.00, dist 0.58, agent speed 0.159 ≈ stimulus 0.15
+(velocity-matched), spread 4.5 (traverses the path). Full interpolation:
+circle → follower (0.80); ratio 1.27 → follower (0.58/1.00); ratio 4 →
+toll-booth (0.69); shuttle → parked toll-booth (0.54); aperiodic → nothing
+(0.12). **The competence law: homeostatic agents entrain to motions whose
+co-moving frame is holdable with ~constant control; past that tolerance
+selection substitutes stillness at favorable points; without periodicity,
+nothing.** The tolerance boundary lies in curvature ratio (1.27, 4.0) —
+open interval, bisectable later. This is the quantitative form of the
+mentors' ladder rung 3 and of "prediction vs Gibsonian loops": within the
+law's reach, no prediction is needed (the baseball intuition); beyond it,
+the family cannot go.
