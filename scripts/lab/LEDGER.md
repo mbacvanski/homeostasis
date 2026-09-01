@@ -2424,3 +2424,16 @@ targets (B on A, C on B, D on C each >= 0.7 of late steps within their
 h50-era distances +1); (b) no capture events (zero switches after step
 2000); (c) if links instead re-wire attention (e.g. D attends A), the
 chain reorganizes to a star — report topology.
+
+## H86 verdict: the whole depth-4 chain survives shared visibility
+
+With capture-resistant sticky attention (5x/300) and sequential
+coupling, the saved H50 chain runs all-visible: B_on_A 1.000, C_on_B
+1.000, D_on_C 1.000, zero attention switches, link distances identical
+to the exclusive-sensing era (3.56/2.70/3.14). (a),(b) confirmed; the
+topology remains a chain (c). Corollary observed while debugging: a
+PARALLEL update scheme (followers see one-step-stale positions) breaks
+link C entirely (0.011) while sequential coupling gives 1.000 — one
+step of sensory latency mid-chain is fatal; the ecology requires
+within-step freshness, consistent with the knife-edge theme.
+(h86_chain_shared.json)
