@@ -1408,3 +1408,52 @@ explosion threshold falls with density); wlr=.3 renormalizes fine
 total spread over 160 links), mechanism open. Summary law: sparsity
 WIDENS the viable plasticity window and shifts it down; density narrows
 it. Sparse is forgiving, dense is brittle. (h54b_matched.json)
+
+## H55 (preregistered): ballistic interception — the baseball test, run forward
+
+New pursuit stimulus_motion "ballistic": spawn on a random edge aimed
+inward (+-60deg), straight flight at 0.15/step through the 15-box, respawn
+on exit (~40 crossings per 3600-step run). Catch = dist < 1.5 any step of
+a crossing. The constant-control law PREDICTS interception is learnable —
+a constant-bearing approach has a static retina in the closing frame,
+unlike the refuted aperiodic wander. Predictions: (a) fresh GA (same
+protocol as H33/H34) reaches per-crossing catch rate >= 0.5 by gen 10;
+(b) champion autopsy shows constant-bearing geometry: during closing
+stretches, bearing SD < ~15 deg around a NONZERO lead angle (CBD), not
+tail-chase (bearing pinned at 0 with heading matched to target's); (c) the
+H34 orbital champion transfers only weakly (its solution is an orbit lock,
+not a general chase); (d) a blinded variant (input_weight ~ 0) anchors
+chance well below 0.2.
+
+## H55 verdict: interception REFUTED at native speed — below the lock horizon
+
+Blind-body chance anchor 0.240; H34 orbital champion transfers to 0.296;
+10-gen GA flat (best ~0.31-0.39 train, champion fresh-seed 0.274+-0.040 ~
+chance). Crossings last ~70 steps (51/3600) while re-entrainment takes
+90-225 (H31): each encounter ends before a lock can form. Proposed third
+clause of the competence law: engagement must OUTLAST the re-entrainment
+horizon (periodic motion qualifies because it never ends). (h55.log,
+h55_intercept.json)
+
+## H55b (preregistered): stretch the encounter past the horizon
+
+Same champions, ballistic speed 0.15 -> {0.08, 0.04} (crossings ~140 and
+~275 steps, spanning the 90-225 horizon), n=7200, 8 seeds, blind anchors
+at each speed. Prediction: champion-minus-blind catch gap grows from
+~0.03 at 0.15 to >=0.15 at 0.04; if the gap stays ~0 while both rise,
+the horizon story is wrong and the failure is acquisition geometry.
+
+## H55b verdict: CONFIRMED — the lock horizon is the third clause
+
+H34 champion's skill gap over blind: +0.027 at ~70-step crossings,
++0.209 at ~140, +0.310 at ~275 (catch 0.535 vs blind 0.225, which FALLS
+with slowing — a crossover, not a tide). The gap opens exactly as
+crossings outlast the 90-225-step re-entrainment horizon measured
+independently in H31. Competence law, third clause: THE ENGAGEMENT MUST
+OUTLAST THE RE-LOCK HORIZON. Bonus: the H55 GA champion is numerically
+identical to its own blinded control at all speeds — its genome has
+input_weight at the range floor (1.15) drowned by recurrent 1.23 and
+wheel_base at max: below the horizon, vision has zero marginal fitness
+and SELECTION EVOLVES A BLIND SWEEPER. Catching a baseball is homeostatic
+only because the ball is watched continuously from launch — one long
+engagement. (h55b_horizon.json)

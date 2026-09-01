@@ -1,7 +1,7 @@
 # How homeostatic reservoirs work: laws, phases, and the entrainment mechanism
 
 *Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/;
-50 preregistered hypotheses H1–H50 in
+55 preregistered hypotheses H1–H55 in
 [scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~20,000 local runs plus
 three cluster batches; four tasks — tracking, Pong, wall avoidance, and the
 new pursuit task — plus two-to-four-agent ecologies). Method: every
@@ -287,6 +287,30 @@ reward-scaled (H35) nor one-step reward-directed (H36) plasticity crosses,
 leaving *minimal structural additions* (eligibility traces? prediction?) as
 the live question.
 
+**The third clause: engagements must outlast the lock** (H55/H55b,
+`h55_intercept.py`, ballistic stimulus mode). The baseball test run
+forward: targets fly straight through the arena (spawn on an edge, exit
+the other side; catch = closing within 1.5). A constant-bearing approach
+is constant-control, so the law seems to promise interception — yet a
+10-generation GA stays flat at the blind-body chance level (champion
+0.274 ± 0.040 vs blind 0.240). The timescales say why: crossings last
+~70 steps while re-entrainment takes 90–225 (the H31 body-clock
+measurement) — each encounter ends before a lock can form. Stretch the
+encounter and skill appears exactly on schedule: the orbital H34
+champion's gap over blind grows +0.03 → +0.21 → **+0.31** as crossings
+lengthen to ~140 and ~275 steps (catch 0.535 while blind *falls* to
+0.225 — a crossover, not a tide). So the competence law has three
+clauses: (i) the co-moving frame must be holdable with ~constant control,
+(ii) the frame rate must sit in the entrainment band, and (iii) **the
+engagement must outlast the re-lock horizon** — periodic motion
+qualifies by never ending. The evolutionary footnote writes itself: the
+GA champion bred at native speed turns out to be *numerically identical
+to its own blinded control* — its genome drove input_weight to the range
+floor and the wheel base to maximum. Below the horizon, vision has zero
+marginal fitness, and selection evolves a blind sweeper. Catching a fly
+ball is homeostatic only because the fielder watches the ball
+continuously from launch: one long engagement, not forty short ones.
+
 **The lottery's home, and the mechanism hierarchy** (H40–H42): the wiring
 lottery lives in the frozen adjacency — weight-space operations cannot touch
 it (flow-seeking annealing fires 21 times/run and locks 0/16, because
@@ -314,6 +338,70 @@ are constant across a 10× size range (f 0.14–0.16, |E| 0.53–0.59, flow
 2.2–2.5). The duty law holds at N=2000 (corr 0.988). **Size per se is
 inert; the organizing variables of this model family are degrees and
 rates, not counts** — the direct answer to "scaling up network sizes."
+
+## Robustness: noise, damage, and the sparse advantage
+
+Three late-night studies (H51–H54) probed what the laws imply when the
+world or the network is degraded. All three returned the same shape of
+answer: **the comfort machinery always restores physiology; whether
+behavior benefits depends on where you start relative to comfort.**
+
+**Sensor noise is a resource for under-plastic networks** (H51,
+`h51_noise.py`). Moderate uniform sensor noise (σ=0.1 on activations)
+*rescues* the statue regime — wlr=0.03 goes 0.367 → 0.533 with
+reliability 0.44 → 0.81 — and even lifts wlr=1.0, flattening the ridge;
+strong noise (σ=0.2) hurts everywhere and collapses the absorption
+regime's activity (f 0.17 → 0.04). The mechanism is *not* desaturation of
+the reservoir: in open loop, σ=0.1 changes nothing (recon gain stays
+0.001) while σ=0.2 does desaturate (gain 0.196). The rescue is
+loop-level (H51c): at wlr=0.03 the failing agent spends 35% of its steps
+in darkness — zero input flow, hence zero learning signal, an absorbing
+sensory dead state. σ=0.1 abolishes darkness (input duty 0.65 → 1.00)
+while barely touching the motor (eff-diff 0.049 → 0.056), keeping the
+flow ratchet engaged. σ=0.2 keeps duty at 1.00 but washes out stimulus
+*contrast* (dir-agree 0.297 → 0.227). The optimum sits exactly where
+darkness is abolished and contrast survives.
+
+**Node death: physiology always repairs; behavior only needs it for big
+wounds** (H53, `h53_selfrepair.py`). Killing 10–50% of nodes mid-run
+(full adjacency removal, caches rebuilt so plasticity cannot regrow;
+silent nodes stay in readout denominators) at the ridge: spike rate
+recovers under learning (k=0.3: 0.174 → 0.115 → 0.136 vs frozen
+0.046 → 0.057 flat; k=0.5 doubles back 0.042 → 0.096) via **Law 3
+acting as deafferentation-induced synaptic scaling** — the kill halves
+Σw_in, E goes persistently negative, and the integral controller
+re-inflates surviving weights (w̄ 0.106 → 0.210 at k=0.5, a near-exact 2×
+for the halved in-degree; T contributes only 0.07, blocked by its floor).
+This is Turrigiano-style compensatory scaling from eq. 5 with nothing
+added. Behaviorally, though, redundancy buffers the damage: a *frozen*
+network shrugs off 10% death (0.506 vs baseline 0.510) and keeps ~76% of
+score at 30% — and at small wounds the repair transient is **net
+harmful** (paired learning−frozen −0.098; the inflammation costs more
+than the injury), while learning wins at k=0.5 (median 0.432 vs 0.295)
+and abolishes the catastrophic tail at k=0.1 (0/16 dead vs 3/16).
+
+**Sparsity relocates the starting point** (H54, `h54_sparsity.py`, with
+input and output wiring pinned so only recurrent density varies). At the
+ridge, the conservation law is exact: w̄·p·N = 2.01–2.17 across a 40×
+density range (g_final 0.93–1.02) — total recurrent input is conserved
+and criticality is wiring-invariant; score is flat (the risky
+"dense-degrades" prediction was refuted). But at wlr=0.03 the table
+turns: **p=0.02 scores 0.566 with 15/16 reliability — the best cell of
+the campaign** — because 4-link columns start at g≈1.5 instead of 7.5:
+sparse wiring is *pre-adapted*, needing almost no renormalization, so
+nearly-frozen plasticity suffices and churn never enters. The ridge is
+really about time-to-renormalize versus churn: sparse shifts the optimal
+wlr down (monotone: 0.566 at 0.03 → 0.299 at 1.0) while density
+*narrows* the viable window instead of shifting it up (H54b: at p=0.8,
+wlr 0.3 and 1.0 both collapse to 0/16 — the former with physiology fully
+renormalized, a carrier-level loss; the latter by runaway potentiation,
+w̄pN → +235, the explosion threshold falling with density). Sparse is
+forgiving; dense is brittle. Two corollaries: internal fluctuations from
+sparse wiring substitute for external noise (the H51 rescue, achieved
+architecturally), and dense *readout pools* are their own failure —
+unpinned p=0.8 output pools (~160 nodes) average away the left/right
+asymmetry that steers the body (0.251 vs 0.443 pinned). Sparse readout
+pools are the motor symmetry-breakers.
 
 ## The two-body problem, and the band clause
 

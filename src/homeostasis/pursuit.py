@@ -61,7 +61,7 @@ class PursuitConfig:
     # to the retina's angular grain.
     wheel_base: float | None = None
     # stimulus
-    stimulus_motion: str = "orbit"        # orbit | waypoint | still | wander | ellipse
+    stimulus_motion: str = "orbit"        # orbit | waypoint | still | wander | ellipse | ballistic
     ellipse_a: float = 5.0                # ellipse semi-axes (ellipse mode)
     ellipse_b: float = 2.5
     wander_sigma: float = 0.05            # per-step heading diffusion (rad), wander mode
@@ -101,6 +101,9 @@ class PursuitEnv:
             self._phase = 0.0
             self.sx = center + c.orbit_radius
             self.sy = center
+        elif c.stimulus_motion == "ballistic":
+            self.crossings = 0
+            self._spawn_ballistic()
         elif c.stimulus_motion == "wander":
             self.sx = center + 2.0
             self.sy = center
@@ -113,6 +116,24 @@ class PursuitEnv:
             self.sx = center
             self.sy = center + 3.0
             self._target = self._new_waypoint()
+
+    def _spawn_ballistic(self):
+        """Respawn the stimulus on a random edge, aimed inward (+-60 deg)."""
+        c = self.config
+        lo, hi = c.waypoint_margin, c.box_size - c.waypoint_margin
+        edge = int(self.rng.integers(0, 4))
+        along = float(self.rng.uniform(lo, hi))
+        inward = (0.0, np.pi, np.pi / 2, -np.pi / 2)[edge]  # from x=lo, x=hi, y=lo, y=hi
+        if edge == 0:
+            self.sx, self.sy = lo, along
+        elif edge == 1:
+            self.sx, self.sy = hi, along
+        elif edge == 2:
+            self.sx, self.sy = along, lo
+        else:
+            self.sx, self.sy = along, hi
+        self._sphi = inward + float(self.rng.uniform(-np.pi / 3, np.pi / 3))
+        self.crossings = getattr(self, "crossings", 0) + 1
 
     def _new_waypoint(self):
         c = self.config
@@ -193,6 +214,14 @@ class PursuitEnv:
             self._phase += c.stimulus_speed / max(r, 1e-6)
             self.sx = center + a * np.cos(self._phase)
             self.sy = center + b * np.sin(self._phase)
+        elif c.stimulus_motion == "ballistic":
+            nx = self.sx + c.stimulus_speed * np.cos(self._sphi)
+            ny = self.sy + c.stimulus_speed * np.sin(self._sphi)
+            lo, hi = c.waypoint_margin, c.box_size - c.waypoint_margin
+            if nx < lo or nx > hi or ny < lo or ny > hi:
+                self._spawn_ballistic()
+            else:
+                self.sx, self.sy = float(nx), float(ny)
         elif c.stimulus_motion == "wander":
             self._sphi += float(self.rng.normal(0.0, c.wander_sigma))
             nx = self.sx + c.stimulus_speed * np.cos(self._sphi)
