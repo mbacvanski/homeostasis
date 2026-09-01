@@ -1,0 +1,12 @@
+{"mode": "closed", "res": {"p_link": 0.02, "weight_lr": 0.03, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 2, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "sparse"}
+{"mode": "closed", "res": {"p_link": 0.02, "weight_lr": 0.03, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 10, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "sparse"}
+{"mode": "closed", "res": {"p_link": 0.02, "weight_lr": 0.03, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 18, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "sparse"}
+{"mode": "closed", "res": {"p_link": 0.02, "weight_lr": 0.03, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 26, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "sparse"}
+{"mode": "closed", "res": {"p_link": 0.02, "weight_lr": 0.03, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 34, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "sparse"}
+{"mode": "closed", "res": {"p_link": 0.02, "weight_lr": 0.03, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 42, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "sparse"}
+{"mode": "closed", "res": {"p_link": 0.1, "weight_lr": 0.1, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 2, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "ridge"}
+{"mode": "closed", "res": {"p_link": 0.1, "weight_lr": 0.1, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 10, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "ridge"}
+{"mode": "closed", "res": {"p_link": 0.1, "weight_lr": 0.1, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 18, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "ridge"}
+{"mode": "closed", "res": {"p_link": 0.1, "weight_lr": 0.1, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 26, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "ridge"}
+{"mode": "closed", "res": {"p_link": 0.1, "weight_lr": 0.1, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 34, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "ridge"}
+{"mode": "closed", "res": {"p_link": 0.1, "weight_lr": 0.1, "target_lr": 0.01, "input_p_link": 0.1}, "seed": 42, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "ridge"}

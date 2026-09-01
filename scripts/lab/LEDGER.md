@@ -1803,3 +1803,34 @@ is dynamical (pre-adaptation, wide plasticity window), not
 informational. At wlr=.03 dense saturates (f~1, gain 0) and only sparse
 survives — the two virtues never co-occur below the ridge.
 (h65_infospike.json)
+
+## H66 (preregistered): the sparse cell is a calm attractor, not survivor luck
+
+n=21600 (30 segments, late = 5..29), 12 CRN seeds, cells: sparse
+(p=.02, wlr=.03), ridge (p=.1, wlr=.1), statue-ref (p=.1, wlr=.03).
+Decompose score variance into between-seed (SD of per-seed late means)
+and within-seed (mean per-seed SD across late segments = wander).
+Predictions: (a) sparse within-seed wander SD < 60% of the ridge cell's;
+(b) sparse between-seed SD also lower; (c) statue-ref shows the known
+bimodality (large between-seed, with dead seeds quiet within).
+
+## H54 addendum: 48-seed cluster calibration of the sparse headline
+
+p=.02/wlr=.03: 0.509 (SD .186), reliability 0.79 — regressed from the
+16-seed 0.566/0.94 as headline cells do, but the sparse pair (0.509,
+0.497 / rel 0.79, 0.81) still beats the dense pair (0.460, 0.399 / rel
+0.62, 0.60) by +0.05 mean and +0.18 reliability at matched seeds. THIRD
+bit-identical cross-machine reproduction (16 shared seeds, max diff
+0.00e+00). (sparse48_results.jsonl, job 21730350)
+
+## H66 verdict: wander is universal; design moves the MEAN
+
+(a),(b) REFUTED: within-seed wander SD is ~0.26-0.28 in every cell
+(sparse 0.259, ridge 0.279, statue-ref 0.268) and between-seed SDs are
+similar (0.124-0.148). The sparse cell's reliability is a THRESHOLD
+effect: same wander around a higher mean (0.524 vs 0.368 long-run) ->
+fewer crossings below 0.35. No tested design lowers the wander itself.
+Suggestive long-horizon sag (ridge -0.104 early->late vs sparse -0.052)
+is underpowered at n=12 (t = -1.8); 48-seed cluster test in flight
+(wander48, job 21730399). Sparse lag-1 autocorr -0.38 (segment rebound)
+noted. (h66_wander.json)
