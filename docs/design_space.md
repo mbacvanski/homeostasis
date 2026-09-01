@@ -564,9 +564,11 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   corollaries: the depth-4 chain's per-link exclusive sensing (each
   follower sees only its own target) was *load-bearing*, not a
   simplification — an all-visible ecology would collapse; and with
-  H67's ~1% jitter tolerance this completes the knife-edge theme —
-  perfect locks, self-repair, and N-invariance inside the single-source
-  clean-flow manifold, collapse at every measured edge. **Selective
+  the acquisition tolerance of ~1% (H67 as re-scoped by H101–H102) this
+  sharpens the knife-edge theme into its final form — *the knife-edge
+  is at the door*: acquisition collapses at every measured edge, while
+  an established lock is robust (kink-immune, swap-immune, tracks slow
+  drift and unit-scale displacement). **Selective
   attention is the missing machinery for real multi-agent ecologies**,
   arguably ahead of "prediction" in the structural-additions queue —
   and its minimal sufficient form is now measured (H82–H84): evolution
@@ -616,11 +618,19 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   jitter-amplification reading is retracted: phase-aligned residuals
   *shrink* down the chain, 0.31 → 0.11 — each follower is a regularizer,
   broadcasting a cleaner signal than it receives). Controlled replays
-  bracket the rest: a follower tolerates the pacemaker's entire
-  deterministic waveform but almost no *stochastic* jitter (OU sd 0.1,
-  ~1% of ring radius, destroys the lock), and full-trajectory replay of
-  link D fails exactly as the live chain does — the signal is
-  intrinsically too slow, not too noisy. Link evolvability remains
+  bracket the rest — with a major later amendment (H101–H102): the
+  original "~1% stochastic jitter tolerance" turned out to be the
+  *acquisition* tolerance (jitter present during the startup window
+  voids the speckle ticket). An **established** lock is robust: it
+  tracks a full-unit quasi-static displacement of the whole path
+  (near4 1.000), follows smooth stochastic drift whenever the drift is
+  slower than the machine's own 90–225-step re-locking clock (sd 0.5:
+  0.98 at tau 3840, 0.86 at 960, dead at 60 — the transition brackets
+  the horizon), and tolerates ~0.25 even of fast flutter (2.5× the
+  acquisition tolerance). The knife-edge is at the door, not in the
+  room. Full-trajectory replay of link D still fails exactly as the
+  live chain does — that signal is intrinsically too slow, not too
+  noisy. Link evolvability remains
   start-basin sensitive (one false start caught and fixed on the record)
   — IC-dependence at the collective level.
 

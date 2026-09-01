@@ -546,7 +546,13 @@ Three separate kinds of luck run through everything above:
   a winning start by a hand's width and it usually fails, while a new
   winner appears somewhere else. You can't aim for a lock. You can only
   inherit one (budding), keep one (patience), or re-roll until one
-  happens (evolution).
+  happens (evolution). The flip side — measured late, and it changes
+  the picture: once a lock *is* formed, its grip is strong. A locked
+  follower rides out sharp mid-flight turns, swapped muscles, the whole
+  path slowly sliding a full body-width sideways, and even a leader
+  that wanders smoothly and unpredictably — as long as the wandering is
+  slower than the follower's own re-gripping reflex (a few hundred
+  steps). The fragility is all at the door; the room is sturdy.
 
 ### The whole story in one paragraph
 

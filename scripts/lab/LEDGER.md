@@ -2862,3 +2862,82 @@ interactive viewers, each bit-exact against its campaign data; two
 mechanisms promoted to first-class code (structural homeostasis,
 StickyAttention); 161-test suite green throughout; every reversal,
 instrument bug, and shrinking effect kept on the record.
+
+## H101 (preregistered): smooth irregularity is measured against the re-lock clock
+
+User question (2026-09-01): did we ever test smoothly-but-irregularly
+moving stimuli? H37 died to instrument problems; H67 fixed the
+instrument but swept only amplitude at ONE timescale (tau=60 — fast
+flutter; tolerance ~0.1). Missing axis: the jitter TIMESCALE. Setup:
+h67 rev-3 full-replay pacemaker circle + OU positional jitter, sd 0.5
+(5x the tau-60 tolerance) at tau {60, 240, 960, 3840}, plus sd 1.0 at
+tau {960, 3840}; 8 jitter seeds; follower = h48e champion; lock =
+late near4. Predictions: (a) near4 rises monotonically with tau at
+sd=0.5; (b) near4 >= 0.8 at tau=3840/sd=0.5 — SLOW smooth irregularity
+IS followable (irregularity is judged against the 90-225-step re-lock
+horizon, not against periodicity per se); (c) sd=1.0 at tau=3840 still
+>= 0.6. If (b) fails, smooth irregularity is unfollowable at any tested
+slowness and strict periodicity is load-bearing beyond the three
+clauses.
+
+## H101 verdict + H102 (preregistered): what IS the lock, actually?
+
+H101: all six cells ~0.02 ((a),(b),(c) all REFUTED; instrument
+re-validated at sd=0 -> 1.000 in the same process). Even tau=3840 —
+drift 20-40x slower than the re-lock horizon, amounting to a slowly
+wandering ~0.5-unit displacement of the whole path — destroys the lock.
+Slow smooth irregularity is NOT followable. This forces a discriminator
+between two readings of the h48e "lock": (i) genuine closed-loop
+coupling (should tolerate small quasi-static path changes) vs (ii) an
+open-loop memorized cycle phase-matched by initial conditions (dies at
+ANY path deviation). H102 battery, preregistered: (A) constant offset
+c {0.1, 0.3, 1.0} from step 0 — coupling predicts near4 stays >= 0.8
+at 0.1-0.3; memorization predicts collapse even at 0.1. (B) offset 0.3
+ramped in over 1000 steps starting AFTER lock formation (step 3600) —
+coupling predicts survival; (C) phase-shifted replay (start the loop
+90 deg later): both readings predict failure (acquisition lottery), so
+C is the control that the test isn't trivially passable.
+
+## H102 verdict: the lock is REAL coupling; the deaths were acquisition deaths
+
+(A) const offset from step 0: dead even at 0.1 (0.000) — but (B) the
+SAME offsets ramped in after lock formation are tracked PERFECTLY
+(near4 1.000 at both 0.3 and 1.0): the established lock survives a
+full-unit slow displacement of the whole path. (C) phase-shifted start:
+0.534 (partial re-acquisition). Resolution: constant-offset and
+H101's OU-jitter failures are ACQUISITION failures (the deviation voids
+the H88 speckle ticket during the startup window), not coupling
+failures. RETROACTIVE FLAG: H67's "~1% stochastic tolerance" also ran
+jitter from step 0 and may likewise be an acquisition artifact — its
+verdict is provisionally narrowed to "1% tolerance FOR ACQUISITION";
+the following-tolerance is measured next. (h102_whatlock.json)
+
+## H101-rev (preregistered): jitter after the lock — the true following tolerance
+
+Same six cells as H101 (sd .5 x tau {60,240,960,3840}; sd 1.0 x tau
+{960,3840}) but the OU jitter's amplitude ramps 0->full over steps
+3600-4100, after the lock is established; near4 scored on steps
+4100-7200. Predictions, revised by H102: (a) slow smooth irregularity
+is TRACKED once locked — near4 >= 0.8 at tau >= 960 for sd 0.5;
+(b) fast flutter stays fatal (tau=60 <= 0.3 — the churn-like regime);
+(c) sd 1.0 at tau 3840 >= 0.6. If (a) fails too, even established locks
+cannot track drift and the memorized-cycle reading returns for the
+stochastic case.
+
+## H101-rev verdict: CONFIRMED — smooth irregularity is followable once locked
+
+Post-lock OU jitter: sd 0.5 -> 0.002 (tau 60), 0.343 (240), 0.858 8/8
+(960), 0.980 8/8 (3840); sd 1.0 -> 0.239 (960), 0.852 8/8 (3840). All
+three revised predictions confirmed; the followability transition
+(tau ~ 240-960) BRACKETS the 90-225-step re-lock horizon — drift is
+tracked when slower than the machine's own re-locking clock. Addendum
+cells re-scope H67 completely: post-lock sd 0.1 at tau 60 -> 0.965
+(8/8) — the very jitter that scored 0.068 from step 0. THE TWO-REGIME
+LAW: acquisition tolerance ~0.1 (the speckle ticket; razor-thin);
+following tolerance ~0.25 against fast flutter and >= 1.0 against slow
+drift. The knife-edge is at the door, not in the room: getting locked
+is the lottery; being locked is robust (this unifies with the kink
+immunity H57d, swap immunity b4, and displacement tracking H102).
+H67's verdict is formally amended: its "~1% stochastic tolerance" was
+the ACQUISITION tolerance. (h101rev_postlock.json, h101_slowjitter.json,
+h102_whatlock.json)
