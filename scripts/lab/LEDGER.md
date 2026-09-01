@@ -361,3 +361,23 @@ steps each. The reduced model is now DERIVED: per node, f slaved by the duty
 law; drive servo integrates -wlr*E (spike-gated); target servo integrates
 tlr*E (floored). Closure check: predicted absorption cutoff P* ~ 2pi/(wlr*f)
 = ~420 steps at (wlr .1, f .15) vs observed 240-960 in B3.
+
+## H20 (preregistered before B8): the turn bias lives in the recurrent weights
+
+Decomposing pool duty differences into input vs recurrent components: at w1'
+the RECURRENT component's L-R difference flips with stimulus direction (the
+follower's velocity is W-stored); the input component contributes with the
+sign of the retinal lag; at defaults neither correlates strongly.
+
+## H20 verdict (B8): SUPPORTED at w1' — the velocity is W-stored; carrier is regional
+
+Sanity: corr(pool Δf, dH) = +1.000 (pipeline exact); Δf tracks stimulus
+direction +0.878 at w1'. Carrier decomposition (duty components, L-R):
+w1' — recurrent +0.370 vs input −0.042 (couplings to Δf: +0.414 / −0.031):
+**pure W-stored bias**. ridge25 — mixed (input +0.534, recurrent +0.388).
+default — churn-carried recurrent (+0.919 coupling). Lag-servo alternative
+REFUTED at w1'/ridge25: heading error keeps a constant +7–9° offset in BOTH
+directions (corr with direction ≈ 0) — there is no direction-flipping lag.
+The entrainment loop is now specified end-to-end: stimulus direction →
+drive-servo writes pool-asymmetric recurrent drive → duty law reads it out
+as the turn command → reversal rewrites it in ~30–200 steps.
