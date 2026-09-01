@@ -575,6 +575,54 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   at w1′ lesion collapses (0.250±0.433, bimodal). The prior reflex/medium
   dichotomy is the design space talking, not the model.
 
+## A designer's cheat-sheet
+
+Everything above compresses into working rules. Given a new task for this
+family:
+
+1. **Screen the task first** (no training needed) with the three-clause
+   competence law: the target's co-moving frame must be holdable with
+   ~constant control (≤ ~2× control modulation), its frame rate must sit
+   in the entrainment band (linear speed ≈ 0.09–0.28 arena-units/step,
+   angular ≤ ~2.1°/step for these bodies), and engagements must outlast
+   the re-lock horizon (90–225 steps). If the task fails a clause, no
+   learning-rate choice and no scalar-reward scheme will cross it —
+   only wiring-level selection finds repertoire members, and only if the
+   clauses are satisfiable at all.
+2. **Set the weight rate by initial distance-to-comfort.** Compute
+   Σw_init = p·N·w̄₀ against the comfort total (~2 for tracking-class
+   drive; the controller conserves this quantity). Starting far above
+   (supercritical) needs fast erosion (wlr ≈ 1) — or better, sparsify so
+   you *start* near comfort and slow plasticity suffices (p=0.02 was the
+   most reliable tracking cell). Starting at or below (mean-zero Pong)
+   grows to comfort at any wlr given enough steps; avoid wlr ≥ 1
+   (churn/runaway — and the explosion threshold falls with density).
+   At p = 0.1 the ridge rule is wlr* ≈ 1.04·leak^1.41.
+3. **Respect the flow sign.** Flow-positive embodiments (approach raises
+   input): skip the storm — sparse pre-adapted starts win on score and
+   reliability. Flow-negative (avoidance): the storm IS the search that
+   finds the live attractor — keep the supercritical start, and never
+   trust a zero-collision metric without an aliveness check (death
+   solves avoidance).
+4. **Keep readout pools sparse** (~10–20 in-neighbors): dense pools
+   average away the left/right asymmetry that steers the body.
+5. **A sensor-noise floor (σ ≈ 0.1) is a free rescue** for under-plastic
+   networks — it abolishes the absorbing dark state while sparing
+   contrast. Sparse wiring's internal fluctuations buy the same thing
+   architecturally.
+6. **Don't freeze a deployed network.** Long-horizon competence decays by
+   metastable lock loss, and plasticity is the re-locking mechanism —
+   frozen networks sag *faster*. (Structural rewiring is the opposite:
+   developmental window only.)
+7. **Targets are the calibration surface.** Only heterogeneous, adapted
+   per-node target profiles hold interior spike rates statically;
+   homogeneous frozen networks are dead-or-saturated (the cliff). Let
+   T adapt, then freeze T if you must freeze something.
+8. **Size is inert.** Pick N for readout smoothness; pin in-degree
+   (~20) and input wiring; check ignition with Law 1 (drive ≥
+   leak·ρ·T). Predict the frozen cold-start fate from the wiring file
+   with the Laws-1+2 vector map before spending any simulation.
+
 ## Refuted along the way (all preregistered)
 
 1. "Homeostasis silences stationary input" — only the weight channel

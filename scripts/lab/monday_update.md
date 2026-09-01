@@ -89,3 +89,69 @@ scripts/out/lab/). The rings contract ~15% per link, predicting a finite
 chain depth. This is a constructive answer to "what if agents interact":
 interaction alone gives stillness or unfollowable churn (measured); add one
 band-compatible pacemaker and entrainment propagates.
+
+**Night two (H51–H69, ~3,000 more runs, three more cluster batches).**
+The campaign kept going and the ledger now runs to 69 preregistered
+hypotheses — including five refuted-backwards results that each replaced
+a plausible story with a measured one:
+
+- **Robustness chapter.** Moderate sensor noise *rescues* under-plastic
+  networks (0.367→0.533, reliability 0.44→0.81) — not by desaturation but
+  by abolishing the absorbing dark state (the agent otherwise spends 35%
+  of its time in darkness where no learning signal exists). Killing
+  10–50% of nodes mid-run: spike rate recovers via eq. 5 acting as
+  Turrigiano-style synaptic scaling (surviving weights re-inflate ~2× for
+  a halved in-degree, nothing added to the model); behavior barely needs
+  it (redundancy buffers 10% death entirely) and at small wounds the
+  repair transient costs more than the injury.
+- **Sparsity (your "simple question") has a law.** Total recurrent input
+  after adaptation is conserved across a 40× density range (w̄·p·N ≈
+  2.1); the interesting effect is the *starting point*: p=0.02 begins
+  near comfort, so nearly-frozen plasticity suffices — best tracking
+  reliability of the campaign (0.566, 15/16; 48-seed calibration
+  0.509/0.79) and best Pong cell (0.679 vs published 0.600, running at
+  ~10 active neurons in 500). But it FAILS on wall avoidance — there the
+  supercritical storm is the *search* that finds the live attractor
+  (flow sign strikes again). And density *sharpens* the spike code
+  (info-per-spike 9.02 vs 1.42 sparse): the sparse-wiring advantage is
+  dynamical, not informational.
+- **The baseball question, closed with a boundary.** Ballistic
+  interception fails at native speeds — crossings (~70 steps) end before
+  the re-lock horizon (90–225 steps) — and selection, given that task,
+  evolves a literally blind sweeper (vision has zero marginal fitness
+  below the horizon). Slow the targets past the horizon and interception
+  works (+0.31 over blind, wiring-robust). Third clause of the
+  competence law: **engagements must outlast the lock**. Mid-flight ±90°
+  kinks are harmless (randomized test); what kills loitering pursuit is
+  ramplessness — entrained turning is closed-loop bearing geometry, so
+  fluttering bearings cancel to pure forward throttle: vision *unparks
+  the agent without aiming it* and a parked blind statue wins. Flow is a
+  throttle; stable geometry is the steering.
+- **The reward ladder is complete and the barrier is task-side.**
+  Eligibility traces fail; traces with homeostatic erosion switched OFF
+  fail identically — neither credit delay nor absorbability was the
+  blocker. The tasks reward was aimed at violate the competence clauses;
+  there is no gradient any weight-tweak rule could climb.
+- **The chain's depth ceiling has a closed mechanism** — after two wrong
+  ones, caught by our own controls. The four rings are concentric about
+  an off-center point and co-rotate at one angular rate, so ring
+  contraction converts to linear-speed loss (0.255→0.086 = ω·r at every
+  link); link five fails because its target crawls below the followable
+  speed band, whose edges we measured (~0.09–0.28 units/step). Followers
+  are *regularizers* (each broadcasts a cleaner signal than it receives);
+  stochastic jitter tolerance is ~1% of ring radius.
+- **Statics vs dynamics, made precise.** Laws 1+2 compose into a
+  simulation-free predictor of frozen-network fate (r = 1.0000 from the
+  wiring file alone) — and the same model shows homogeneous frozen
+  networks have NO stable interior spike rates: the f ≈ 0.1–0.3 regime
+  where all competence lives exists only as the homeostat's dynamically
+  held equilibrium. Long-horizon competence decays by metastable lock
+  loss, and freezing makes it WORSE — plasticity is the re-locking
+  mechanism. Homeostasis doesn't just tune the network; it *is* the
+  thing keeping the working state in existence.
+
+Practical payoff: docs/design_space.md now ends with a designer's
+cheat-sheet (task screen via the three-clause law, wlr from
+distance-to-comfort, flow-sign rules, readout sparsity, noise floors,
+never-freeze). Three new interactive pages (/lab/repair, noise slider,
+ballistic pursuit) reproduce their campaign JSONs bit-exactly.
