@@ -1,0 +1,20 @@
+'flow-evolved rep1 (hit 0.63)' seed 13: 8000 frames, 228,500 steps
+  pass A: 228,500 steps in 37s
+  trio: (138, 114, 41)
+  pass B: trio traces in 36s
+  frame 500/8000 (0.148 s/frame, eta 19 min)
+  frame 1000/8000 (0.146 s/frame, eta 17 min)
+  frame 1500/8000 (0.144 s/frame, eta 16 min)
+  frame 2000/8000 (0.143 s/frame, eta 14 min)
+  frame 2500/8000 (0.143 s/frame, eta 13 min)
+  frame 3000/8000 (0.142 s/frame, eta 12 min)
+  frame 3500/8000 (0.142 s/frame, eta 11 min)
+  frame 4000/8000 (0.142 s/frame, eta 9 min)
+  frame 4500/8000 (0.142 s/frame, eta 8 min)
+  frame 5000/8000 (0.142 s/frame, eta 7 min)
+  frame 5500/8000 (0.143 s/frame, eta 6 min)
+  frame 6000/8000 (0.143 s/frame, eta 5 min)
+  frame 6500/8000 (0.143 s/frame, eta 4 min)
+  frame 7000/8000 (0.143 s/frame, eta 2 min)
+  frame 7500/8000 (0.142 s/frame, eta 1 min)
+saved scripts/out/pong_reservoir.mp4 (8000 frames @ 25 fps)

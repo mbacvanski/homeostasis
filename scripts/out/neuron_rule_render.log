@@ -1,0 +1,32 @@
+neuron #195, steps 470..520
+pass 2: recording that neuron in detail...
+  branches in segment: {'hungry': 17, 'sated': 17, 'spike→hungry': 10, 'spike→sated': 6}
+frame plan: 3600 frames = 60.0 s  (slow 0..3599, ramp ..3599, fast ..3599)
+  slow-phase spike at step 6: frames 432..503
+  slow-phase spike at step 9: frames 648..719
+  slow-phase spike at step 10: frames 720..791
+  slow-phase spike at step 24: frames 1728..1799
+  slow-phase spike at step 25: frames 1800..1871
+  slow-phase spike at step 26: frames 1872..1943
+  slow-phase spike at step 27: frames 1944..2015
+  slow-phase spike at step 28: frames 2016..2087
+  slow-phase spike at step 29: frames 2088..2159
+  slow-phase spike at step 31: frames 2232..2303
+  slow-phase spike at step 42: frames 3024..3095
+  slow-phase spike at step 45: frames 3240..3311
+  slow-phase spike at step 46: frames 3312..3383
+  slow-phase spike at step 47: frames 3384..3455
+  slow-phase spike at step 48: frames 3456..3527
+  slow-phase spike at step 49: frames 3528..3599
+rendering 3600 frames at 60 fps on 10 workers...
+  part 1/10 done (neuron_rule_part00.mp4)
+  part 2/10 done (neuron_rule_part01.mp4)
+  part 3/10 done (neuron_rule_part02.mp4)
+  part 4/10 done (neuron_rule_part03.mp4)
+  part 5/10 done (neuron_rule_part04.mp4)
+  part 6/10 done (neuron_rule_part05.mp4)
+  part 7/10 done (neuron_rule_part06.mp4)
+  part 8/10 done (neuron_rule_part07.mp4)
+  part 9/10 done (neuron_rule_part08.mp4)
+  part 10/10 done (neuron_rule_part09.mp4)
+saved scripts/out/neuron_rule.mp4 in 44s

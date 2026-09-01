@@ -1,0 +1,5 @@
+'flow-evolved rep1 (hit 0.63)' seed 13: 8000 frames, 228,500 steps
+  pass A: 228,500 steps in 35s
+  trio: (138, 114, 41)
+  pass B: trio traces in 34s
+saved scripts/out/pong_reservoir_frame4000.png

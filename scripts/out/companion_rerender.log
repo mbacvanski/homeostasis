@@ -1,0 +1,8 @@
+simulating seed 0, 7200 steps (irregular motion, paper config — matches the tracking demo)...
+rendering 1200 frames (40 s at 30 fps, synced to the tracking demo)...
+  frame 0/1200
+  frame 250/1200
+  frame 500/1200
+  frame 750/1200
+  frame 1000/1200
+saved scripts/out/reservoir_companion.mp4

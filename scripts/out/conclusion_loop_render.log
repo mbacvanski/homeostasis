@@ -1,0 +1,14 @@
+simulating tracking 'paper' seed 0 (10802 steps) + pong 'pongEvo1' seed 13 (7202 steps)...
+  pong: 29 opportunities, hit rate 0.586
+rendering 3600 frames (60s at 60 fps, 480x1080) on 10 workers...
+  part 1/10 done
+  part 2/10 done
+  part 3/10 done
+  part 4/10 done
+  part 5/10 done
+  part 6/10 done
+  part 7/10 done
+  part 8/10 done
+  part 9/10 done
+  part 10/10 done
+saved scripts/out/conclusion_loop.mp4 in 6s
