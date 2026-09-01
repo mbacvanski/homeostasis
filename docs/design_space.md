@@ -555,7 +555,13 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   salience inverts hierarchies) — and a conservative switching
   threshold (rival must be 5× brighter for 300 steps) cures it:
   **B holds A at 1.000 and C holds B at 1.000 simultaneously, zero
-  switches — the first stable all-visible homeostatic ecology.**
+  switches — the first stable all-visible homeostatic ecology.** The
+  full saved depth-4 chain then passes the same test (H86): all three
+  links at 1.000 under shared visibility, distances identical to the
+  exclusive-sensing era — with one more knife-edge corollary banked in
+  passing: giving mid-chain followers one-step-stale target positions
+  (parallel instead of sequential update) destroys a link completely
+  (0.011 vs 1.000); the ecology needs within-step sensory freshness.
 - **Entrainment propagates — to depth four, and the ceiling's mechanism
   is now closed** (H49–H50, H60–H68b,
   [fig_chain4](../scripts/out/lab/fig_chain4.png),
