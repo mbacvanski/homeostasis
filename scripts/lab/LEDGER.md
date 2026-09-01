@@ -165,3 +165,65 @@ model. (5) gain confound confirmed: score 0.268/0.325/0.208 at gain
 - #4: repeat the K3 autopsy at the w1' config (the best-known medium) — does
   the lesion/freeze ordering invert where the medium is functional?
 - #5: fine slip-speed curve at wlr=0.1 (the nonmonotone anomaly).
+
+## H8-H12 (preregistered before Act II batch 1)
+
+- **H8 (A1 wlr x tlr closed-loop)**: tracking dead at wlr=0 (statue, 0.25);
+  a working band at intermediate wlr; channel-competition signature in
+  behavior: score(wlr=0.1, tlr=0.1) << score(wlr=0.1, tlr=0.001) because
+  fast targets starve the weight channel.
+- **H9 (A2 darkness)**: at wlr=1.0 the network sustains f > 0.2 in TOTAL
+  darkness (endogenous churn); at wlr=0.1 darkness → silence. If confirmed,
+  the tracking network is a self-exciting medium that input MODULATES.
+- **H10 (A3 leak x wlr)**: working band broad in leak at wlr=1.0; low-leak
+  cells show frozen-cycle signatures (high |E|, low score).
+- **H11 (A4 autopsy at w1')**: the K3 ordering INVERTS where the medium is
+  functional: lesion collapses (~0.1, prior w1 evidence), freeze-mid < full,
+  and freeze-W-only dead everywhere; if shuffle-mid recovers above full even
+  here, "ongoing process > learned structure" is general, not regional.
+- **H12 (A5 slip curve at wlr=0.1)**: f(speed) is nonmonotone with a peak
+  where sensor dwell (plateau 4 deg / speed) matches the absorption
+  timescale; speed* shifts with wlr.
+
+## H8 verdict (A1): CONFIRMED — and the sweep's box was wrong
+
+score_late (12 CRN seeds): peak **wlr=0.1, tlr=0.01 → 0.633, 12/12 seeds
+≥0.35** vs 2024-default wlr=1.0 → 0.325 (4/12). wlr=0 → statue (f≈1.0,
+0.250). wlr=3.0 → numerical blowup (inf/nan; plasticity has an UPPER
+stability bound between 1 and 3 — treat wlr≥3 cells as "exploded" class).
+Channel competition behavioral: (wlr=0.1, tlr=0.1) → 0.267 with f=0.977
+(fast targets starve the weight channel → near-statue). NOTE: the historic
+241-sweep never varied weight_lr — its winners lived on the wlr=1.0 slice.
+
+## H9 verdict (A2): REFUTED — churn is input-powered, not self-exciting
+
+f_late = 0.000 in total darkness at every (wlr, tlr) tested, wlr=1.0
+included. With K1: at defaults the network's activity is input-POWERED but
+stimulus-statistics-INDEPENDENT — plasticity converts input energy into
+sustained churn whose level it sets itself.
+
+## H10 verdict (A3): the matched-timescale ridge (law candidate)
+
+leak x wlr score ridge is diagonal: best (leak, wlr) = (0.05, 0.03) 0.681 |
+(0.25, 0.1) 0.633 | (0.5, 0.3-1.0) 0.43 | (0.75, 1.0) 0.494. Score needs
+plasticity rate ~ dissipation rate. **Unification: sweep winners w1/w2 both
+chose leak≈0.56-0.57 under forced wlr=1.0 — they sat on this same ridge.**
+Off-diagonal death: high-leak/low-wlr dead (0.250), low-leak/high-wlr poor
+(~0.27-0.29).
+
+## H11 verdict (A4): medium is regional, weight channel universal
+
+w1' (seeds 0-11): full 0.850±0.184; lesion 0.250±0.433 (bimodal collapse —
+medium real here, unlike defaults where lesion won); freeze-mid 0.632;
++resetT 0.619 (still not a threshold artifact); shuffle-mid 0.762 (ongoing
+process ≥ structure EVEN in the medium regime); freeze-T-only 0.654 (target
+adaptation helps at w1', unlike defaults); **freeze-W-only 0.250 — dead in
+every regime tested. Weight plasticity is THE universal necessary channel.**
+
+## H12 verdict (A5): bandpass confirmed, with structure
+
+f(speed) at wlr=0.1: high at 0.05-0.13 deg/step (bimodal, silence-vs-chase),
+minimum ~0.8, secondary bump at 1.3-2.0, collapse by 8.0 (0.016). Fast slip
+is absorbed as if stationary (averages out inside the absorption window) —
+**spiking requires non-stationarity ON the plasticity timescale: a bandpass.**
+Secondary bump near sensor-spacing/speed resonance — open thread.
