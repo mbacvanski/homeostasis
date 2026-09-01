@@ -2714,3 +2714,22 @@ switch at t=187 under 2x100). Observed deviation recorded: under
 memoryless WTA at this geometry, C captures B at t=0 and the leaderless
 PAIR coheres while unmoored from the pacemaker (C_B 1.000, B_A 0.134)
 — "collapse" means no chain to the pacemaker, not zero pair cohesion.
+
+## H97 (preregistered): reproduction at comfort solves the acquisition lottery
+
+Mentors' "reproduction as action", minimally instantiated: a follower
+that has held lock (dist < 4.8) for 1200 consecutive steps SPAWNS one
+offspring at its own position (fresh net wiring seed, genome mutated at
+the h33 rates), population cap 6, all sensing the pacemaker exclusively
+(attention already solved; this isolates the reproduction question).
+Control: 6 agents at RANDOM ring-adjacent starts, no reproduction, same
+total agent-steps. n=21600, one lineage seed. Predictions:
+(a) reproduction condition ends with >= 3 concurrently locked agents
+(offspring inherit the parent's in-basin position, breaking the H88
+speckle lottery by construction); (b) the random-start control ends
+with <= 2 locked (per H87/H88 base rates); (c) at least one LOCKED
+offspring carries a mutated genome (heredity + variation + selection-
+by-comfort all present — evolution running on homeostatic viability
+alone). Note: offspring wirings are fresh (the wiring lottery still
+applies); the claim is that POSITION inheritance alone lifts the
+acquisition barrier.
