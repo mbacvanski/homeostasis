@@ -157,6 +157,48 @@ gain *rises* to 0.505 — fast slip sparsifies spiking into hyper-selective
 events. Absorption kills slow signals' activity and information together;
 fast signals lose activity but keep information.
 
+## The third embodiment: wall avoidance and the sign flip
+
+Case study 3 (implemented and replicated 2026-09-01; `src/homeostasis/wall.py`,
+`scripts/lab/wall_rep.py`; all five of the paper's qualitative anchors pass —
+see LEDGER H27a) completes the input-flow thesis:
+
+| task | sensors read | rho(input flow, success) |
+|---|---|---|
+| tracking | stimulus presence (egocentric) | **+0.77** |
+| Pong | ball bearing (egocentric) | **+0.95** |
+| wall avoidance | wall **proximity** | **−0.86** (alive configs) |
+
+The internal quantity is identical; **the body decides the sign of its
+coupling to success** (H27b, preregistered). On wall avoidance the positive
+correlate is flow *stability* (+0.88). Two structural facts sharpen the
+picture: (1) this is the family's only task **solvable by death** — 40/91
+random configs never move and never collide, so only living configs
+discriminate theories; (2) the settled solution is a small constant-direction
+circle in flat sensory territory, spun by the churn regime (f ≈ 0.32 with
+near-stationary input).
+
+**How stabilization actually works here** (H28 series — the preregistered
+event-ratchet story was *refuted* and corrected): with time-local baselines,
+individual collisions are nearly invisible to the network (|dW| at hits =
+1.04× baseline; the saturated learning-off statue shows literally zero |E|
+response to hits — saturation is deafness). Stabilization is the convergence
+of the global early churn transient, and the surviving orbit is
+**stability-selected**: orbits persist where input variation along them fits
+inside the absorbable band. Causal probe (H28c): teleporting a settled agent
+next to a wall doubles |E| and the agent drifts back to flat territory
+(median 6 hits); teleporting to a flat point changes nothing (median 0).
+
+**The unification across all three case studies**: behavior settles where —
+and only where — the sensory consequences of action fall inside the weight
+servo's absorbable band. Tracking's stimulus moves autonomously, so no
+stationary solution exists and the loop *chases* absorbability (velocity
+entrainment). Pong's rally is the absorbable regime and resets are not. Wall
+avoidance has genuinely stationary solutions, so the loop parks in one.
+"Behavior as externalized absorption" — with the H28 caveat that the loop
+does not need to *sense* failure events for this; failure-free regions are
+simply the only places the dynamics can settle.
+
 ## What the two homeostatic channels actually do
 
 - **The weight servo is the universal necessary channel**: freeze-W-only is

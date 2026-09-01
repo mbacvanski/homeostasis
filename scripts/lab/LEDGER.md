@@ -587,3 +587,48 @@ post-hoc but forced by the task's structure). The input-flow thesis's full
 form is now demonstrated across all three case studies: internal metrics
 generalize over embodiments; the BODY decides the sign of the
 flow-performance coupling.
+
+## H28 (preregistered): stabilization is event-driven rewiring until surprise ceases
+
+Unifying reading of all three case studies: each task's failure event
+(stimulus escape / ball reset / wall hit+kick) is an INPUT DISCONTINUITY;
+such events inject error, error drives weight-churn bursts (Law 3), churn
+changes behavior, and the loop settles exactly when events stop — behavior
+as externalized absorption. Wall-avoidance predictions: (a) event-triggered
+average of mean|E| and of per-step total |dW| shows a sharp burst at hits
+(vs matched non-hit baseline); (b) cumulative |dW| rises step-like with
+cumulative hits early and flattens when hits cease; (c) in the learning-off
+arm hits produce the |E| burst but no rewiring and no stabilization (the
+pawl without the ratchet).
+
+## H28 verdict: REFUTED as event-driven search — corrected to transient convergence + stability selection
+
+With time-local baselines (1444 events): |dW| at hits = 1.04x, |E| = 1.02x
+(flow 1.26x) — individual collisions are nearly invisible to the network;
+the naive 5-7x "burst" was an epoch confound (hits cluster in the early
+high-churn phase). The +0.66 window correlation is co-occurrence, not
+causation. Also: the learning-off statue shows ZERO |E| response to
+collisions (saturation = deafness to events). Corrected account:
+stabilization = convergence of the global churn transient; the settled
+orbit persists where input variation along it is absorbable (small circles
+away from walls/corners) — STABILITY SELECTION, not surprise-driven search.
+
+## H28c (preregistered): displacement probe for stability selection
+
+Teleport a settled (t=3600) agent, preserving all network state, to (a)
+near a wall (2.0, 7.5) vs (b) a flat mid-arena point (7.5, 7.5).
+Predictions: wall-adjacent placement destabilizes the orbit (elevated |E|
+fluctuation and turning change) and the agent re-forms a wall-clear orbit
+within ~600 steps with few hits (<5 median); flat placement just continues
+circling (near-zero behavioral change).
+
+## H28c verdict: SUPPORTED — the orbit is stability-selected
+
+Teleport-to-wall (state preserved): |E| jumps to 0.155 (vs 0.075 at a flat
+point, 2.1x), the agent drifts AWAY from the wall (2.74 -> 3.18 over the
+window) as |E| relaxes to 0.068; median 6 post-hits (predicted <5 — near
+miss, heavy tail: mean 46.6 from a few struggling seeds). Teleport-to-flat:
+median 0 hits, behavior unchanged. Wall-adjacent orbits are dynamically
+UNSTABLE (input variation along them exceeds the absorbable band); flat-
+region orbits persist. Wall avoidance = stability selection among orbits,
+with collisions as near-invisible perturbations — not punishment learning.

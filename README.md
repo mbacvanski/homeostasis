@@ -191,6 +191,31 @@ Validation, 40 runs × 100,000 steps each (chance 0.20), against the paper's
 500-run figures: see `scripts/out/pong/results.json` and
 `scripts/out/pong/pong_validation.png`.
 
+## Wall avoidance (case study 3)
+
+[src/homeostasis/wall.py](src/homeostasis/wall.py) ports the released
+Braitenberg agent (reference/original_julia/WallAvoidance/): a circular
+agent (radius 0.5) in a 15×15 box, two rim-mounted ±45° proximity ray
+sensors (activation 1 − dist/diagonal), differential-drive motion with
+translation (L+R)/2 and rotation (e₂−e₁)/(2r) rad/step, wall clamp with a
+random ±45° kick, and the published sensory inversion (`perturb_at=1000`:
+sensors swapped and doubled). `WALL_RESERVOIR_CONFIG` carries the case
+study's network settings. Replication (24 seeds, `scripts/lab/wall_rep.py`):
+hits fall 0.168 → 0.004/step, 96% of seeds collision-free in the last 1000
+steps, settled behavior is constant-direction circling; learning-off
+saturates and bounces forever; inversion re-stabilizes.
+
+### Wall avoidance: further discrepancies
+
+| Topic | Paper text | Released wall code (= this repo) |
+|---|---|---|
+| Input weights | "all input-reservoir weights now set to 2" | `input_amp = 4` — used for the input weights AND the recurrent init mean |
+| Recurrent weight init | (case 1 scheme implied) | **Normal(4, 0.1)** — a fourth scheme; initial recurrent gain ≈ 40 |
+| Weight learning rate | — | `lrate_wmat = .01` defined but never used: full-error updates, as in tracking |
+| Movement gain | — | `movement_amp = 10` defined but never used; motion uses raw effector values |
+| Pure-rotation kinematics | (L=0, R=1) "rotated one radian … and did not change position" | the code always translates by (L+R)/2 — here 0.5 — while rotating |
+| Published run | baseline described | the released main script runs with the sensory perturbation ENABLED (`perturb = 1`, swap+double after step 1000) and noise off |
+
 ## Beyond the paper: the design-space campaign
 
 `scripts/lab/` is an open investigation into why these networks work: three
