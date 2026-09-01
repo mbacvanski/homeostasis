@@ -413,3 +413,46 @@ activity collapses (f 0.003, spikes on 30% of steps): fast slip sparsifies
 spiking into hyper-selective events. Absorption kills slow signals' activity
 AND information; fast signals lose activity but keep information (fewer,
 sharper spikes). The bandpass is a property of ACTIVITY, not information.
+
+## H23 (preregistered): N-invariance of the ridge
+
+Closed-loop at leak=0.25, wlr {0.05, 0.1, 0.2}, N {50, 100, 200, 400}, 12
+CRN seeds: score and ridge position are N-stable for N in 100-400 (the
+lr-ratio organizes, not size); N=50 degrades (the toy-world result put the
+medium's floor at N~64).
+
+## H23 verdict: REFUTED as designed — and the design was confounded
+
+At FIXED p_link=0.1, w0=0.75: N=50 works (0.44-0.54; no N~64 floor at these
+params), N=200 peaks (0.633 at wlr .1), N=400 DEGRADES (0.34-0.43). But
+in-degree = N*p grows with N, so this "N-line" confounds size with recurrent
+gain (as does cluster R3 — flagged). Corrected experiment: dual scaling.
+Ridge pre-fit from coarse A3: wlr* ≈ 1.5 * leak^1.5 (grid-quantized; H14's
+cluster fine grid tests b in [1.2, 1.8]).
+
+## H23b (preregistered): dual-scaled N-line
+
+Holding in-degree fixed (p = 20/N) or holding total recurrent weight fixed
+(w0 = 15/(N*0.1)) at wlr=0.1: score becomes N-stable for N in 100-400; the
+two scalings separate at N=50 (in-degree fluctuations vs weight granularity).
+
+## H23b/c verdict: "size effects" were mostly wiring confounds
+
+Dual scaling alone did not rescue N-invariance (H23b), because p_link also
+wires input and output layers: p-scaling halved input drive at N=400. With
+recurrent density scaled to in-degree 20 and input_p_link pinned at 0.1
+(H23c): N=100 0.456, N=200 0.633, N=400 0.507, N=800 0.536 (92% seeds) —
+roughly N-stable, N=200 nominally best at ~1.7 SE. Organizing variables:
+in-degree, input drive, lr ratio — not N. (Cluster R3 keeps fixed p and will
+reproduce the confounded curve; treat it as the confound demo.)
+
+## The lottery partially dissolves (exploratory, no prereg)
+
+Across seeds: corr(segment-1 score, late score) is only +0.45 (wlr .1) /
++0.39 (wlr 1) / ~0 elsewhere; and LATE seg-to-seg correlation within a run
+is ~0 (+0.03 at wlr .1) — performance WANDERS segment to segment. A large
+share of "seed lottery" variance is sampling noise of a wandering process,
+not fixed wiring fate; w1's 100%-of-seeds reliability = its wander floor
+clears 0.35. The remaining fixed effect (early-late +0.45) is real but
+modest. Reframes open question 1: ask what sets the wander floor, not which
+seeds are blessed.
