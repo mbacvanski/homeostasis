@@ -1834,3 +1834,108 @@ Suggestive long-horizon sag (ridge -0.104 early->late vs sparse -0.052)
 is underpowered at n=12 (t = -1.8); 48-seed cluster test in flight
 (wander48, job 21730399). Sparse lag-1 autocorr -0.38 (segment rebound)
 noted. (h66_wander.json)
+
+## H67 (preregistered): the band clause's noise tolerance (jitter psychometric)
+
+The chain died when link E had to ride a 0.38-sd wobble; B locks on the
+clean pacemaker. Controlled version: the h48e champion follows a clean
+parametric replay of the pacemaker circle (r=9.34, 1.9 deg/step, box 30)
+plus OU positional jitter (tau=60 steps) of sd {0, .1, .25, .5, 1, 2},
+8 jitter realizations each. Predictions: (a) near4 >= 0.8 at sd <= 0.1;
+(b) the half-lock point (near4 = 0.5) falls in sd (0.25, 1.0);
+(c) decline is monotone in sd.
+
+## H67 rev-1 invalid: replay infidelity (chirality + shape)
+
+The clean parametric circle fails to lock at sd=0 (near4 0.000) — replay
+validity check failed before the psychometric could run. Live pacemaker
+measured: omega = -1.92 deg/step (CLOCKWISE; replay used +1.9 — the
+follower's turn bias is chiral) and radius sd 4.33 (the orbit is a
+rounded-square wall loop, not a circle). Rev-2: replay one recorded
+period of the actual loop, tiled, + OU jitter; sd=0 must reach near4
+>= 0.8 for the sweep to count.
+
+## H67 verdict (rev-3 valid): stochastic tolerance is razor-thin (~1% of ring)
+
+Full-trajectory replay validates (sd=0: near4 1.000, dist 3.77 = the
+live lock). Predictions (a),(b) REFUTED: OU jitter of sd 0.1 (1% of the
+9.3-unit ring) already destroys the lock (near4 0.068); the half-lock
+point is below 0.1, not in (0.25, 1.0). Reformulation: entrainment
+tolerates DETERMINISTIC deformation (the pacemaker's rounded-square
+loop, radius sd 4.33, is followed perfectly — it is part of the shape)
+but almost no STOCHASTIC jitter. (h67_jitter.json)
+
+## H67b (preregistered): the chain died where the aperiodic residual crossed ~0.1
+
+Decompose each chain link's position into a lap-periodic mean shape +
+aperiodic residual. Prediction: the residual sd grows down the chain and
+crosses the ~0.1 tolerance measured in H67 exactly at the E link's
+target (D): residual(B) and residual(C) < 0.1, residual(D) > 0.1.
+
+## H67b verdict: REFUTED backwards — the chain REGULARIZES; H60's mechanism dies
+
+Fixed-period decomposition was phase-drift-confounded (pacemaker
+lap-resid 2.51); the phase-aligned residual (binned by pacemaker angle)
+is the valid split and DECREASES down the chain: A 0.306 -> B 0.259 ->
+C 0.222 -> D 0.110. Every link broadcasts a CLEANER signal than its own
+target; D is the cleanest of all. H60's jitter-amplification account of
+the depth ceiling is hereby REFUTED by better measurement — the growing
+link_sd (0.38 -> 1.75) was coordination flutter of failing/loose rides
+(an outcome), not signal degradation (the putative cause). The depth-4
+ceiling stands as an empirical fact with its mechanism now OPEN.
+Corollary kept: followers are regularizers (each link low-passes its
+target's wobble). (h67b_residual.json)
+
+## H68 (preregistered): is D's signal intrinsically unfollowable?
+
+GA (h50 protocol, warm-started from D's genome both times) on
+FULL-REPLAY of (i) D's recorded trajectory and (ii) A's recorded
+trajectory (positive control; the A-signal is known learnable).
+Predictions: (a) replay-A locks (near4 >= 0.8); (b) if replay-D also
+locks (>= 0.6), the live-E failure is a live-loop/basin artifact (e.g.
+START_Y) and the ceiling is not signal-intrinsic; if replay-D fails
+(< 0.6), the ceiling IS signal-intrinsic and the unfollowable property
+of D's motion (radius? curvature profile? amplitude?) is the next
+target.
+
+## H68 verdict: the ceiling is SIGNAL-INTRINSIC
+
+Same protocol, same warm start, same follower start: replay-A locks
+near4 1.00 (dist 1.95), replay-D fails at 0.28 (dist 5.71). Live-loop
+and basin explanations are out; D's motion itself is unfollowable.
+(h68_replay_d.json)
+
+## H68b (preregistered): radius wall vs corner features
+
+GA (same protocol) on SYNTHETIC circles at the correct chirality
+(omega = -1.92 deg/step), radius {9.34, 7.06}. Readout: (i) both lock ->
+radius innocent, D's waveform specifics matter (features); (ii) 9.34
+locks and 7.06 fails -> MINIMUM FOLLOWABLE RADIUS between 7.1 and 9.3:
+combined with ~10%/link contraction this yields a closed geometric
+mechanism for the depth ceiling (depth = laps from r_pace to r_min);
+(iii) both fail -> featureless circles are unfollowable for this body:
+A's corners are the entrainment hooks.
+
+## H68b outcome (iv) + the resolution: THE CHAIN DIES BY SPEED FLOOR
+
+Synthetic circles at correct chirality: r=9.34 FAILS (0.18), r=7.06
+LOCKS (0.63) — neither prereg branch; the organizing variable is LINEAR
+SPEED, not radius. Full resolution came from plotting the actual chain
+(chain_truth.png): the rings are concentric around (19.7, 19.7), NOT
+the arena center — every H60/H60b "radius about (15,15)" was an
+eccentric-frame artifact. RETRACTION OF THE RETRACTION: the artifact
+caption's original radii (7.8 -> 6.5 -> 5.6 -> ~2.6) were correct; my
+H60b "correction" (9.34/8.38/7.89/7.06) was the error. True picture:
+all four agents co-rotate at omega ~ 1.9 deg/step about the shared
+off-center point; linear speed = omega*r_true fits every link (A 0.255
+@7.8, B 0.212 @6.5, C 0.184 @5.6, D 0.086 @2.6). MECHANISM, closed:
+rings contract link by link; co-rotation converts radius loss into
+SPEED loss; at D the target crawls (0.086, sd 0.058 stop-and-go) below
+the followable band, and E cannot lock — the known unfollowable
+near-stationary class. Band edges measured tonight: 0.184 followable
+(C by D), 0.237 followable (c706), 0.086 not (D by E), 0.313 not
+(c934): the followable speed band for this body class is ~(0.09, 0.28)
+arena-units/step. H60's ceiling FACT stands; its mechanism is speed
+floor, not jitter amplification (H67b) and not signal noise (H68 -
+replay-D fails because the REPLAYED TARGET IS SLOW, consistent with all
+of tonight's failures). (h68b_circles.json, chain_truth.png)
