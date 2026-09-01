@@ -314,7 +314,10 @@ about twice the variation, breeding stops producing followers and starts
 producing **toll-booths**: machines that just park at a good spot on the
 target's route and let it drive past, collecting closeness points. (A
 real evolved strategy. We checked: one champion "chaser" sat at speed
-exactly zero.)
+exactly zero.) Watch the switch happen — same breeding recipe, two oval
+shapes:
+
+![animated: a follower gluing to a gentle oval; a loiterer ignoring a stretched one](assets/tour_ellipse.gif)
 
 **Rule 2 — the target must move at a comfortable speed.** We measured
 the whole comfort zone:

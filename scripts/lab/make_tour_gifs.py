@@ -337,3 +337,51 @@ def seduction_gif():
                        else "dotted line = whom B watches")
         return []
     gif(fig, update, n // step, "tour_seduction.gif")
+
+
+# ── ellipse follower vs toll-booth ──────────────────────────────────────
+def ellipse_gif():
+    from homeostasis.simulation import run_pursuit
+    from homeostasis.pursuit import PursuitConfig
+    res_keys = ("n_nodes", "p_link", "input_weight", "weight_init_mean",
+                "leak", "target_lr", "threshold_ratio", "weight_lr")
+    follower = json.loads((LAB / "h38c_interp.json").read_text())[-1]
+    booth = json.loads((LAB / "h38_manifold.json").read_text())["ellipse"][-1]
+    runs = []
+    for champ, a, b, label in (
+            (follower, 4.5, 4.0, "gently squashed circle:\na true follower keeps pace"),
+            (booth, 5.0, 2.5, "strongly squashed circle:\nbreeding gave up on following — it just\nloiters mid-court as the target swings past")):
+        g, seed = champ["champion"], champ["champ_seed"]
+        pc = PursuitConfig(eye_offsets=(0.0,), sensors_per_eye=91,
+                           stimulus_motion="ellipse", ellipse_a=a, ellipse_b=b,
+                           wheel_base=g["wheel_base"],
+                           intensity_scale=g["intensity_scale"])
+        res = ReservoirConfig(n_inputs=pc.n_sensors, **{k: g[k] for k in res_keys})
+        h = run_pursuit(n_steps=2600, seed=seed, reservoir_config=res,
+                        pursuit_config=pc)
+        runs.append((label, h))
+    step = 8
+    fig, axes = plt.subplots(1, 2, figsize=(8.8, 4.6))
+    artists = []
+    for ax, (label, h) in zip(axes, runs):
+        ax.set_xlim(-0.5, 15.5); ax.set_ylim(-0.5, 15.5)
+        ax.set_aspect("equal"); ax.axis("off")
+        ax.plot([0, 15, 15, 0, 0], [0, 0, 15, 15, 0], color=INK, lw=2)
+        tt, = ax.plot([], [], color=WARM, lw=1, alpha=0.5)
+        at, = ax.plot([], [], color=ACC, lw=1, alpha=0.5)
+        td, = ax.plot([], [], "o", color=WARM, ms=9)
+        ad, = ax.plot([], [], "o", color=ACC, ms=9)
+        ax.set_title(label, fontsize=9.5)
+        artists.append((h, tt, at, td, ad))
+    fig.suptitle("orange = the target   ·   teal = the bred chaser", fontsize=10)
+
+    def update(f):
+        i = f * step
+        for h, tt, at, td, ad in artists:
+            lo = max(0, i - 260)
+            tt.set_data(h.sx[lo:i + 1], h.sy[lo:i + 1])
+            at.set_data(h.x[lo:i + 1], h.y[lo:i + 1])
+            td.set_data([h.sx[i]], [h.sy[i]])
+            ad.set_data([h.x[i]], [h.y[i]])
+        return []
+    gif(fig, update, 2600 // step, "tour_ellipse.gif")
