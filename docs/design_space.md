@@ -449,8 +449,11 @@ ridge, the conservation law is exact: w̄·p·N = 2.01–2.17 across a 40×
 density range (g_final 0.93–1.02) — total recurrent input is conserved
 and criticality is wiring-invariant; score is flat (the risky
 "dense-degrades" prediction was refuted). But at wlr=0.03 the table
-turns: **p=0.02 scores 0.566 with 15/16 reliability — the best cell of
-the campaign** — because 4-link columns start at g≈1.5 instead of 7.5:
+turns: **p=0.02 scores 0.566 with 15/16 reliability at 16 seeds — the
+best cell of the campaign** (48-seed cluster calibration: 0.509/0.79,
+still +0.05 mean and +0.18 reliability over the dense pair, with a third
+bit-identical cross-machine determinism check) — because 4-link columns
+start at g≈1.5 instead of 7.5:
 sparse wiring is *pre-adapted*, needing almost no renormalization, so
 nearly-frozen plasticity suffices and churn never enters. The ridge is
 really about time-to-renormalize versus churn: sparse shifts the optimal
