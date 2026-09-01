@@ -2459,3 +2459,40 @@ WIRING-determined, not IC-determined. Ecology width by direct attention
 works only near the ring, and a true ring-flock needs wiring diversity
 or agent-agent repulsion — neither of which the family provides for
 free. (h87_flock.json)
+
+## Wander addendum (exploratory, from stack48/twin48 data in hand)
+
+Within-run wander SD: full 0.291, freezeT0 0.314 (T channel EXONERATED
+for wander — removing it slightly increases it), stack+noise 0.230 —
+the first design that moves the "universal" wander, and consistently
+with H70's mechanism: dips are dark excursions, the noise floor
+abolishes darkness, wander shrinks ~20%. The wander question resolves
+as: wander = dark-excursion noise, reducible by sensory floors, not by
+channel surgery.
+
+## H88 (preregistered): the acquisition basin of an entrainment attractor
+
+H87 showed starts ~6 units outside the pacemaker ring fail to acquire.
+Map it: the h48e champion pair, single pacemaker (exclusive sensing),
+starts on rays from the ring at signed offsets {-6, -3, 0, +3, +6, +9,
++12} from the mean ring radius (7.8 about (19.7,19.7)), 4 ray
+directions each, n=7200, lock = late near4.8 >= 0.8. Predictions:
+(a) inside starts (offsets <= 0, i.e. between ring and center) acquire
+at >= 75%; (b) outside acquisition decays with offset, dead beyond
+about +6 (the H87 failures); (c) the basin is asymmetric: inside
+beats outside at matched |offset| (the retina faces outward less often
+than... committed either way: inside >= outside).
+
+## H88 verdict: acquisition is a phase lottery, not a radial basin
+
+All three prereg predictions effectively refuted: no radial-monotone
+basin exists. Even on the ring only 1/4 sampled angles acquires (0.86);
+offset -6 has a 0.91 beside three failures; the historically "proven"
+(15,10) start is just a winning ticket at an unsampled angle.
+Acquisition success is a fine-grained function of (start position x
+pacemaker startup phase) with ~10-25% per-attempt coverage at
+favorable radii (7200-step window). Locks are near-permanent once
+formed; FORMING one from arbitrary geometry is the rare event — the
+third lottery of the campaign (wiring, wander, now initial-condition
+phase), and the reason warm-started ecologies work: they implicitly
+select acquiring ICs. (h88_basin.json)
