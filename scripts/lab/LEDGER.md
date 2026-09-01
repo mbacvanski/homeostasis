@@ -1063,3 +1063,66 @@ reliable on its pair. First-guess parameters (theta ±0.05, window 120,
 random growth source) untuned; the direction, not the number, is the
 finding. This hands the mentors' connectivity/DNA agenda its empirical
 mandate and its first working local rule.
+
+## H40b verdict: REFUTED at proper power — the lottery is not early-legible
+
+300 wirings, 20 lockers (6.7%): balanced accuracy 0.49-0.52 for every
+early-200-step feature (flow, flow trend, revolution rate, dist trend) —
+chance. With K4 (static kernel fails): the lock outcome is decided late in
+the run by structure finer than these summaries. Prediction-based audition
+strategies are out; selection/structural search remain.
+
+## H42b/H43 (preregistered): tuning structural homeostasis; the tracking wander floor
+
+H42b variants (16 wirings each, pursuit): (i) gentler+slower (win 240,
+theta ±0.03); (ii) sensor-biased growth (new afferents drawn from nodes
+with above-median input in-degree — "grow toward the sensors"); (iii) both.
+Prediction: at least one variant beats 3/16 (>=5/16). H43: base grow/prune
+rule on TRACKING at ridge25 (24 seeds, 14400 steps): prediction —
+structural plasticity raises frac(score_late >= 0.35) by >= 0.10 over
+baseline and reduces late-segment wander (higher lag-1 correlation of
+segment scores).
+
+## H42b/H43 verdicts: tunings fail; structural plasticity is a stability-plasticity trade at the structure level
+
+H42b: no variant beats base 3/16 (gentle 1, sensor-bias 1, both 2). H43:
+on TRACKING (a solved task) the same rule is CATASTROPHIC — 0.284 vs 0.491,
+frac>=0.35 0.88 -> 0.00: perpetual rewiring destroys the entrained drive
+balance (the rule's threshold fires on ordinary churn-regime errors).
+Structural plasticity helps only where frozen structure is hopeless and
+harms where structure suffices — the stability-plasticity dilemma at the
+structural level.
+
+## H44 (preregistered): the developmental window resolves the structural dilemma
+
+Rewiring permitted only during the first 3600 steps, frozen after.
+Predictions: (a) tracking recovers to baseline (frac >= 0.80, vs 0.00 with
+lifelong rewiring); (b) pursuit locks >= the lifelong rule's 3/16 (early
+exploration is when it matters).
+
+## H44 verdict: SUPPORTED — the developmental window resolves the structural dilemma
+
+Tracking recovers fully (0.481 / frac 0.92 vs baseline 0.491/0.88;
+lifelong rewiring was 0.284/0.00); pursuit keeps the structural benefit
+(2/16 locked, mean 0.26 vs lifelong 3/16, 0.25 — comparable; the >=3/16
+count is a near-miss, recorded). Conclusion of the structural trilogy
+(H42-H44): grow/prune helps exactly where frozen structure is hopeless,
+harms where structure suffices, and a developmental window — structural
+exploration that CLOSES — captures the benefit at no cost. The family,
+minimally extended, rediscovers why development exists.
+
+## H45 (preregistered): N-scaling of the ridge and duty law
+
+Tracking N-line {200, 500, 1000, 2000} x wlr {0.05, 0.1, 0.2} at leak .25,
+in-degree pinned (p = 20/N) and input wiring pinned (input_p_link = 0.1),
+24 CRN seeds (the H23c clean protocol, cluster). Predictions: (a) the ridge
+position in wlr is N-invariant; (b) score at the ridge is N-stable within
+±0.05 from N=500 to 2000; (c) the duty law holds per-node at N=2000 with
+corr >= 0.99 (open-loop check, local).
+
+## H45c (local part): duty law at N=2000 — holds, mildly degraded
+
+Per-(node, window) fit over 46,000 points: corr +0.9881 (a shade under the
+preregistered 0.99), median |resid| 0.021 (vs 0.0025 at N=200). The law is
+N-robust; the extra residual is consistent with more heterogeneous
+within-window drift at 10x nodes.
