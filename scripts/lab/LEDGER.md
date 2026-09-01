@@ -456,3 +456,23 @@ not fixed wiring fate; w1's 100%-of-seeds reliability = its wander floor
 clears 0.35. The remaining fixed effect (early-late +0.45) is real but
 modest. Reframes open question 1: ask what sets the wander floor, not which
 seeds are blessed.
+
+## H24 (preregistered): the ridge law predicts w1's optimum out-of-family
+
+The coarse ridge law wlr* ≈ 1.5·leak^1.5 gives wlr* ≈ 0.65 at w1's
+leak=0.574. Prediction: score(w1', wlr=0.65) ≥ score(w1', wlr=1.0), with
+wlr=0.3 below the peak. Also attribution: grafting w1' ingredients onto
+ridge25 (gain 28.35, rho 1.525, input_weight 0.828) — bet: gain is the main
+floor-lifter (authority speeds re-acquisition).
+
+## H24 verdict: REFUTED both ways — the ridge law is family-local; w1' is epistatic
+
+(a) At w1' (leak .574), wlr=1.0 → 0.842 ≥ wlr=0.65 → 0.789 (16 seeds): the
+coarse ridge law does NOT extrapolate across w1's other parameter changes
+(rho 1.525, gain 28, N=100/p=.21). wlr=0.3 collapses (0.383) so the ridge's
+low side holds. Scope the law to the default family pending the cluster fine
+grid. (b) Every w1' ingredient grafted onto ridge25 HURTS (gain28 0.556,
+rho1.5 0.289, win0.83 0.534, gain+rho 0.373 vs base 0.633): the best-known
+config is a jointly-tuned whole — ingredient attribution by grafting fails
+(epistasis). The "what lifts the wander floor" question stays open and is
+now known to be non-additive.
