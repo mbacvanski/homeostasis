@@ -16,7 +16,8 @@ CHAMP = json.loads((LAB / "h48e_warm.json").read_text())
 CX, CY, R0 = 19.7, 19.7, 7.8
 
 def run(task):
-    off, ang = task
+    off, ang = task[0], task[1]
+    noise = task[2] if len(task) > 2 else 0.0
     r = R0 + off
     sx = float(np.clip(CX + r * np.cos(ang), 1.0, 29.0))
     sy = float(np.clip(CY + r * np.sin(ang), 1.0, 29.0))
@@ -29,23 +30,30 @@ def run(task):
     net = HomeostaticReservoir(res, seed=CHAMP["champ_seed"])
     env = PursuitEnv(pc, rng=net.rng)
     A = WallSimulation(wall_config=PACE_CFG, seed=PACE_SEED)
+    nrng = np.random.default_rng(int(off * 1000 + ang * 100) + 900001) if noise > 0 else None
     n = 7200
     d = np.empty(n)
     for i in range(n):
         A.step()
         env.sx, env.sy = A.env.x, A.env.y
         d[i] = env.distance()
-        st = net.step(env.sense())
+        acts = env.sense()
+        if nrng is not None:
+            acts = np.maximum(acts + nrng.uniform(-noise, noise, acts.shape), 0.0)
+        st = net.step(acts)
         env.apply_action(*map(float, st.outputs))
         env.steps += 1
-    return dict(off=off, ang=float(ang), lock=float((d[n // 2:] < 4.8).mean()))
+    return dict(off=off, ang=float(ang), noise=noise,
+                lock=float((d[n // 2:] < 4.8).mean()))
 
 def main():
-    tasks = [(off, ang) for off in (-6, -3, 0, 3, 6, 9, 12)
+    import sys as _s
+    noise = 0.1 if "--noise" in _s.argv else 0.0
+    tasks = [(off, ang, noise) for off in (-6, -3, 0, 3, 6, 9, 12)
              for ang in np.linspace(0, 2 * np.pi, 4, endpoint=False)]
     with ProcessPoolExecutor(10) as pool:
         rows = list(pool.map(run, tasks, chunksize=1))
-    (LAB / "h88_basin.json").write_text(json.dumps(rows))
+    (LAB / ("h89_basin_noise.json" if noise > 0 else "h88_basin.json")).write_text(json.dumps(rows))
     for off in (-6, -3, 0, 3, 6, 9, 12):
         sel = [r["lock"] for r in rows if r["off"] == off]
         print(f"offset {off:+3d}: acquire {np.mean([x >= 0.8 for x in sel]):.2f}"

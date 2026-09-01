@@ -2496,3 +2496,23 @@ formed; FORMING one from arbitrary geometry is the rare event — the
 third lottery of the campaign (wiring, wander, now initial-condition
 phase), and the reason warm-started ecologies work: they implicitly
 select acquiring ICs. (h88_basin.json)
+
+## H89 (preregistered): the noise floor widens the acquisition lottery
+
+H88's grid (7 offsets x 4 angles) rerun with a sigma=0.1 uniform sensor
+noise floor (H51's dark-escape mechanism, harness-level). Predictions:
+(a) total acquisition fraction at least doubles (baseline 2/28 = 0.07
+-> >= 0.14); (b) at least one far-outside start (offset >= +6)
+acquires; (c) already-acquiring cells keep their locks (noise does not
+break the winners).
+
+## H89 verdict: REFUTED in reverse — the noise floor is tracking-specific
+
+With sigma=0.1 sensor noise the acquisition grid goes to 0/28 (max lock
+0.16): noise destroys even the two baseline winners ((c) failed).
+The H51 rescue does NOT export to pursuit locks: the pursuit retina's
+intensity scaling (bump amplitude ~0.6 at lock distance) makes +-0.1
+activation noise proportionally large, and the lock's ~1% positional
+tolerance (H67) leaves no budget. Noise-as-resource is scoped to the
+1D tracking embodiment; the acquisition phase lottery stands
+unrescued. (h89_basin_noise.json)
