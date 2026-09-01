@@ -2405,3 +2405,22 @@ seduces the leader (hierarchy inversion); capture-resistant sticky
 attention -> stable chain (1.000 + 1.000). One latched selection bit
 plus a conservative switching threshold is the complete minimal
 machinery for shared-world homeostatic ecologies. (h85_shared.json)
+
+## H83 addendum (48 seeds): sag-free confirmed at power
+
+stack+noise 0.570 (SD 0.302, frac 0.79); stack-plain 0.536 (SD 0.221,
+frac 0.83) — noise buys mean, costs the reliability tail. Long-run
+stack+noise: sag -0.008 (zero, n=48) with late 0.562 vs ridge-full
+0.351: the stacked config is the best long-horizon tracking
+configuration measured, and the eq.-4 sag account holds at power.
+(stack48_results.jsonl, job 21731857)
+
+## H86 (preregistered): the saved depth-4 chain under shared visibility
+
+Load the H50 chain (A + B,C,D, saved genomes/wirings), run all-visible
+(every follower senses all other agents) with capture-resistant sticky
+attention (5x/300). Predictions: (a) all three links hold their own
+targets (B on A, C on B, D on C each >= 0.7 of late steps within their
+h50-era distances +1); (b) no capture events (zero switches after step
+2000); (c) if links instead re-wire attention (e.g. D attends A), the
+chain reorganizes to a star — report topology.

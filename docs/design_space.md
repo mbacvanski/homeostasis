@@ -697,7 +697,12 @@ family:
 7. **Targets are the calibration surface.** Only heterogeneous, adapted
    per-node target profiles hold interior spike rates statically;
    homogeneous frozen networks are dead-or-saturated (the cliff).
-8. **Size is inert.** Pick N for readout smoothness; pin in-degree
+8. **The stacked recommendation** (H83, 48-seed calibrated): p=0.02,
+   wlr=0.03, targets frozen, input/output pins, optional σ=0.1 noise
+   floor — 0.536–0.570 short-run, and on long horizons *sag-free* at
+   0.562 (the full-homeostatic ridge decays to 0.351). Noise buys mean
+   and costs the reliability tail; choose by application.
+9. **Size is inert.** Pick N for readout smoothness; pin in-degree
    (~20) and input wiring; check ignition with Law 1 (drive ≥
    leak·ρ·T). Predict the frozen cold-start fate from the wiring file
    with the Laws-1+2 vector map before spending any simulation.
