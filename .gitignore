@@ -3,5 +3,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .DS_Store
+~$*
+BMM Final Presentation.pptx
 scripts/out/*.mp4
 scripts/out/**/*.mp4
