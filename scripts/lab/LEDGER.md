@@ -2155,3 +2155,17 @@ letter: gain drops ~25% at P=240 in every density, well below the
 nominal absorption corner P* ~ 2pi/(wlr*f) — the corner formula,
 calibrated at f~0.15, mispredicts for quiet nets (or the 8-cycle
 window is noise-limited); flagged. (h78_bits.json)
+
+## H76 verdict (48-seed cluster power): target adaptation is harmful from step one
+
+freezeT0 late 0.466 vs full 0.351 (+0.115, t=+3.24) and vs freezeT3600
+(+0.090, t=+2.65): even 3600 early steps of T adaptation do lasting
+damage; freezing after them recovers little (+0.026 NS vs full) and the
+frozen early-adapted profile still sags (-0.069) — the harm is the
+PROFILE interacting with ongoing W dynamics, not just continuing drift.
+On ridge tracking, eq. 4 — the family's namesake set-point mechanism —
+is a pure liability: the H76 either/or resolves to "early adaptation
+actively harms". SCOPE: ridge tracking (wlr=.1); Pong sparse-slow says
+tlr is neutral there (H74); the historic claim that frozen homogeneous
+T is death was config-specific (defaults/w1' era) and does not hold at
+the ridge. (twin48_results.jsonl, job 21731397)

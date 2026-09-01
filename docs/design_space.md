@@ -566,12 +566,19 @@ split the channels cleanly:
   full −0.064): the erosion is metastable *lock decay*, and the weight
   channel is the re-locking mechanism (as the re-entrainment experiments
   said) — lifelong weight plasticity earns its keep.
-- **Freezing only the targets abolishes the sag and wins outright**
-  (H71: freeze-T-only +0.030 vs full −0.104; late score 0.519 vs
-  0.336). The erosion is the target channel's doing — but not through
-  its mean (T̄ moves +0.018, uncorrelated with sag) and not by
-  relabeling anatomically input-driven nodes (H72 null): a per-node
-  profile drift whose selectivity is dynamic, still open.
+- **Freezing only the targets abolishes the sag and wins outright** —
+  now at 48-seed cluster power (H71/H76): freeze-T-at-birth late 0.466
+  vs full 0.351 (+0.115, t=+3.24), and even the *first 3600 steps* of T
+  adaptation do lasting damage (freeze-at-3600 loses to freeze-at-birth
+  by 0.090, t=+2.65, and still sags — the early-adapted profile itself
+  keeps interacting badly with ongoing W dynamics). On ridge tracking,
+  eq. 4 — the family's namesake set-point mechanism — is a pure
+  liability. The harmful component is boxed by three nulls: not the
+  mean (+0.018, uncorrelated), not anatomical input selectivity (H72),
+  not lifetime-activity selectivity (H77). Scope: the historic
+  "frozen homogeneous T is death" claim was config-specific and does
+  not hold at the ridge; Pong's sparse-slow optimum finds tlr neutral
+  (H74).
 
 Prescription: **keep W plastic, freeze T after calibration** — on
 supercritical tracking. (Pong's subcritical regime still wants fast
