@@ -65,8 +65,8 @@ td.num,th.num{text-align:right; font-variant-numeric:tabular-nums;
 <div class="kicker">homeostasis · design-space campaign · 2026-09-01</div>
 <h1>Three Laws and a Ridge</h1>
 <p class="sub">Why homeostatic reservoir networks work, where they work, and what they are
-actually doing — an overnight preregistered investigation (~26,000 runs, 96 hypotheses
-H1–H96, every number re-derivable from <code>scripts/out/lab/</code>; running log in
+actually doing — an overnight preregistered investigation (~28,000 runs, 99 hypotheses
+H1–H99, every number re-derivable from <code>scripts/out/lab/</code>; running log in
 <code>scripts/lab/LEDGER.md</code>, synthesis in <code>docs/design_space.md</code>, interactive
 verification at <code>/lab</code> in the repo visualizer).</p>
 
@@ -318,7 +318,7 @@ duty law holds at N=2000 (corr 0.988). The organizing variables of this family a
 <em>degrees and rates, not counts</em>.</p>
 
 <h2>Night two: robustness, the third clause, and the static cliff
-<span class="chip ok">H51–H96</span></h2>
+<span class="chip ok">H51–H99</span></h2>
 
 <figure><img src="{{FIG_NIGHT2}}" alt="Night-two results: noise rescue, synaptic scaling repair, sparse pre-adaptation, the lock horizon">
 <figcaption>Four arcs from the second half of the night: (a) moderate sensor noise rescues
@@ -361,7 +361,8 @@ of shifting it (at p=0.8, wlr 0.3 and 1.0 both collapse to 0/16 — one by a car
 loss with physiology fully renormalized, one by runaway potentiation); sparse is forgiving,
 dense is brittle. And it transfers: on Pong (mean-zero weights — there the controller
 <em>grows</em> input to comfort, the mirror image of tracking's erosion) the best cell is
-again sparse+slow, hit rate 0.679 vs the published 0.600, running nearly silent at f≈0.02.
+again sparse+slow (12-seed screen 0.679; at the paper's own 500-run scale with targets
+off: 0.610 ± 0.204 vs published 0.582 ± 0.100, z = +2.8), running nearly silent at f≈0.02.
 The best Pong players use about ten active neurons in five hundred.</p>
 
 <p><strong>The baseball test, run forward — and the competence law's third clause.</strong>
@@ -479,6 +480,37 @@ within noise by late); and with wander SD ≈ 0.29, early/late windows regress t
 the reversion-adjusted sags (full −0.102, freeze-at-birth +0.006) and same-window cross-arm
 contrasts on shared seeds are the load-bearing statistics throughout.</p>
 
+<figure><img src="{{FIG_BUDDING}}" alt="The budding cascade: population staircase and locked distances">
+<figcaption><strong>The budding theorem (H97) — reproduction as action, answered.</strong> A
+locked follower spawns offspring at its own position after 1,200 steps of held comfort. The
+inheritance ladder: position alone fails (the fresh-wired child loses the competence
+lottery); adding wiring heredity fails (the cold-state child loses the acquisition lottery);
+even a <em>pure clone</em> at the parent's exact position fails — mutation exonerated,
+internal state is the barrier. Only <strong>budding</strong> — copying the parent's full
+dynamical state — works, and then completely: the founder wins the speckle lottery once
+(the wild transient at left), and the population cascades to its cap with 6/6 locked.
+<em>The heritable unit in this family is the entire dynamical state, not the structure</em> —
+the statics cliff at the population level: you can't inherit a lock. What biology inserts
+between genome and competence — scaffolded development that re-derives state — is precisely
+the machinery this family lacks, and that is the measured gap the reproduction-as-action
+agenda must cross. (Interactive: <code>/lab/reproduce</code>, all four rungs, bit-identical
+to the campaign runs.)</figcaption></figure>
+
+<p><strong>Scale calibrations, run last.</strong> At the paper's own 500-run scale, the best
+Pong cell (sparse wiring, slow weights, targets off) scores <strong>0.610 ± 0.204 vs the
+published 0.582 ± 0.100</strong> — a real (z = +2.8) but modest improvement bought at doubled
+variance; the stacked tracking config holds 0.512 / reliability 0.72 at 200 seeds. The
+pattern deserves its name: every effect in the campaign shrank monotonically from 12 → 48 →
+200/500 seeds while keeping its sign — small-n screens find directions, large-n runs give
+the citable numbers. And the ridge's <em>structure</em> fell on the final pass (H98–H99):
+each run is a two-state lock process whose measured formation/destruction rates predict the
+whole (leak × wlr) plane at r = +0.878 (score = chance + locked-time × locked-quality),
+land the crest exactly at two of three tested leaks — and the destruction rate is already
+mechanistic: <strong>91% of lock losses are dark-mediated</strong> (P(destroy | next
+segment dark) = 0.78 vs 0.29). The universal wander, the dark-excursion dips, and the crest
+are one unlock/relock alternation; what remains open is why view-keeping and dark
+re-acquisition depend on (leak, wlr) as they do.</p>
+
 <h2>Refuted along the way <span class="chip bad">all preregistered</span></h2>
 <ol>
 <li>"Homeostasis silences stationary input" — only the weight channel regulates; the statue
@@ -517,7 +549,7 @@ curve is now clearly worth one clean experiment.</li>
 
 <div class="provenance">
 <span style="font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">provenance</span>
-— Hypotheses H1–H96 preregistered before their experiments in
+— Hypotheses H1–H99 preregistered before their experiments in
 <code>scripts/lab/LEDGER.md</code> (refutations, wrong premises, and two confounded designs
 caught by their own controls all kept on the record); common-random-number seeds; laws
 verified to stated precision; chance = 0.25; score = within-45° occupancy, segments 6–10.
