@@ -1,7 +1,7 @@
 # Overnight research update (2026-09-01) — pasteable for Slack
 
 **TL;DR for the 4pm meeting.** The design-space campaign ran overnight to
-99 preregistered hypotheses (~28k runs, nine cluster batches, all
+100 preregistered hypotheses (~28k runs, nine cluster batches, all
 pushed). The model family now has: three exact laws that compose into a
 simulation-free predictor (r = 1.0000); a mechanistic account of every
 task in the repo (tracking = velocity entrainment; wall = stability
@@ -262,3 +262,10 @@ lock-destruction rates predict the whole (leak x wlr) plane at r=+0.88
 exactly at 2/3 tested leaks. The wander, the dark-excursion dips, and
 the crest are one unlock/relock alternation; the two rates now hold all
 the remaining mystery.
+
+**The hundredth entry closed the ridge's mechanism.** Lock destruction
+is view-loss (91% of losses are dark-mediated); lock formation is
+churn-limited engagement (fast weights re-lock a fully-lit agent at
+0.065 vs 0.837 slow — a 13x deficit exactly where flow is fullest). The
+crest of the ridge is the balance of those two behavioral rates; only
+the quantitative exponent remains phenomenological.
