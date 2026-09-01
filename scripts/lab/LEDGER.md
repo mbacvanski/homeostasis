@@ -1276,3 +1276,52 @@ that noisier target. Measured chain depth at this budget/scale: a pacemaker
 plus THREE followers. The telephone-game law: entrainment chains are nearly
 lossless until a link's orbit noise crosses the band, then the next link
 cannot form.
+
+## H51 (preregistered): noise robustness of the ridge
+
+Tracking with per-step uniform sensor noise U(±σ), σ {0, 0.1, 0.2} × wlr
+{0.03, 0.1, 0.3, 1.0} (leak .25, tlr .01), 16 CRN seeds, harness-level
+noise (clamped at 0; core untouched). Predictions (the SNR theory's):
+(a) noise costs score most at wlr=1.0 (external noise compounds the
+servo's self-churn); (b) the ridge peak stays at or shifts BELOW wlr=0.1
+(self-churn becomes redundant when the environment supplies fluctuation);
+(c) at wlr=0.03 noise partially RESCUES (breaks the statue: external
+fluctuation substitutes for the absent weight churn).
+
+## H51 verdict: stochastic resonance across the plane; strong noise starves absorption
+
+sigma=0.1 RESCUES the under-plastic side (wlr 0.03: 0.367 -> 0.533,
+reliability 0.44 -> 0.81 — external fluctuation substitutes for missing
+weight churn; prereg (c) strongly confirmed) and even lifts wlr=1.0
+(0.340 -> 0.419/0.88): the ridge FLATTENS, not shifts ((b) partial).
+sigma=0.2: the absorption regime's activity collapses (f 0.17 -> 0.04 —
+noise accelerates erosion; score still 0.442) and wlr=1.0 degrades ((a)
+holds only at strong noise). Noise is a design RESOURCE for under-plastic
+networks and a tax on over-plastic ones.
+
+## H51b (preregistered): the noise-rescue mechanism is desaturation
+
+Open-loop transfer probe at wlr=0.03 (the saturated, information-blind
+regime; baseline recon gain ~0.05): adding sigma=0.1 sensor noise
+desaturates (f drops from ~1 toward ~0.2) and recon gain rises above 0.15.
+
+## H51b verdict: mixed, and the miss is the finding
+
+sigma=0.2 desaturates open-loop exactly as predicted (gain 0.002 -> 0.196,
+f 0.99 -> 0.38: rectified noise adds mean drive, the integral controller
+bites). But sigma=0.1 — the level that rescues closed-loop wlr=0.03 —
+does NOTHING open-loop (gain 0.001, f 0.98). The rescue is not a readout
+effect. (h51b_desat.json)
+
+## H51c: the rescue is a dark-trap escape (loop-level, not reservoir-level)
+
+At wlr=0.03/sigma=0 the failing agent spends 35% of steps in darkness
+(input_duty 0.65) — zero input flow, hence zero learning signal: an
+absorbing sensory dead state (the ratchet clause "dark -> still" is a trap
+for under-plastic networks). sigma=0.1 abolishes darkness (duty 1.00, flow
+1.98 -> 3.68) while the motor barely changes (eff_diff 0.049 -> 0.056):
+the flow ratchet stays engaged, score 0.367 -> 0.533. sigma=0.2 keeps
+duty=1.00 but washes out contrast (dir-agree 0.297 -> 0.227, eff_sat up):
+inverted-U in sigma, optimum = darkness abolished AND contrast preserved.
+A sensory noise floor is a design resource specifically for under-plastic
+networks. (h51c_movement.json)

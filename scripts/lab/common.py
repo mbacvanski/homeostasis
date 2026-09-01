@@ -91,6 +91,8 @@ def run_closed_loop(task: dict) -> dict:
     n_steps = int(task.get("n_steps", 7200))
     arm = task.get("arm", "full")
     snap_every = int(task.get("snap_every", 240))
+    sensor_noise = float(task.get("sensor_noise", 0.0))
+    noise_rng = np.random.default_rng(seed + 900001) if sensor_noise > 0 else None
 
     rcfg, tcfg = make_configs(res_over, trk_over)
     net = HomeostaticReservoir(rcfg, seed=seed)
@@ -141,6 +143,9 @@ def run_closed_loop(task: dict) -> dict:
 
         herr = env.heading_error()
         inputs = env.sense()
+        if noise_rng is not None:
+            inputs = np.maximum(inputs + noise_rng.uniform(
+                -sensor_noise, sensor_noise, inputs.shape), 0.0)
         state = net.step(inputs)
         if arm == "freeze-W-only":
             net.weights = w0.copy()
@@ -248,6 +253,8 @@ def run_open_loop(task: dict) -> dict:
     seed = task["seed"]
     n_steps = int(task.get("n_steps", 3000))
     per_node = bool(task.get("per_node", False))
+    sensor_noise = float(task.get("sensor_noise", 0.0))
+    noise_rng = np.random.default_rng(seed + 900001) if sensor_noise > 0 else None
 
     rcfg, tcfg = make_configs(res_over, trk_over)
     net = HomeostaticReservoir(rcfg, seed=seed)
@@ -276,6 +283,9 @@ def run_open_loop(task: dict) -> dict:
         d = np.abs((theta[i] - offs + 180.0) % 360.0 - 180.0)
         acts = np.exp(-(d ** 2) / tcfg.tuning_width)
         acts[d <= tcfg.plateau_width] = 1.0
+        if noise_rng is not None:
+            acts = np.maximum(acts + noise_rng.uniform(
+                -sensor_noise, sensor_noise, acts.shape), 0.0)
         drive = acts @ net.input_weights + net._spiked_f @ net.weights
         state = net.step(acts)
         f_t[i] = state.prop_spiked
