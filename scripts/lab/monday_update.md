@@ -224,3 +224,12 @@ hierarchies); raising the switching threshold (5x for 300 steps) cures
 it: pacemaker→B→C all mutually visible, B holds A at 1.000 and C holds
 B at 1.000 with zero attention switches. One latched selection bit plus
 a conservative switch rule is the complete minimal machinery.
+
+**On the arXiv paper from the notes (2510.18221, Bejjani et al.):** their
+60k-agent reward-free evolutionary ecologies are the macro version of the
+direction; our campaign supplies the micro substrate and makes three
+predictions for homeostat-based versions — selection (not within-life
+reward rules) is the certified mechanism; stable inter-agent behavior
+needs persistent selective attention (raw mutual visibility collapses);
+and scale buys emergence through niches that satisfy the competence
+clauses, not through network size (which is inert).

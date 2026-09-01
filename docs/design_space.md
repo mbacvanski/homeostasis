@@ -634,6 +634,26 @@ supercritical tracking. (Pong's subcritical regime still wants fast
 targets as a damper at high wlr; at the slow-wlr cells that now win
 there, the question is open.)
 
+## Relation to the large-scale ecology program (arXiv 2510.18221)
+
+The meeting notes point at Bejjani et al.'s 60,000-agent evolutionary
+ecologies — reward-free populations of evolved networks where foraging,
+predation, and vision emerge under survival pressure, with some behaviors
+appearing only past a scale threshold. Tonight's results describe the
+*individual-agent substrate* such a program needs, and make three
+predictions for homeostat-based versions of it: (i) reward-free selection
+is exactly the mechanism our boundary experiments certify (selection
+finds repertoire members that no within-life scalar rule can shape —
+H29/H35/H36/H56); (ii) stable inter-agent behavior will not emerge from
+raw mutual visibility — it requires persistent selective attention (the
+H81–H86 progression: collapse → flicker → capture → stability), so their
+scale thresholds may partly be *attention-architecture* thresholds; and
+(iii) network size per se contributes nothing (H45) — the leverage is in
+degrees, rates, and ecological structure (band-compatible pacemakers,
+supra-horizon engagements), which is where scale plausibly buys its
+emergent behaviors: bigger worlds contain more niches that satisfy the
+competence clauses.
+
 ## What the two homeostatic channels actually do
 
 - **The weight servo is the universal necessary channel**: freeze-W-only is
