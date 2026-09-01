@@ -254,3 +254,11 @@ improvement is real (z = +2.8) but modest, and its variance is doubled
 the campaign shrank monotonically from 12 → 48 → 200/500 seeds while
 keeping its sign — treat the small-n numbers as direction-finders and
 the large-n numbers as the citable ones.
+
+**And a last theory result (H98):** the ridge's structure reduced to a
+two-state process — measured per-segment lock-formation and
+lock-destruction rates predict the whole (leak x wlr) plane at r=+0.88
+(score = chance + locked-fraction x locked-quality), landing the crest
+exactly at 2/3 tested leaks. The wander, the dark-excursion dips, and
+the crest are one unlock/relock alternation; the two rates now hold all
+the remaining mystery.

@@ -2790,3 +2790,20 @@ configuration effect shrank monotonically with n while keeping its
 sign — the 12-16-seed screening numbers are direction-finders, the
 48-500-seed numbers are the citable ones.
 (pong500_results.jsonl, stack200_results.jsonl)
+
+## H98 verdict: the crest IS a lock-statistics balance; the rates hold the mystery
+
+(c) SUPPORTED: predicted crest = measured crest exactly at leak .12
+(0.01) and leak .5 (0.5); the miss at leak .25 is a flat crest
+(measured 0.401-0.416 across 13x in wlr — argmax ill-defined, the
+original ridge fit's own caveat row). Plane-wide, predicted locked
+fraction explains measured score at r = +0.878 (18 cells), with the
+calibration line measured ~ 0.46*pred + 0.24 — i.e. score = chance
+(0.25) + locked_fraction x (locked quality ~ 0.7 - chance). (a),(b)
+REFUTED: neither rate is monotone in wlr (at leak .12, SLOW weights
+form locks more readily, 0.66 at wlr .01 vs 0.18 at 0.4). The ridge
+reduces to a TWO-STATE MARKOV PROCESS (form rate p_f, destroy rate
+p_d); the SNR physics lives inside the two rates, still phenomenological
+— but the structure unifies the campaign: the universal wander (H66),
+the dark-excursion dips (H70), and the crest are one unlock/relock
+alternation. (ridge98_results.jsonl, h98_analyze.py)

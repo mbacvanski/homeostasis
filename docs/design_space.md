@@ -128,7 +128,15 @@ as *measured* characterization. (Its once-favored "matched-timescale"
 behavioral period — was later refuted at plane scale, H94: crest wlr
 rises *with* duty rate, the opposite sign, so the b3-era single-point
 match was coincidence. The ridge exponent remains empirical and
-underived — the sharpest theory question the campaign leaves open.) Two corollaries,
+underived — though its *structure* fell on the last pass (H98): treat
+each run as a two-state process with measured per-segment lock-formation
+and lock-destruction rates, and the steady state p_f/(p_f+p_d) predicts
+the plane at r = +0.878 — calibration line score ≈ 0.25 + 0.46·locked
+fraction, i.e. chance plus locked-time × locked-quality — and lands the
+crest exactly at two of three tested leaks (the third is a flat crest
+with ill-defined argmax). The universal wander, the dark-excursion dips,
+and the crest are one unlock/relock alternation; what shapes the two
+rates is the remaining question.) Two corollaries,
 both measured: activity under a *stationary* retina at wlr=1.0 stays at
 f ≈ 0.39 for every stimulus schedule (the canonical prop_spiked ≈ 0.34 is
 churn-set, not stimulus-set; k1), yet **total darkness silences every
