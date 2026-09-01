@@ -1,15 +1,16 @@
 # How homeostatic reservoirs work: laws, phases, and the entrainment mechanism
 
 *Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/;
-55 preregistered hypotheses H1–H55 in
+60 preregistered hypotheses H1–H60 in
 [scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~20,000 local runs plus
 three cluster batches; four tasks — tracking, Pong, wall avoidance, and the
 new pursuit task — plus two-to-four-agent ecologies). Method: every
 hypothesis preregistered before its experiment; common-random-number wiring
 seeds; all scripts deterministic (two bit-identical cross-machine
 reproductions); every number below traceable to a JSON in
-`scripts/out/lab/`. Interactive verification: six `/lab` pages in the
-visualizer. Chance score is 0.25; "score" is within-45° occupancy over
+`scripts/out/lab/`. Interactive verification: seven `/lab` pages in the
+visualizer (incl. `/lab/repair`, the noise slider, and ballistic pursuit,
+each bit-exact against its campaign JSON). Chance score is 0.25; "score" is within-45° occupancy over
 reversal segments 6–10 unless noted.*
 
 ## The three exact laws
