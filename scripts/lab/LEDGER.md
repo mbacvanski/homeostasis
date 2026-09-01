@@ -2591,3 +2591,24 @@ old hint was noise — retire the question.
 Gain 0.213-0.279 across P 24-60 with SDs ~0.10: flat within noise, no
 local max at the spacing-crossing period. The old hint was sampling
 noise; the question is retired. (h92_resonance.json)
+
+## H93 (preregistered): the carrier's locus shifts with leak along the ridge
+
+Leak {0.15, 0.25, 0.4, 0.55, 0.7} at matched ridge wlr = 1.04*leak^1.41
+(leak alone at fixed wlr kills cells — the claim tested is
+along-the-ridge), tlr .01, 8 seeds, B8 locus protocol. W-purity =
+|corr(dduty_rec, dir)| / (|corr_rec| + |corr_in|). Predictions:
+(a) W-purity increases with leak (rank corr >= +0.8 over the 5 cells) —
+fast-leak x forgets input context so the bias must live in W;
+(b) purity >= 0.75 at leak .55-.7 (w1'-like) and <= 0.5 at leak .15;
+(c) all cells functional (mean score >= 0.35) so the comparison stands.
+
+## H93 verdict: leak is the storage-locus dial
+
+(a) CONFIRMED: W-purity 0.38 -> 0.41 -> 0.59 -> 0.74 -> 0.61 across
+leak 0.15-0.7 (Spearman +0.90); (b) partial — 0.74 at leak .55
+(w1'-like, its leak ~0.59) but the 0.7 cell dips to 0.61 (residue
+noted); (c) all cells functional (0.49-0.56). Slow-leak agents lean on
+x-carried input context; fast-leak agents must store the bias in the
+weights. The carrier-regionalization question is answered: the locus
+follows dissipation. (h93_locus.json)

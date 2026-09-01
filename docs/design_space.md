@@ -760,8 +760,12 @@ the fast edge is sparse-and-informative.)
    corner formula mispredicts for quiet nets. The sensor-spacing
    "resonance" was retested at fine grain and retired — flat within
    noise (H92).
-3. **Why does the carrier regionalize** — pure W-storage at w1′ vs mixed at
-   ridge25? (Candidate: leak sets how long input context persists in x.)
+3. ~~Why does the carrier regionalize~~ — ANSWERED (H93): leak is the
+   storage-locus dial. Along the ridge, W-purity of the turn bias rises
+   0.38 → 0.74 as leak goes 0.15 → 0.55 (Spearman +0.90): slow-leak
+   agents lean on x-carried input context, fast-leak agents must store
+   the bias in the weights; w1′'s leak (~0.59) sits exactly at the
+   high-purity cell. (Residue: a dip to 0.61 at leak 0.7.)
 4. **Why the exact retinal drive formula underperforms the proxy** for the
    dead boundary — a closed-loop selection effect worth one figure.
 5. ~~What breaks entrainment chains~~ — CLOSED (H60–H68b): a speed
