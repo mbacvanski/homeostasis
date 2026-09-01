@@ -415,8 +415,10 @@ world or the network is degraded. All three returned the same shape of
 answer: **the comfort machinery always restores physiology; whether
 behavior benefits depends on where you start relative to comfort.**
 
-**Sensor noise is a resource for under-plastic networks** (H51,
-`h51_noise.py`). Moderate uniform sensor noise (σ=0.1 on activations)
+**Sensor noise is a resource for under-plastic networks — on the 1D
+tracking embodiment** (H51, `h51_noise.py`; the scope matters: the same
+σ=0.1 floor *destroys* fine pursuit locks, whose positional tolerance
+is ~1%, H89). Moderate uniform sensor noise (σ=0.1 on activations)
 *rescues* the statue regime — wlr=0.03 goes 0.367 → 0.533 with
 reliability 0.44 → 0.81 — and even lifts wlr=1.0, flattening the ridge;
 strong noise (σ=0.2) hurts everywhere and collapses the absorption
@@ -749,9 +751,10 @@ family:
 4. **Keep readout pools sparse** (~10–20 in-neighbors): dense pools
    average away the left/right asymmetry that steers the body.
 5. **A sensor-noise floor (σ ≈ 0.1) is a free rescue** for under-plastic
-   networks — it abolishes the absorbing dark state while sparing
-   contrast. Sparse wiring's internal fluctuations buy the same thing
-   architecturally.
+   networks on coarse tasks (tracking) — it abolishes the absorbing dark
+   state while sparing contrast; sparse wiring's internal fluctuations
+   buy the same thing architecturally. Do NOT apply it to fine locks
+   (pursuit-class, ~1% positional tolerance): there it is poison (H89).
 6. **Keep the weight channel plastic; freeze the target channel — from
    birth, on supercritical tracking.** Long-horizon competence decays by
    metastable lock loss, and weight plasticity is the re-locking
