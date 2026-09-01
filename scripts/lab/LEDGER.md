@@ -313,3 +313,33 @@ other regime probed** — the matched-timescale ridge is where plasticity
 whitens saturation away without self-noise. (Highpass corner below P=30 not
 reached; absorption cutoff confirmed; P*-vs-wlr scaling untestable on this
 flat-top — refine with shorter periods if needed.)
+
+## H18 verdict (B4): swap-immunity — the loop is self-organizing, not a wired reflex
+
+Effector inversion at t=3600: recovery ratio (swap/full, segments 9-10) =
+1.03 ridge25 / 0.93 w1' / 0.96 default — the dip is barely visible at
+720-step resolution ANYWHERE (H18b's regime-dependence refuted; recovery is
+universal and fast). Ratchet pawl confirmed in recorded policy stats:
+RMS dH out-of-view 0.174 vs in-view 1.200 at wlr=0.1 (dark = still), 0.81 at
+wlr=1.0 (churn keeps moving).
+
+## H16b verdict (B5): REFUTED — targets at w1' are not static gain-normalization
+
+w1' tlr=0 with target_init 2/3/4 = total death (0.25x; duty law: raising T
+drops mu/T below leak → silence); only ti=1 lives (0.654) and true target
+ADAPTATION adds the remaining ~0.2 to reach 0.85. Whatever targets do at w1',
+it is dynamic.
+
+## H19 + B6 verdict: the agent is a VELOCITY-ENTRAINED FOLLOWER, not a servo
+
+Follow ratio (agent net rotation / stimulus net rotation, per segment):
+w1' 0.837 overall (0.88 of segments > 0.5, up to 0.98 late) — genuine
+following through reversals. ridge25 0.565 and LEARNING over the session
+(0.28 → 0.89 by segment). Yet the signed in-view response is ~zero (w1'
++0.0006) or ANTI-corrective (ridge25 −0.120): **no position-error feedback
+exists**. Mechanism: slip → spikes (bandpass) → turning, with the turn BIAS
+as the slow learned variable dragged by the stimulus; darkness stalls the
+agent (ridge25 dark-stall 0.93) and the periodic world returns the stimulus
+(periodicity is load-bearing, as the toy-world result predicted). Swap
+immunity follows: inversion just re-learns the bias. "Gibsonian resonance"
+is mechanically accurate: entrainment, not servo control.
