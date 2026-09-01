@@ -190,3 +190,14 @@ network core carries per-case-study settings (`PONG_RESERVOIR_CONFIG`):
 Validation, 40 runs × 100,000 steps each (chance 0.20), against the paper's
 500-run figures: see `scripts/out/pong/results.json` and
 `scripts/out/pong/pong_validation.png`.
+
+## Beyond the paper: the language track
+
+`scripts/stage1*`–`scripts/stage5a_*` are an exploratory track applying the
+same reservoir to the authors' earlier *language* model (Falandays, Nguyen &
+Spivey 2021, PDF in repo root): passive listening, prediction-as-pattern-
+completion, and then attempts to close the loop through a mouth (speaking,
+contingent dialogue). Findings — including the full 2021 replication, the
+prediction-by-absorption mechanism, the staleness result, and the
+context-residue confound — are distilled with verified numbers in
+[docs/language_track.md](docs/language_track.md).
