@@ -2103,3 +2103,55 @@ bracket, which resolves cleanly: a CLEAN slow circle nearly locks while
 D (same mean speed 0.086 but 67% speed modulation, stop-and-go) does
 not. The low edge is jointly set by speed AND speed-regularity — the
 constant-control clause in the speed dimension. (h75_band.json)
+
+## H76 (preregistered): a developmental window for the target channel
+
+Ridge cell, n=21600, 12 CRN seeds (H71's): new arm freezes T at step
+3600 (after calibration), compared against H71's freeze-at-0 and full.
+Predictions: (a) freeze-at-3600 beats full late by >= 0.10 (the sag is
+cured regardless of freeze time); (b) explicit either/or on calibration
+value at the ridge: freeze-at-3600 minus freeze-at-0 late, paired — if
+>= +0.03 early calibration earns something; if within +-0.03,
+calibration is worthless at the ridge (consistent with H71's finding
+that init-frozen homogeneous T already wins); if <= -0.03, early
+adaptation actively harms even before 3600.
+
+## H77 (preregistered): the T drift is activity-organized
+
+Full arm, 12 seeds, n=21600; per-node lifetime spike count vs dT.
+Predictions: (a) |corr(dT_n, spikes_n)| >= 0.4 within-seed (the drift
+is organized by dynamics where the static proxy failed, H72); (b) the
+sign question is committed as: NEGATIVE (spiking nodes' post-spike x'
+sits below T, integrating E<0), reported either way.
+
+## H77 verdict: NULL — the harmful drift is not activity-organized either
+
+corr(dT, lifetime spikes) = +0.033 (range -0.04..+0.08); active vs
+quiet halves' dT identical (+0.092 vs +0.083). Three nulls now box the
+sag's micro-mechanism: not mean-T (H71c), not anatomical input drive
+(H72), not lifetime activity (H77). Remaining suspects: temporal
+structure (T drifting during dark excursions, mistiming recovery) or
+T-W misalignment. Parked with the box walls recorded. (h77_dyn.json)
+
+## H78 (preregistered): bits per spike, properly
+
+Open-loop sine replay, linear position decoding; Gaussian-channel
+information rate I = -0.5*log2(1 - gain^2) bits/step; efficiency =
+I/(N*f) bits/spike/step/node-normalized. Grid: p {0.02, 0.1, 0.4} x
+period P {60, 120, 240} at wlr=0.1, input pinned, 8 seeds. Predictions:
+(a) bits/spike rises with p at every P (the H65 proxy, now in units);
+(b) gain varies < 20% across P within each p (all periods below the
+absorption corner P* ~ 420); (c) the p=0.4 efficiency exceeds p=0.02's
+by >= 3x at P=120.
+
+## H78 verdict: bits/spike in units — density wins 11x
+
+(a),(c) CONFIRMED: bits/spike rises with density at every period
+(P=120: 1.08 -> 3.76 -> 11.9 x1e-3 bits/spike for p .02/.1/.4), and
+dense wins the absolute information RATE too (0.077 vs 0.027 bits/step
+at a third of the spikes). Wiring density buys code sparsity buys
+information efficiency — the H65 proxy now in units. (b) REFUTED at the
+letter: gain drops ~25% at P=240 in every density, well below the
+nominal absorption corner P* ~ 2pi/(wlr*f) — the corner formula,
+calibrated at f~0.15, mispredicts for quiet nets (or the 8-cycle
+window is noise-limited); flagged. (h78_bits.json)

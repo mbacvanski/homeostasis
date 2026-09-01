@@ -136,6 +136,7 @@ def run_closed_loop(task: dict) -> dict:
     f_win_acc = 0.0
 
     kill_frac = float(task.get("kill_frac", 0.0))
+    freeze_T_at = task.get("freeze_T_at")
     t_mid = None
     for i in range(n_steps):
         if arm.startswith("kill-mid") and i == half and kill_frac > 0:
@@ -160,6 +161,8 @@ def run_closed_loop(task: dict) -> dict:
                 net.weights = w0.copy()
         elif arm == "freeze-T-mid" and i == half:
             t_mid = net.targets.copy()
+        if freeze_T_at is not None and i == int(freeze_T_at):
+            t_mid = net.targets.copy()
         elif arm == "shuffle-mid" and i == half:
             mask = net.adjacency
             vals = net.weights[mask]
@@ -175,7 +178,7 @@ def run_closed_loop(task: dict) -> dict:
             net.weights = w0.copy()
         elif arm == "freeze-T-only":
             net.targets = t0.copy()
-        elif arm == "freeze-T-mid" and t_mid is not None:
+        elif (arm == "freeze-T-mid" or freeze_T_at is not None) and t_mid is not None:
             net.targets = t_mid.copy()
         e_left, e_right = state.outputs
         if arm == "swap-mid" and i >= half:

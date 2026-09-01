@@ -688,11 +688,15 @@ the fast edge is sparse-and-informative.)
    What remains open is the microdynamics generating that invariant SD
    (and the earlier non-additivity results stand: the best configs are
    jointly-tuned wholes; the floor lives in ≥3-way interactions).
-2. **Formalize information-per-spike** — sharpened by H65's refutation:
-   info-per-spike *rises* with wiring density (gain/f 1.4 → 9.0 across
-   p = .02 → .4 at the ridge; density creates code sparsity), and the
-   best Pong players run at f ≈ 0.02. A decoding-based bits/spike curve
-   is one clean experiment away; also the sensor-spacing resonance.
+2. ~~Formalize information-per-spike~~ — DONE (H78): with the Gaussian
+   -channel identity on decoding gain, bits/spike rises ~11× with
+   density (1.1 → 3.8 → 11.9 mbits/spike across p = .02/.1/.4 at
+   P=120), and dense wins the absolute rate too (0.077 vs 0.027
+   bits/step at a third of the spikes). Wiring density buys code
+   sparsity buys information efficiency. Residue: gain sags ~25% at
+   P=240 in every density, below the nominal absorption corner — the
+   corner formula mispredicts for quiet nets. The sensor-spacing
+   resonance stays open.
 3. **Why does the carrier regionalize** — pure W-storage at w1′ vs mixed at
    ridge25? (Candidate: leak sets how long input context persists in x.)
 4. **Why the exact retinal drive formula underperforms the proxy** for the

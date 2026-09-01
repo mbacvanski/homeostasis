@@ -1,0 +1,18 @@
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 0, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 3600, "_cell": "freezeT3600"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 3, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 0, "_cell": "freezeT0"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 6, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "full"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 8, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 3600, "_cell": "freezeT3600"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 11, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 0, "_cell": "freezeT0"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 14, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "full"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 16, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 3600, "_cell": "freezeT3600"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 19, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 0, "_cell": "freezeT0"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 22, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "full"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 24, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 3600, "_cell": "freezeT3600"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 27, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 0, "_cell": "freezeT0"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 30, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "full"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 32, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 3600, "_cell": "freezeT3600"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 35, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 0, "_cell": "freezeT0"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 38, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "full"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 40, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 3600, "_cell": "freezeT3600"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 43, "n_steps": 21600, "pin_output_p": 0.1, "freeze_T_at": 0, "_cell": "freezeT0"}
+{"mode": "closed", "res": {"weight_lr": 0.1, "target_lr": 0.01, "p_link": 0.1, "input_p_link": 0.1}, "seed": 46, "n_steps": 21600, "pin_output_p": 0.1, "_cell": "full"}
