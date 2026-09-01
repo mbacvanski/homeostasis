@@ -590,10 +590,14 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   switches — the first stable all-visible homeostatic ecology.** The
   full saved depth-4 chain then passes the same test (H86): all three
   links at 1.000 under shared visibility, distances identical to the
-  exclusive-sensing era — with one more knife-edge corollary banked in
-  passing: giving mid-chain followers one-step-stale target positions
-  (parallel instead of sequential update) destroys a link completely
-  (0.011 vs 1.000); the ecology needs within-step sensory freshness.
+  exclusive-sensing era — with one more corollary banked in
+  passing and later re-scoped (H101–H102 era): giving mid-chain
+  followers one-step-stale target positions destroys a link completely
+  (0.011 vs 1.000) — but only when the staleness is present from the
+  start; switched on after the chain has locked, stale coupling is
+  tracked at 1.000 on every link. Within-step freshness is a
+  *formation* requirement, not a maintenance one — the two-regime law
+  again.
 - **Entrainment propagates — to depth four, and the ceiling's mechanism
   is now closed** (H49–H50, H60–H68b,
   [fig_chain4](../scripts/out/lab/fig_chain4.png),

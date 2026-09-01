@@ -296,9 +296,12 @@ caught, retracted, and re-retracted on the ledger). All four agents co-rotate at
 (0.255 → 0.212 → 0.184 → 0.086 = ω·r at every link), and the fifth agent fails because its
 target now crawls below the followable speed band — <strong>the depth limit is a speed
 floor, not noise</strong>. Controlled replays proved the rest: phase-aligned residuals
-<em>shrink</em> down the chain (0.31 → 0.11 — each follower is a regularizer), a follower
-tolerates the pacemaker's entire deterministic waveform but almost no stochastic jitter
-(OU sd 0.1, ~1% of ring radius, kills the lock), and the band's edges got measured:
+<em>shrink</em> down the chain (0.31 → 0.11 — each follower is a regularizer), and — a
+major later amendment (H101–H102) — the apparent "~1% stochastic jitter tolerance" was the
+<em>acquisition</em> tolerance: an established lock tracks a full-unit slow displacement of
+the whole path, follows smooth stochastic drift whenever it is slower than the 90–225-step
+re-locking clock, and tolerates ~0.25 even of fast flutter. The knife-edge is at the door,
+not in the room. The band's edges got measured:
 followable target speed ≈ 0.09–0.28 units/step (0.184 and 0.237 lock; 0.086 and 0.313
 don't). A heavy-wheeled "repeater" link fails too — a low-pass body filters the signal
 along with the noise. One evolution round was also caught chasing a moved start

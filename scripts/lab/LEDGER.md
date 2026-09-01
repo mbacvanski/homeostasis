@@ -2941,3 +2941,14 @@ immunity H57d, swap immunity b4, and displacement tracking H102).
 H67's verdict is formally amended: its "~1% stochastic tolerance" was
 the ACQUISITION tolerance. (h101rev_postlock.json, h101_slowjitter.json,
 h102_whatlock.json)
+
+## H86 amendment: staleness, too, was an acquisition-window artifact
+
+One-step-stale coupling switched on at step 5400 (post-lock): the whole
+chain holds 1.000/1.000/1.000. The H86 corollary re-scopes: within-step
+sensory freshness is required for chain FORMATION, not maintenance. The
+two-regime law now covers path deviation (H102), stochastic jitter
+(H101-rev), and coupling latency (this): every "fatal" perturbation
+tested so far kills only when present during the acquisition window.
+(scratchpad stale_postlock probe; deterministic, reproducible from
+h50_chain.json)
