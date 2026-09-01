@@ -1651,3 +1651,27 @@ wlr=1.0 cells (0.282-0.333) — the slow-weights result generalizes.
 Striking: the best Pong players are nearly silent, f_end ~ 0.019 (~10
 active nodes of 500) vs 0.11 at p=.1. Sparse quiet networks play Pong
 best. (h58_pong_sparse.json)
+
+## H60 (preregistered): the chain's maximum depth is 4 — the jitter law bites
+
+The depth-4 chain's per-link jitter grows 0.048 -> 0.055 -> 0.38 (sd of
+follower-target distance, h50_chain.json). The band clause says a
+follower entrains only to near-periodic motion; D's 0.38 wobble is the
+pacemaker signal link E would have to ride. Predictions: (a) the H50 GA
+protocol (8 gens, pop 16, warm-started) FAILS to lock link E (best
+near4 < 0.6); (b) ring radii contract link by link (r_B > r_C > r_D,
+measured around the arena center) and E's best attempt sits at larger
+mean distance than D's 3.18; (c) if E unexpectedly locks, its sd
+exceeds 1 and link F then fails — jitter amplification is the
+depth-limiting mechanism either way.
+
+## H60 verdict: depth 4 IS the ceiling — jitter amplification is the mechanism
+
+(a) CONFIRMED: the H50 GA protocol fails at link E (best near4 0.46,
+dist 4.30) — and E's sd is 1.75: the wobble chain 0.048 -> 0.055 ->
+0.38 -> 1.75 amplifies super-linearly once it leaves the near-periodic
+band. (b) CONFIRMED: orbit radii contract A 9.34 -> B 8.38 -> C 7.89 ->
+D 7.06 (~10%/link, refining the earlier ~15% eyeball). Entrainment
+chains are finite because each follower re-broadcasts its pacemaker's
+phase noise amplified; without regeneration the signal exits the band
+clause within ~4 links. (h60_depth5.json)
