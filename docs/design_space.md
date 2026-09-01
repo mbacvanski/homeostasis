@@ -700,7 +700,7 @@ the fast edge is sparse-and-informative.)
    regenerator), where the naive heavy-wheel repeater failed (H63)?
 6. ~~Eligibility traces / multi-step credit~~ — CLOSED (H56): traces
    fail at two decay constants, and so does the decisive
-   erosion-免-arm (homeostasis frozen mid-run while reward continues).
+   erosion-free arm (homeostasis frozen mid-run while reward continues).
    The barrier is task-side (the competence clauses), not rule-side;
    beyond this only structured machinery (prediction) remains untested.
 7. **The target channel's slow erosion** (H71): freeze-T-only abolishes
