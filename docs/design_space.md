@@ -538,7 +538,15 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   perfect locks, self-repair, and N-invariance inside the single-source
   clean-flow manifold, collapse at every measured edge. **Selective
   attention is the missing machinery for real multi-agent ecologies**,
-  arguably ahead of "prediction" in the structural-additions queue.
+  arguably ahead of "prediction" in the structural-additions queue —
+  and its minimal sufficient form is now measured (H82–H84): evolution
+  over the genome space cannot find it (GA plateau 0.21), a *memoryless*
+  winner-take-all retinal filter fails too (0.074 — the selected source
+  flickers, teleporting the effective stimulus), but winner-take-all
+  **with persistence** (keep the source unless the rival is 2× brighter
+  for 100 straight steps) restores the lock completely (1.000, zero
+  switches). One latched state variable is the whole difference between
+  a collapsed ecology and a working one.
 - **Entrainment propagates — to depth four, and the ceiling's mechanism
   is now closed** (H49–H50, H60–H68b,
   [fig_chain4](../scripts/out/lab/fig_chain4.png),

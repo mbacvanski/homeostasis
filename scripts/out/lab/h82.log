@@ -1,0 +1,10 @@
+WTA control: lock A1 0.074 | A2 0.112
+gen 0: best lock 0.188 (A 0.03 / B 0.19)
+gen 1: best lock 0.188 (A 0.03 / B 0.19)
+gen 2: best lock 0.188 (A 0.03 / B 0.19)
+gen 3: best lock 0.188 (A 0.03 / B 0.19)
+gen 4: best lock 0.188 (A 0.03 / B 0.19)
+gen 5: best lock 0.188 (A 0.03 / B 0.19)
+gen 6: best lock 0.212 (A 0.00 / B 0.21)
+gen 7: best lock 0.212 (A 0.00 / B 0.21)
+GA best: lock A 0.000 / B 0.212

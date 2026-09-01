@@ -2308,3 +2308,53 @@ modes, 4 new ballistic mechanics tests) leave every validated anchor
 intact. Artifact source template checked into
 scripts/lab/artifact_template.html (figures resolve from
 scripts/out/lab at build time).
+
+## H83 (preregistered): the stacked config
+
+Stack the night's discovered advantages on tracking: p=.02 (pre-adapted)
+x wlr=.03 (quiet plasticity) x tlr=0 (no T toxin) x sensor noise
+{0, 0.1} (dark-trap floor), input/output pinned, 16 CRN seeds, n=7200
+and n=21600. Predictions: (a) the no-noise stack beats the H54 sparse
+cell (0.566/0.94) on the same seeds — >= 0.58 with 16/16; (b) noise
+adds nothing or hurts here (its rescue targeted dark-trapped statues;
+tlr=0 + sparse should not be dark-trapped: duty >= 0.9 without noise);
+(c) at n=21600 the stack shows no sag (>= -0.02), since the sag was
+eq. 4's doing.
+
+## H82 verdict: not parameter-reachable — and attention-as-filter fails too
+
+GA plateaus at lock 0.21 ((c) branch confirmed: figure-ground needs
+architecture, not parameters). The pre-registered "positive control"
+FAILED informatively: per-step WTA masking locks nothing (0.074/0.112)
+— the selected source switches with relative intensity, so the
+effective stimulus teleports between locations. Attention without
+temporal persistence is useless; the requirement is attention WITH
+STATE (select and stick), not a filter. (h82_attention.json, h82.log)
+
+## H83 verdict: the stack works, noise belongs in it, and the sag is gone
+
+(a) mixed: no-noise stack 0.535/0.88 slightly below the tlr=.01 sparse
+cell (0.566/0.94) at 7200 — but (b) REFUTED in the good direction:
+noise HELPS the stack (0.607/0.81, duty 0.76 -> 1.00; the sparse-slow
+config still dark-traps without a floor), making stack+noise the best
+short-run tracking cell of the campaign. (c) CONFIRMED: long-run sag
++0.047 (gone; late 0.582 vs ridge-full 0.351 — the stacked config
+nearly doubles long-horizon tracking). The causal chain (sag = eq. 4)
+validates end-to-end. (h83_stack.json)
+
+## H84 (preregistered): attention needs state — WTA with hysteresis
+
+Sticky WTA: keep the currently selected source unless the rival is
+>= 2x brighter for 100 consecutive steps. Predictions: (a) lock on one
+pacemaker >= 0.8 (vs 0.07-0.11 memoryless WTA); (b) selection sticks:
+<= 2 switches in 10,800 steps; (c) if sticky WTA also fails, the
+deficit is deeper than selection persistence.
+
+## H84 verdict: one bit of persistent state is the whole difference
+
+Sticky WTA (keep source unless rival >= 2x brighter for 100 steps):
+lock A1 = 1.000, zero switches. The progression: no attention 0.034;
+memoryless per-step WTA 0.074; attention-with-state 1.000. The minimal
+sufficient figure-ground machinery for homeostatic ecologies is source
+selection WITH persistence — a single latched state variable, not a
+filter and not new learning. (h84_sticky.json)

@@ -200,3 +200,15 @@ source separation. The depth-4 chain worked only because each link sees
 exclusively its own target — selective attention, not prediction, looks
 like the first structural addition a real multi-agent homeostatic
 ecology needs.
+
+**Postscript — attention, solved minimally; and a recommended config.**
+The figure-ground deficit has a measured minimal cure: evolution can't
+find attention in the parameter space (GA plateau 0.21), a memoryless
+winner-take-all filter fails (0.074 — the selection flickers), but WTA
+*with persistence* (stick with a source unless the rival is 2x brighter
+for 100 steps) restores the lock to 1.000. One latched state variable.
+Separately, stacking the night's discoveries (p=.02, wlr=.03, targets
+OFF, sensor-noise floor 0.1) yields the best tracking cell measured
+(0.607 short-run) and — with targets off — the long-horizon sag is gone
+entirely (late-run 0.582 vs 0.351 for the full-homeostatic ridge; the
+eq.-4 causal story validated end-to-end).
