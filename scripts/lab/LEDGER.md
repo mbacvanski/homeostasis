@@ -2576,3 +2576,18 @@ staleness). Three lotteries now named: wiring, wander (threshold-
 crossing), and acquisition phase (speckle). Two mechanisms added to the
 repo as first-class code: structural grow/prune homeostasis (H42-era)
 and StickyAttention (H84).
+
+## H92 (preregistered): the sensor-spacing resonance, tested at fine grain
+
+Open-loop sine (amp 20 deg) at the ridge; peak angular speed =
+amp*2pi/P crosses the 4-degree sensor spacing per step at P ~ 31.
+Fine grid P {24, 30, 36, 42, 48, 60}, 8 seeds, recon gain. Predictions:
+(a) a local max near P=30 exceeding P=24 and P=42 by >= 10% (the
+spacing resonance is real); (b) if the curve is flat or monotone, the
+old hint was noise — retire the question.
+
+## H92 verdict: no resonance — retired
+
+Gain 0.213-0.279 across P 24-60 with SDs ~0.10: flat within noise, no
+local max at the spacing-crossing period. The old hint was sampling
+noise; the question is retired. (h92_resonance.json)
