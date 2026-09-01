@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Single-Node Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Single-Node Lab <span class="sub">one node under constant drive · protocol of scripts/lab/k2_single_node.py</span></h1>
+  <div id="conn" class="conn">idle</div>
+</header>
+
+<div id="controls">
+  <span class="ctl preset-ctl">
+    <label>presets</label>
+    <button data-preset="dead" title="μ below the comfort split: x* = μ/leak sits under the target floor, so E stays negative forever">dead-floor</button>
+    <button data-preset="silent" title="T adapts onto x* = μ/leak and the error vanishes without ever spiking">silent-comf</button>
+    <button data-preset="spiking" title="sustained firing; watch f_late match the duty law (μ/T − leak)/ρ">spiking</button>
+    <button data-preset="frozen" title="a mode-locked spike cycle whose mean error stays negative; T pinned at the floor">frozen-cycle</button>
+    <button data-preset="bistable" title="same parameters, different fate: cold start spikes forever, hot start ends comfortable-silent — toggle the hot checkbox">bistable</button>
+  </span>
+  <span class="ctl"><label>μ drive</label><input id="sl-mu" type="range" min="0" max="1000" value="500"><span id="v-mu" class="mono val"></span></span>
+  <span class="ctl"><label>leak</label><input id="sl-leak" type="range" min="0" max="1000" value="250"><span id="v-leak" class="mono val"></span></span>
+  <span class="ctl"><label>ρ</label><input id="sl-rho" type="range" min="0" max="1000" value="320"><span id="v-rho" class="mono val"></span></span>
+  <span class="ctl"><label>target_lr</label><input id="sl-lr" type="range" min="0" max="1000" value="600"><span id="v-lr" class="mono val"></span></span>
+  <span class="ctl"><label>steps</label><input id="in-steps" type="number" value="3000" min="10" max="20000" step="500"></span>
+  <span class="ctl"><label title="Start from x₀ = 3μ/leak instead of x₀ = 0"><input id="chk-hot" type="checkbox"> hot start</label></span>
+  <button id="btn-run" class="primary">Run</button>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main>
+  <section class="panel explainer">
+    <p>
+      One homeostatic node under constant drive — the paper's rule with everything else stripped
+    away. Each step the node leaks a fraction <em>leak</em> of its activation, integrates a constant
+    input μ, spikes when x ≥ ρ·T (the threshold is subtracted on spiking), and then nudges its
+    target by <em>target_lr</em>·E, where E&nbsp;=&nbsp;x′&nbsp;−&nbsp;T and T never falls below the
+    floor T<sub>floor</sub>&nbsp;=&nbsp;1. Every run ends in one of four states:
+    <b class="st-dead">dead-floor</b> (silent and permanently uncomfortable),
+    <b class="st-silent">silent-comf</b> (T adapts onto the leak balance point x*&nbsp;=&nbsp;μ/leak and
+    the error vanishes), <b class="st-spiking">spiking</b> (sustained firing, cycle-mean E&nbsp;≈&nbsp;0),
+    or <b class="st-frozen">frozen-cycle</b> (a mode-locked spike pattern whose discomfort never
+    resolves). Two laws organize the map: the <b>comfort split</b> at μ&nbsp;=&nbsp;leak·T<sub>floor</sub>
+    separates dead-floor from silent-comf, and on the spiking branch the <b>duty law</b>
+    f&nbsp;=&nbsp;(μ/T&nbsp;−&nbsp;leak)/ρ pins the firing rate — compare <i>observed f</i> against
+    <i>predicted f</i> in the strip below. Initial conditions matter: a cold start (x₀&nbsp;=&nbsp;0)
+    and a hot start (x₀&nbsp;=&nbsp;3μ/leak) can land in different basins — try the
+    <b>bistable</b> preset with the hot checkbox on and off.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>End state <span class="hint">classified over the last <span id="tail-n">500</span> steps — same rules as k2_single_node.py</span></h2>
+    <div class="sumrow">
+      <span id="state-chip" class="chip">no run yet</span>
+      <div class="sumstat"><div class="k">observed f (duty)</div><div class="v mono" id="f-late">—</div></div>
+      <div class="sumop mono">vs</div>
+      <div class="sumstat"><div class="k">duty law (μ/T − leak)/ρ</div><div class="v mono" id="duty-pred">—</div></div>
+      <div class="sumstat"><div class="k">T_late</div><div class="v mono small" id="t-late">—</div></div>
+      <div class="sumstat"><div class="k">mean E (tail)</div><div class="v mono small" id="mean-e">—</div></div>
+      <div class="sumstat"><div class="k">mean |E| (tail)</div><div class="v mono small" id="abs-e">—</div></div>
+    </div>
+    <div class="hint mono" id="boundaries"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Activation, target &amp; threshold <span class="hint">x′ (blue) · T (yellow) · ρT (dashed) · spikes ticked in green · classification tail shaded</span></h2>
+    <canvas id="trace" width="960" height="260"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Error E = x′ − T <span class="hint">comfort band |E| &lt; 0.02 shaded</span></h2>
+    <canvas id="etrace" width="960" height="150"></canvas>
+  </section>
+</main>
+
+<script src="/lab/static/lab.js"></script>
+</body>
+</html>

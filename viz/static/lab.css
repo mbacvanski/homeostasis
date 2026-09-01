@@ -1,0 +1,42 @@
+/* Lab-specific additions on top of the shared visualizer stylesheet. */
+
+:root { --orange: #ffa04d; }
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.explainer p { margin: 2px 0; color: var(--text); font-size: 13px; line-height: 1.55; }
+.explainer .st-dead { color: var(--dim); }
+.explainer .st-silent { color: var(--blue); }
+.explainer .st-spiking { color: var(--green); }
+.explainer .st-frozen { color: var(--orange); }
+
+.preset-ctl button { padding: 4px 9px; }
+
+.ctl input[type="range"] { width: 90px; }
+.ctl .val { color: var(--text); font-size: 12px; min-width: 52px; }
+
+.panel canvas#trace, .panel canvas#etrace { width: 100%; }
+
+/* summary strip */
+.sumrow { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin: 6px 0 4px; }
+.chip {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #0b1520;
+  background: #39424f;
+}
+.chip.dead-floor { background: var(--dim); }
+.chip.silent-comf { background: var(--blue); }
+.chip.spiking { background: var(--green); }
+.chip.frozen-cycle { background: var(--orange); }
+.sumstat .k { color: var(--dim); font-size: 11.5px; }
+.sumstat .v { font-size: 24px; font-weight: 600; }
+.sumstat .v.small { font-size: 17px; font-weight: 500; }
+.sumop { color: var(--dim); font-size: 13px; align-self: flex-end; padding-bottom: 4px; }
+#boundaries { margin-top: 4px; font-size: 11px; }

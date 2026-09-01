@@ -478,3 +478,8 @@ async def ws_endpoint(ws: WebSocket):
 from .pong_server import pong_app  # noqa: E402  (mounted after this app is built)
 
 app.mount("/pong", pong_app)
+
+# Lab viewers (single-node explorer, …) live in their own sub-application, at /lab.
+from .lab_server import lab_app  # noqa: E402
+
+app.mount("/lab", lab_app)
