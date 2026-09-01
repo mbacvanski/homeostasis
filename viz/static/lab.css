@@ -41,8 +41,65 @@ main {
 .sumop { color: var(--dim); font-size: 13px; align-self: flex-end; padding-bottom: 4px; }
 #boundaries { margin-top: 4px; font-size: 11px; }
 
+/* live sections (shared by the wall / pursuit / traj / repair / ecology
+   live viewers; transport controls match the main tracking viewer) */
+.livebar { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.livebar .mono.val { min-width: 46px; }
+.live-t { color: var(--dim); font-size: 12px; }
+.live-t b { color: var(--text); font-weight: 600; }
+.surgery { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 6px 0 2px; }
+.surgery button, .playrow2 button {
+  background: #2a313c;
+  color: var(--text);
+  border: 1px solid #39424f;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.surgery button:hover, .playrow2 button:hover { background: #343d4a; }
+.surgery button.armed { background: var(--red); border-color: var(--red); color: #0b1520; font-weight: 600; }
+.surgery .sep { color: var(--dim); margin: 0 4px; }
+.surgery .state { color: var(--dim); font-size: 12px; }
+.surgery .state b { color: var(--yellow); font-weight: 600; }
+.livegrid { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; }
+@media (max-width: 1000px) { .livegrid { grid-template-columns: 1fr; } }
+.livegrid .stack { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.livegrid canvas.wide { width: 100%; }
+details.batch-box > summary {
+  cursor: pointer;
+  color: var(--dim);
+  font-size: 13px;
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+}
+details.batch-box > summary:hover { color: var(--text); }
+details.batch-box[open] > summary { border-radius: 10px 10px 0 0; }
+details.batch-box > .batch-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--panel-edge);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 10px;
+}
+.batch-body .batchctl { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--dim); font-size: 13px; }
+.batch-body .batchctl button {
+  background: #2a313c; color: var(--text); border: 1px solid #39424f;
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; font-size: 13px;
+}
+.batch-body .batchctl button:hover { background: #343d4a; }
+.batch-body .batchctl input[type="number"] {
+  width: 70px; background: #10141a; color: var(--text);
+  border: 1px solid #39424f; border-radius: 4px; padding: 3px 6px; font-size: 13px;
+}
+
 /* nav between the lab pages */
 .labnav { gap: 2px; }
+.labnav .livemark { color: var(--green); font-size: 8px; vertical-align: super; margin-left: 1px; }
 .labnav a {
   color: var(--dim);
   text-decoration: none;

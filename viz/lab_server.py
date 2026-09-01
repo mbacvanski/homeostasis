@@ -51,17 +51,28 @@ Pages:
               run_closed_loop, arms kill-mid / kill-mid-frozen), so the
               displayed numbers are the H53 campaign's numbers.
 
+Live sessions: wall, pursuit, traj, repair, and ecology also expose a
+per-connection LIVE world over a WebSocket (/lab/ws/<page>), speaking the same
+protocol as the main tracking viewer (viz.server: play / pause / step / speed /
+reset, plus world-specific commands like teleport, surgery, kill, stim_speed).
+Each connection owns one world; an async loop advances it at the requested
+steps-per-second and streams compact per-step series plus a `now` snapshot.
+The same ground rule holds: sessions construct and step ONLY tested package
+objects (or replicate scripts/lab/common.py harness semantics verbatim, where
+a page is the live face of a campaign arm) — see each session class docstring.
+
 Run via the main app:  uvicorn viz.server:app --port 8471  ->  /lab
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
 import sys
 from pathlib import Path
 
 import numpy as np
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -89,6 +100,23 @@ _COMMON_PATH = Path(__file__).resolve().parent.parent / "scripts/lab/common.py"
 _common_spec = importlib.util.spec_from_file_location("lab_common", _COMMON_PATH)
 lab_common = importlib.util.module_from_spec(_common_spec)
 _common_spec.loader.exec_module(lab_common)
+
+# The H50 chain harness (make_follower, START_Y, PACE_CFG/PACE_SEED, the
+# saved-chain path) — the live ecology page runs the saved chain through its
+# construction helpers. h50_depth imports its siblings (h48c_live_chain ->
+# common, h33_evolve_pursuit) by bare name, so the same sys.path dance
+# applies. It is loaded under its bare name and registered in sys.modules
+# FIRST so h85_shared/h97_reproduce below reuse this exact module object
+# (they were already importing it implicitly as a side effect).
+_H50_PATH = _COMMON_PATH.parent / "h50_depth.py"
+_h50_spec = importlib.util.spec_from_file_location("h50_depth", _H50_PATH)
+lab_h50 = importlib.util.module_from_spec(_h50_spec)
+sys.path.insert(0, str(_H50_PATH.parent))
+try:
+    sys.modules["h50_depth"] = lab_h50
+    _h50_spec.loader.exec_module(lab_h50)
+finally:
+    sys.path.remove(str(_H50_PATH.parent))
 
 # The H85 harness (StickyFollower — the sticky-attention rule — plus the
 # pacemaker config and champion pair it runs). It imports its lab-script
@@ -1270,3 +1298,913 @@ def repair(kill: float = 0.3, seed: int = 0, steps: int = REPAIR_DEFAULT_STEPS):
     steps -= steps % (2 * SEG)
     seed = min(max(int(seed), 0), 1_000_000)
     return run_repair(kill, seed, steps)
+
+
+# ---------------------------------------------------------------------------
+# Live sessions (/lab/ws/*): one live world per WebSocket connection, the
+# viz.server VizSession architecture — an async loop advances the world at
+# steps_per_second (step-debt accumulator, per-frame safety cap) and streams
+# frames of compact per-step `series` plus a rich `now` snapshot. Base verbs
+# are identical to the tracking viewer: play / pause / step{n} / speed{sps} /
+# reset{seed, ...} (+ learning{enabled} where the world has one network).
+# ---------------------------------------------------------------------------
+
+LIVE_FRAME_RATE = 30.0   # frames per second sent to the client
+LIVE_STEP_CAP = 2000     # max sim steps per frame, as viz.server
+LIVE_MAX_SEED = 1_000_000
+
+
+def _clampf(value, lo: float, hi: float, default: float) -> float:
+    try:
+        return min(max(float(value), lo), hi)
+    except (TypeError, ValueError):
+        return default
+
+
+def _clampi(value, lo: int, hi: int, default: int) -> int:
+    try:
+        return min(max(int(value), lo), hi)
+    except (TypeError, ValueError):
+        return default
+
+
+class LiveSession:
+    """One connection's live world plus playback state (viz.server's shape).
+
+    Subclasses own the world: `_build` constructs it from the session's
+    current parameters (package objects only), `_step_once` advances it one
+    step and returns the compact series entry, `_now` / `_config` build the
+    frame snapshot, `_apply_reset` reads world parameters from a reset
+    command, and `handle_extra` implements world-specific commands.
+    """
+
+    kind = "live"
+
+    def __init__(self, seed: int = 0):
+        self.seed = seed
+        self.playing = False
+        self.steps_per_second = 60.0
+        self._step_debt = 0.0
+        self.dirty = True  # a frame should be sent even if no step ran
+        self.t = 0
+        self._build()
+
+    # -- subclass API -------------------------------------------------------
+
+    def _build(self) -> None:
+        raise NotImplementedError
+
+    def _step_once(self) -> dict:
+        raise NotImplementedError
+
+    def _now(self) -> dict:
+        return {}
+
+    def _config(self) -> dict:
+        return {}
+
+    def _apply_reset(self, msg: dict) -> None:
+        pass
+
+    def set_learning(self, enabled: bool) -> bool:
+        """Toggle plasticity where the world has one network; False = no-op."""
+        return False
+
+    def handle_extra(self, msg: dict) -> bool:
+        """World-specific commands; return True if state changed."""
+        return False
+
+    # -- lifecycle ----------------------------------------------------------
+
+    def reset(self, msg: dict) -> None:
+        if msg.get("seed") is not None:
+            self.seed = _clampi(msg.get("seed"), 0, LIVE_MAX_SEED, self.seed)
+        self._apply_reset(msg)
+        self.playing = False
+        self._step_debt = 0.0
+        self.t = 0
+        self._build()
+        self.dirty = True
+
+    # -- stepping -----------------------------------------------------------
+
+    def advance(self, n_steps: int) -> list[dict]:
+        series = []
+        for _ in range(n_steps):
+            entry = self._step_once()
+            entry["t"] = self.t
+            self.t += 1
+            series.append(entry)
+        if series:
+            self.dirty = True
+        return series
+
+    def due_steps(self, dt: float) -> int:
+        self._step_debt += self.steps_per_second * dt
+        n = int(self._step_debt)
+        self._step_debt -= n
+        return min(n, LIVE_STEP_CAP)
+
+    # -- frames and commands ------------------------------------------------
+
+    def frame(self, series: list[dict]) -> dict:
+        return {
+            "type": "frame",
+            "kind": self.kind,
+            "t": self.t,
+            "seed": self.seed,
+            "playing": self.playing,
+            "steps_per_second": self.steps_per_second,
+            "series": series,
+            "now": self._now(),
+            "config": self._config(),
+        }
+
+    def handle(self, msg: dict) -> list[dict]:
+        cmd = msg.get("cmd")
+        if cmd == "play":
+            self.playing = True
+            self._step_debt = 0.0
+        elif cmd == "pause":
+            self.playing = False
+            self.dirty = True
+        elif cmd == "step":
+            return self.advance(_clampi(msg.get("n", 1), 1, 1000, 1))
+        elif cmd == "speed":
+            self.steps_per_second = _clampf(msg.get("sps", 60), 1.0, 2000.0, 60.0)
+        elif cmd == "reset":
+            self.reset(msg)
+        elif cmd == "learning":
+            if self.set_learning(bool(msg.get("enabled", True))):
+                self.dirty = True
+        else:
+            if self.handle_extra(msg):
+                self.dirty = True
+        return []
+
+
+def _live_endpoint(session_cls):
+    """The shared async ws loop — viz.server's ws_endpoint, parametrized."""
+
+    async def endpoint(ws: WebSocket):
+        await ws.accept()
+        session = session_cls()
+        pending_series: list[dict] = []
+
+        async def reader():
+            nonlocal pending_series
+            while True:
+                raw = await ws.receive_text()
+                try:
+                    msg = json.loads(raw)
+                except json.JSONDecodeError:
+                    continue
+                try:
+                    pending_series.extend(session.handle(msg))
+                except Exception as exc:  # keep the session alive on bad input
+                    print(f"lab live command error: {exc!r} for {raw[:200]}")
+
+        reader_task = asyncio.create_task(reader())
+        try:
+            frame_dt = 1.0 / LIVE_FRAME_RATE
+            while True:
+                if session.playing:
+                    pending_series.extend(session.advance(session.due_steps(frame_dt)))
+                if pending_series or session.dirty:
+                    series, pending_series = pending_series, []
+                    session.dirty = False
+                    await ws.send_text(json.dumps(session.frame(series)))
+                await asyncio.sleep(frame_dt)
+        except (WebSocketDisconnect, RuntimeError):
+            pass
+        finally:
+            reader_task.cancel()
+
+    return endpoint
+
+
+# ---------------------------------------------------------------------------
+# /lab/ws/wall — the live wall-avoidance arena.
+# ---------------------------------------------------------------------------
+
+
+class WallLive(LiveSession):
+    """A live WallSimulation — the same construction as run_wall_variant
+    (package objects only: WALL_RESERVOIR_CONFIG with wlr/tlr replaced, the
+    variant's WallConfig, learning per the variant), stepped one package
+    step at a time. Extra commands: teleport{x,y} (position is environment
+    state, no rng consumed — the H28c displacement probe done by hand) and
+    learning{enabled}."""
+
+    kind = "wall"
+
+    def __init__(self):
+        self.variant = "base"
+        self.wlr = 1.0
+        self.tlr = 0.01
+        self._last = None
+        self._last_hit = False
+        super().__init__(seed=0)
+
+    def _apply_reset(self, msg: dict) -> None:
+        if msg.get("variant") in WALL_VARIANTS:
+            self.variant = msg["variant"]
+        self.wlr = _clampf(msg.get("wlr", self.wlr), 0.0, 2.0, self.wlr)
+        self.tlr = _clampf(msg.get("tlr", self.tlr), 0.0, 1.0, self.tlr)
+
+    def _build(self) -> None:
+        wall_config, learning = WALL_VARIANTS[self.variant]
+        rcfg = dataclasses.replace(
+            WALL_RESERVOIR_CONFIG, weight_lr=self.wlr, target_lr=self.tlr)
+        self.sim = WallSimulation(
+            reservoir_config=rcfg, wall_config=wall_config, seed=self.seed)
+        self.sim.network.learning_enabled = learning
+        self._last = None
+        self._last_hit = False
+
+    def _step_once(self) -> dict:
+        state, dh, hit = self.sim.step()
+        self._last = state
+        self._last_hit = hit
+        env = self.sim.env
+        return {
+            "x": round(env.x, 3),
+            "y": round(env.y, 3),
+            "sl": round(float(state.inputs[0]), 4),  # what the network saw
+            "sr": round(float(state.inputs[1]), 4),
+            "prop": round(state.prop_spiked, 4),
+            "hit": int(hit),
+        }
+
+    def _now(self) -> dict:
+        env = self.sim.env
+        st = self._last
+        return {
+            "x": round(env.x, 3),
+            "y": round(env.y, 3),
+            "heading": round(float(env.heading), 4),  # radians
+            "sensors": (np.round(st.inputs, 4).tolist() if st is not None
+                        else [0.0, 0.0]),  # what the network saw (post-perturb)
+            "outputs": (np.round(st.outputs, 4).tolist() if st is not None
+                        else [0.0, 0.0]),
+            "prop": round(st.prop_spiked, 4) if st is not None else 0.0,
+            "hit": bool(self._last_hit),
+            "hits": int(env.hits),
+        }
+
+    def _config(self) -> dict:
+        wc = self.sim.env.config
+        return {
+            "variant": self.variant,
+            "box_size": wc.box_size,
+            "agent_radius": wc.agent_radius,
+            "sensor_angles": list(wc.sensor_angles),
+            "perturb_at": wc.perturb_at,
+            "sensor_noise": wc.sensor_noise,
+            "wlr": self.wlr,
+            "tlr": self.tlr,
+            "n_nodes": self.sim.network.config.n_nodes,
+            "learning": self.sim.network.learning_enabled,
+        }
+
+    def set_learning(self, enabled: bool) -> bool:
+        self.sim.network.learning_enabled = enabled
+        return True
+
+    def handle_extra(self, msg: dict) -> bool:
+        if msg.get("cmd") == "teleport":
+            env = self.sim.env
+            lo = env.config.agent_radius
+            hi = env.config.box_size - env.config.agent_radius
+            env.x = _clampf(msg.get("x"), lo, hi, env.x)
+            env.y = _clampf(msg.get("y"), lo, hi, env.y)
+            return True
+        return False
+
+
+# ---------------------------------------------------------------------------
+# /lab/ws/pursuit — the live chase arena.
+# ---------------------------------------------------------------------------
+
+
+class PursuitLive(LiveSession):
+    """A live PursuitSimulation of a stored champion genome — the exact
+    construction of run_pursuit_variant / scripts/lab/h34b_verify.py run_one
+    (single 91-sensor full-circle eye, genome wheel_base/intensity_scale,
+    stimulus motion + speed on the config), so a paused live run at step N
+    matches the batch trace bit for bit. Ballistic catch stats replicate
+    scripts/lab/h55_intercept.py crossing_stats incrementally: a crossing
+    ends when the stimulus jumps >1 unit in one step; crossings shorter than
+    20 steps are skipped; a catch is closest approach < 1.5 (dist measured
+    at sensing time, exactly the batch index slicing). stim_speed{v} is
+    applied live via dataclasses.replace on the frozen env config."""
+
+    kind = "pursuit"
+
+    def __init__(self):
+        self.genome = "h34-champion"
+        self.motion = "orbit"
+        self.speed = 0.15
+        self._last = None
+        self._last_hit = False
+        super().__init__(seed=H34_CHAMP_SEED)
+
+    def _apply_reset(self, msg: dict) -> None:
+        if msg.get("genome") in PURSUIT_GENOMES:
+            self.genome = msg["genome"]
+        if msg.get("motion") in PURSUIT_MOTIONS:
+            self.motion = msg["motion"]
+        self.speed = _clampf(msg.get("speed", self.speed), 0.01, 0.3, self.speed)
+
+    def _build(self) -> None:
+        champ, _, src = PURSUIT_GENOMES[self.genome]
+        if champ is None:
+            raise RuntimeError(f"{src} not found")
+        pc = PursuitConfig(
+            eye_offsets=(0.0,), sensors_per_eye=91,
+            wheel_base=champ["wheel_base"],
+            intensity_scale=champ["intensity_scale"],
+            stimulus_motion=self.motion,
+            stimulus_speed=self.speed,
+        )
+        res = ReservoirConfig(
+            n_inputs=pc.n_sensors, **{k: champ[k] for k in _PURSUIT_RES_KEYS}
+        )
+        from homeostasis.simulation import PursuitSimulation
+
+        self.sim = PursuitSimulation(res, pc, seed=self.seed)
+        self._last = None
+        self._last_hit = False
+        self._last_dist = self.sim.env.distance()
+        # incremental h55_intercept crossing stats (ballistic)
+        self._prev_s = None
+        self._cross_len = 0
+        self._cross_min = float("inf")
+        self._catches = 0
+        self._n_crossings = 0
+
+    def _finalize_crossing(self) -> None:
+        if self._cross_len >= 20:  # crossing_stats skips shorter ones
+            self._n_crossings += 1
+            if self._cross_min < CATCH_R:
+                self._catches += 1
+        self._cross_len = 0
+        self._cross_min = float("inf")
+
+    def _step_once(self) -> dict:
+        env = self.sim.env
+        d = env.distance()  # at sensing time, as PursuitHistory.dist
+        state, dh, hit = self.sim.step()
+        self._last = state
+        self._last_hit = hit
+        self._last_dist = d
+        sx, sy = float(env.sx), float(env.sy)
+        if self._prev_s is not None and (
+            np.hypot(sx - self._prev_s[0], sy - self._prev_s[1]) > 1.0
+        ):
+            self._finalize_crossing()  # boundary before this step's dist
+        self._cross_len += 1
+        self._cross_min = min(self._cross_min, d)
+        self._prev_s = (sx, sy)
+        return {
+            "x": round(env.x, 3),
+            "y": round(env.y, 3),
+            "sx": round(sx, 3),
+            "sy": round(sy, 3),
+            "dist": round(d, 3),
+            "prop": round(state.prop_spiked, 4),
+            "hit": int(hit),
+        }
+
+    def _now(self) -> dict:
+        env = self.sim.env
+        st = self._last
+        return {
+            "x": round(env.x, 3),
+            "y": round(env.y, 3),
+            "heading": round(float(env.heading), 4),  # radians
+            "sx": round(float(env.sx), 3),
+            "sy": round(float(env.sy), 3),
+            "dist": round(env.distance(), 3),
+            "outputs": (np.round(st.outputs, 4).tolist() if st is not None
+                        else [0.0, 0.0]),
+            "prop": round(st.prop_spiked, 4) if st is not None else 0.0,
+            "hit": bool(self._last_hit),
+            "hits": int(env.hits),
+            "catches": self._catches,
+            "n_crossings": self._n_crossings,
+            "cross_len": self._cross_len,
+        }
+
+    def _config(self) -> dict:
+        pc = self.sim.env.config
+        return {
+            "genome": self.genome,
+            "motion": self.motion,
+            "speed": pc.stimulus_speed,
+            "box_size": pc.box_size,
+            "agent_radius": pc.agent_radius,
+            "orbit_radius": pc.orbit_radius,
+            "n_nodes": self.sim.network.config.n_nodes,
+            "wheel_base": round(pc.wheel_base, 3),
+            "intensity_scale": round(pc.intensity_scale, 3),
+            "input_weight": round(self.sim.network.config.input_weight, 3),
+            "catch_r": CATCH_R,
+            "learning": self.sim.network.learning_enabled,
+        }
+
+    def set_learning(self, enabled: bool) -> bool:
+        self.sim.network.learning_enabled = enabled
+        return True
+
+    def handle_extra(self, msg: dict) -> bool:
+        if msg.get("cmd") == "stim_speed":
+            env = self.sim.env
+            self.speed = _clampf(msg.get("v"), 0.01, 0.3, env.config.stimulus_speed)
+            env.config = dataclasses.replace(env.config, stimulus_speed=self.speed)
+            return True
+        return False
+
+
+# ---------------------------------------------------------------------------
+# /lab/ws/traj — the campaign playground: live tracking with the lab
+# harness's powers (scripts/lab/common.py semantics, replicated verbatim).
+# ---------------------------------------------------------------------------
+
+# Live loadouts = the page's batch variants, plus the H83 stacked config
+# (scripts/lab/h83_stack.py): sparse recurrence + sparse input + frozen
+# targets + slow weights + a thinned output pool. The pool thinning is
+# common.py run_closed_loop's pin_output_p key (rng seed+880008), which the
+# batch /api/traj endpoint does not implement — so "stack" is live-only.
+TRAJ_LIVE_LOADOUTS: dict[str, tuple[dict, dict, float | None]] = {
+    name: (res, trk, None) for name, (res, trk) in TRAJ_VARIANTS.items()
+}
+TRAJ_LIVE_LOADOUTS["stack"] = (
+    {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1},
+    {},
+    0.1,
+)
+
+
+def _kill_nodes(net: HomeostaticReservoir, dead: np.ndarray) -> None:
+    """Adjacency-level node kill — scripts/lab/common.py's kill-mid surgery,
+    verbatim: in+out recurrent links and input afferents removed, weights
+    zeroed, caches rebuilt (regrowth impossible), activation cleared. Dead
+    nodes stay in the output-pool denominators, as in H53."""
+    net.adjacency[dead, :] = False
+    net.adjacency[:, dead] = False
+    net.weights[dead, :] = 0.0
+    net.weights[:, dead] = 0.0
+    net.input_adjacency[:, dead] = False
+    net.input_weights[:, dead] = 0.0
+    net._rebuild_structure_caches()
+    net.x[dead] = 0.0
+
+
+class TrajLive(LiveSession):
+    """Live closed-loop tracking with the exact scripts/lab/common.py
+    run_closed_loop step order (sense -> net.step -> [restore pins] -> act ->
+    advance) and its arm semantics generalized to any-time surgery buttons:
+
+    - swap        the swap-mid arm's effector exchange, toggled from now on
+    - freeze_w    freeze-W semantics: weights pinned (restored after every
+                  step) at their values at the freeze moment
+    - freeze_t    freeze-T-mid semantics: targets pinned at the freeze moment
+    - freeze_both learning_enabled=False (the freeze-mid arm)
+    - kill{frac}  common.py's kill-mid surgery (_kill_nodes). The node draw
+                  comes from rng stream seed+770007: the FIRST kill is
+                  bit-identical to the kill-mid arm's draw; later kills
+                  continue the same stream (and may overlap earlier dead).
+    - noise{sigma} common.py's sensor_noise key: uniform(+-sigma) added to
+                  the sensed activations, clamped at 0, rng stream
+                  seed+900001 (created on first nonzero use, so a run with
+                  noise set from step 0 matches the H51 harness bit for bit).
+    """
+
+    kind = "traj"
+
+    def __init__(self):
+        self.variant = "ridge25"
+        self.sensor_noise = 0.0
+        super().__init__(seed=0)
+
+    def _apply_reset(self, msg: dict) -> None:
+        if msg.get("variant") in TRAJ_LIVE_LOADOUTS:
+            self.variant = msg["variant"]
+        self.sensor_noise = _clampf(
+            msg.get("noise", self.sensor_noise), 0.0, 0.25, self.sensor_noise)
+
+    def _build(self) -> None:
+        res_over, trk_over, pin_out = TRAJ_LIVE_LOADOUTS[self.variant]
+        rcfg, tcfg = lab_common.make_configs(dict(res_over), dict(trk_over))
+        self.rcfg = rcfg
+        self.net = HomeostaticReservoir(rcfg, seed=self.seed)
+        self.env = TrackingEnv(tcfg)
+        if pin_out:  # exactly common.py run_closed_loop's pin_output_p
+            orng = np.random.default_rng(self.seed + 880008)
+            self.net.output_adjacency = (
+                orng.random((rcfg.n_nodes, rcfg.n_outputs)) < float(pin_out))
+            self.net._rebuild_structure_caches()
+        self._noise_rng = None  # lazily default_rng(seed+900001), common.py's stream
+        self._kill_rng = None   # lazily default_rng(seed+770007), common.py's stream
+        self._dead = np.zeros(rcfg.n_nodes, dtype=bool)
+        self.swapped = False
+        self._w_pin = None
+        self._t_pin = None
+        self._last = None
+        self._last_dh = 0.0
+        self.seg_scores: list[float] = []
+        self._seg_in45 = 0
+        self._seg_n = 0
+        self.events: list[dict] = []  # surgery log, for chart marks
+
+    def _step_once(self) -> dict:
+        env, net = self.env, self.net
+        herr = env.heading_error()
+        inputs = env.sense()
+        if self.sensor_noise > 0.0:
+            if self._noise_rng is None:
+                self._noise_rng = np.random.default_rng(self.seed + 900001)
+            inputs = np.maximum(inputs + self._noise_rng.uniform(
+                -self.sensor_noise, self.sensor_noise, inputs.shape), 0.0)
+        state = net.step(inputs)
+        if self._w_pin is not None:  # freeze-W: restore after the step
+            net.weights = self._w_pin.copy()
+        if self._t_pin is not None:  # freeze-T-mid: restore after the step
+            net.targets = self._t_pin.copy()
+        e_left, e_right = state.outputs
+        if self.swapped:  # swap-mid semantics from the toggle on
+            e_left, e_right = e_right, e_left
+        dh = env.apply_action(float(e_left), float(e_right))
+        env.advance_stimulus()
+        self._last = state
+        self._last_dh = dh
+        self._seg_n += 1
+        if abs(herr) <= 45.0:
+            self._seg_in45 += 1
+        if self._seg_n == SEG:
+            self.seg_scores.append(round(self._seg_in45 / SEG, 4))
+            del self.seg_scores[:-60]
+            self._seg_in45 = 0
+            self._seg_n = 0
+        return {
+            "heading": round(float(env.heading), 2),
+            "stim": round(float(env.stimulus_angle), 2),
+            "err": round(herr, 2),   # at sensing time, as run_traj records it
+            "dh": round(dh, 3),
+            "prop": round(state.prop_spiked, 4),
+        }
+
+    def _now(self) -> dict:
+        env = self.env
+        st = self._last
+        return {
+            "heading": round(float(env.heading), 2),
+            "stim": round(float(env.stimulus_angle), 2),
+            "err": round(env.heading_error(), 2),
+            "dh": round(self._last_dh, 3),
+            "sensors": np.round(env.sense(), 4).tolist(),  # current geometry
+            "outputs": (np.round(st.outputs, 4).tolist() if st is not None
+                        else [0.0, 0.0]),
+            "prop": round(st.prop_spiked, 4) if st is not None else 0.0,
+            "seg": {
+                "scores": self.seg_scores[-12:],
+                "cur": round(self._seg_in45 / max(self._seg_n, 1), 4),
+                "n": self._seg_n,
+            },
+            "surgery": {
+                "swapped": self.swapped,
+                "w_frozen": self._w_pin is not None,
+                "t_frozen": self._t_pin is not None,
+                "learning": self.net.learning_enabled,
+                "killed_n": int(self._dead.sum()),
+                "noise": self.sensor_noise,
+            },
+            "events": self.events[-24:],
+        }
+
+    def _config(self) -> dict:
+        rcfg, tcfg = self.rcfg, self.env.config
+        return {
+            "variant": self.variant,
+            "n_nodes": rcfg.n_nodes,
+            "leak": rcfg.leak,
+            "weight_lr": rcfg.weight_lr,
+            "target_lr": rcfg.target_lr,
+            "weight_init_mean": rcfg.weight_init_mean,
+            "gain": tcfg.gain,
+            "seg_len": SEG,
+            "sensor_offsets": tcfg.sensor_offsets.tolist(),
+        }
+
+    def set_learning(self, enabled: bool) -> bool:
+        self.net.learning_enabled = enabled
+        return True
+
+    def handle_extra(self, msg: dict) -> bool:
+        cmd = msg.get("cmd")
+        if cmd == "noise":
+            self.sensor_noise = _clampf(
+                msg.get("sigma"), 0.0, 0.25, self.sensor_noise)
+            return True
+        if cmd != "surgery":
+            return False
+        op = msg.get("op")
+        net = self.net
+        label = op
+        if op == "swap":
+            self.swapped = not self.swapped
+            label = "swap" if self.swapped else "unswap"
+        elif op == "freeze_w":
+            self._w_pin = net.weights.copy()
+        elif op == "freeze_t":
+            self._t_pin = net.targets.copy()
+        elif op == "freeze_both":
+            net.learning_enabled = False
+        elif op == "unfreeze":
+            net.learning_enabled = True
+            self._w_pin = None
+            self._t_pin = None
+        elif op == "kill":
+            frac = _clampf(msg.get("frac"), 0.01, 0.9, 0.3)
+            if self._kill_rng is None:
+                self._kill_rng = np.random.default_rng(self.seed + 770007)
+            dead = self._kill_rng.choice(
+                self.rcfg.n_nodes, int(round(frac * self.rcfg.n_nodes)),
+                replace=False)
+            _kill_nodes(net, dead)
+            self._dead[dead] = True
+            label = f"kill {int(round(frac * 100))}%"
+        else:
+            return False
+        self.events.append({"t": self.t, "op": label})
+        del self.events[:-64]
+        return True
+
+
+# ---------------------------------------------------------------------------
+# /lab/ws/repair — H53 live: twin tracking runs, kill both, freeze one.
+# ---------------------------------------------------------------------------
+
+
+class RepairLive(LiveSession):
+    """Two tracking twins built from the SAME seed on the H53 ridge config
+    (REPAIR_RES on defaults), stepped in lockstep with common.py's step order
+    — bit-identical until the kill. kill{frac} wounds BOTH twins with the
+    identical node draw (_kill_nodes; rng stream seed+770007, so the first
+    kill is the kill-mid arm's exact draw) and freezes all learning in the
+    frozen twin at that moment: from then on the page shows H53's
+    dip-and-recover (learning) vs flatline (frozen) live. Per-step series
+    carry each twin's spike rate f and mean surviving recurrent weight w-bar
+    (lab_common._weight_stats — the harness's own definition)."""
+
+    kind = "repair"
+
+    def __init__(self):
+        super().__init__(seed=0)
+
+    def _build(self) -> None:
+        rcfg, tcfg = lab_common.make_configs(dict(REPAIR_RES))
+        self.rcfg = rcfg
+        self.twins = []
+        for name in ("learning", "frozen"):
+            self.twins.append({
+                "name": name,
+                "net": HomeostaticReservoir(rcfg, seed=self.seed),
+                "env": TrackingEnv(tcfg),
+                "seg": [],
+                "in45": 0,
+                "last": None,
+            })
+        self._seg_n = 0
+        self._kill_rng = None  # lazily default_rng(seed+770007)
+        self._dead = np.zeros(rcfg.n_nodes, dtype=bool)
+        self.kills: list[dict] = []
+
+    def _step_once(self) -> dict:
+        entry = {}
+        for key, tw in zip(("a", "b"), self.twins):
+            net, env = tw["net"], tw["env"]
+            herr = env.heading_error()
+            inputs = env.sense()
+            state = net.step(inputs)
+            e_left, e_right = state.outputs
+            env.apply_action(float(e_left), float(e_right))
+            env.advance_stimulus()
+            tw["last"] = state
+            if abs(herr) <= 45.0:
+                tw["in45"] += 1
+            entry["f" + key] = round(state.prop_spiked, 4)
+            entry["w" + key] = round(lab_common._weight_stats(net)[0], 5)
+        self._seg_n += 1
+        if self._seg_n == SEG:
+            for tw in self.twins:
+                tw["seg"].append(round(tw["in45"] / SEG, 4))
+                del tw["seg"][:-60]
+                tw["in45"] = 0
+            self._seg_n = 0
+        return entry
+
+    def _now(self) -> dict:
+        out = {
+            "killed_n": int(self._dead.sum()),
+            "kills": self.kills[-12:],
+            "seg_n": self._seg_n,
+        }
+        for key, tw in zip(("a", "b"), self.twins):
+            st = tw["last"]
+            out[key] = {
+                "prop": round(st.prop_spiked, 4) if st is not None else 0.0,
+                "w": round(lab_common._weight_stats(tw["net"])[0], 5),
+                "err": round(tw["env"].heading_error(), 2),
+                "seg": tw["seg"][-24:],
+                "cur": round(tw["in45"] / max(self._seg_n, 1), 4),
+                "learning": tw["net"].learning_enabled,
+            }
+        return out
+
+    def _config(self) -> dict:
+        return {
+            "n_nodes": self.rcfg.n_nodes,
+            "leak": self.rcfg.leak,
+            "weight_lr": self.rcfg.weight_lr,
+            "target_lr": self.rcfg.target_lr,
+            "seg_len": SEG,
+        }
+
+    def handle_extra(self, msg: dict) -> bool:
+        if msg.get("cmd") != "kill":
+            return False
+        frac = _clampf(msg.get("frac"), 0.01, 0.9, 0.3)
+        if self._kill_rng is None:
+            self._kill_rng = np.random.default_rng(self.seed + 770007)
+        dead = self._kill_rng.choice(
+            self.rcfg.n_nodes, int(round(frac * self.rcfg.n_nodes)),
+            replace=False)
+        for tw in self.twins:  # the identical wound for both twins
+            _kill_nodes(tw["net"], dead)
+        self.twins[1]["net"].learning_enabled = False  # freeze the frozen twin
+        self._dead[dead] = True
+        self.kills.append({"t": self.t, "frac": frac})
+        return True
+
+
+# ---------------------------------------------------------------------------
+# /lab/ws/ecology — live pacemaker + saved-chain followers, exclusive or
+# all-visible sticky sensing, with H86's sequential same-step coupling.
+# ---------------------------------------------------------------------------
+
+from homeostasis.attention import StickyAttention  # noqa: E402
+
+# The saved H50 chain: [[genome, wiring_seed], ...] for followers B, C, D.
+# Falls back to the H48e champion pair (a 1-link chain) if the file is gone.
+_CHAIN_FILE = OUT_DIR / "lab/h50_chain.json"
+ECOLOGY_CHAIN = (
+    [(g, int(s)) for g, s in json.loads(_CHAIN_FILE.read_text())["chain"]]
+    if _CHAIN_FILE.exists()
+    else ([(H48E_CHAMPION, H48E_CHAMP_SEED)] if H48E_CHAMPION else [])
+)
+ECOLOGY_MAX_LINKS = min(3, len(ECOLOGY_CHAIN))
+
+
+class EcologyLive(LiveSession):
+    """Live pacemaker + followers from the saved H50 chain.
+
+    The pacemaker is an unmodified WallSimulation on lab_h50.PACE_CFG /
+    PACE_SEED (exactly h48c/h50/h85's blind wall circler); followers are
+    lab_h50.make_follower(genome, seed, START_Y[i]) — the saved chain's own
+    construction. Coupling is scripts/lab/h86_chain_shared.py's SEQUENTIAL
+    same-step scheme: within one step, follower i senses its chain
+    predecessor's ALREADY-UPDATED position (one-step-stale coupling breaks
+    link C entirely — LEDGER H86). Sensing modes:
+
+    - exclusive  each follower senses only its predecessor (the designed
+                 chain, h50 cosim_chain's semantics)
+    - sticky     all-visible: each follower senses every other agent
+                 (peers at their previous-step positions, as in H86), with
+                 the package's StickyAttention rule (homeostasis.attention —
+                 the tested implementation of h85/h86's latched WTA) doing
+                 source selection at the given ratio/patience.
+
+    The reset seed replaces link 1's wiring seed (the wiring lottery, as the
+    old ecology page offered); links 2-3 always use their saved seeds.
+    """
+
+    kind = "ecology"
+
+    def __init__(self):
+        self.links = 1
+        self.mode = "exclusive"
+        self.ratio = 5.0
+        self.patience = 300
+        super().__init__(seed=ECOLOGY_CHAIN[0][1] if ECOLOGY_CHAIN else 0)
+
+    def _apply_reset(self, msg: dict) -> None:
+        self.links = _clampi(msg.get("links", self.links), 1,
+                             max(ECOLOGY_MAX_LINKS, 1), self.links)
+        if msg.get("mode") in ("exclusive", "sticky"):
+            self.mode = msg["mode"]
+        self.ratio = _clampf(msg.get("ratio", self.ratio), 1.0, 20.0, self.ratio)
+        self.patience = _clampi(msg.get("patience", self.patience), 1, 2000,
+                                self.patience)
+
+    def _build(self) -> None:
+        if not ECOLOGY_CHAIN:
+            raise RuntimeError(f"{_CHAIN_FILE} not found and no fallback champion")
+        self.pace = WallSimulation(wall_config=lab_h50.PACE_CFG,
+                                   seed=lab_h50.PACE_SEED)
+        self.followers = []
+        for i in range(self.links):
+            genome, wseed = ECOLOGY_CHAIN[i]
+            if i == 0:
+                wseed = self.seed
+            net, env = lab_h50.make_follower(dict(genome), wseed,
+                                             lab_h50.START_Y[i])
+            self.followers.append({
+                "net": net, "env": env, "seed": int(wseed),
+                "att": StickyAttention(ratio=self.ratio,
+                                       patience=self.patience, initial=0),
+                "src_idx": [],   # agent index per source slot, fixed per build
+                "d": 0.0,
+            })
+        # h86's position registry: follower i's peers-at-previous-step view
+        self.pos = [(15.0, lab_h50.START_Y[i]) for i in range(self.links)]
+
+    def _step_once(self) -> dict:
+        self.pace.step()
+        agents = [(float(self.pace.env.x), float(self.pace.env.y))] + list(self.pos)
+        entry = {}
+        for j, f in enumerate(self.followers):
+            own = agents[j]  # chain predecessor, fresh (sequential coupling)
+            if self.mode == "sticky":
+                others = [k for k in range(len(agents)) if k != j and k != j + 1]
+                srcs = [own] + [agents[k] for k in others]
+                f["src_idx"] = [j] + others
+            else:
+                srcs = [own]
+                f["src_idx"] = [j]
+            env, net = f["env"], f["net"]
+            bumps = []
+            for (sx, sy) in srcs:
+                env.sx, env.sy = sx, sy
+                bumps.append(env.sense())
+            acts = f["att"].select(bumps) if self.mode == "sticky" else bumps[0]
+            st = net.step(acts)
+            env.apply_action(*map(float, st.outputs))
+            env.steps += 1
+            newpos = (float(env.x), float(env.y))
+            f["d"] = float(np.hypot(newpos[0] - own[0], newpos[1] - own[1]))
+            entry[f"d{j + 1}"] = round(f["d"], 3)
+            agents[j + 1] = newpos
+        self.pos = agents[1:]
+        return entry
+
+    def _now(self) -> dict:
+        return {
+            "ax": round(float(self.pace.env.x), 3),
+            "ay": round(float(self.pace.env.y), 3),
+            "ah": round(float(self.pace.env.heading), 4),
+            "followers": [
+                {
+                    "x": round(float(f["env"].x), 3),
+                    "y": round(float(f["env"].y), 3),
+                    "h": round(float(f["env"].heading), 4),
+                    "d": round(f["d"], 3),
+                    "sel": (f["src_idx"][f["att"].selected]
+                            if self.mode == "sticky" and f["src_idx"] else j),
+                    "streak": f["att"]._streak,
+                    "switches": len(f["att"].switch_times),
+                    "hits": int(f["env"].hits),
+                }
+                for j, f in enumerate(self.followers)
+            ],
+        }
+
+    def _config(self) -> dict:
+        return {
+            "mode": self.mode,
+            "links": self.links,
+            "max_links": ECOLOGY_MAX_LINKS,
+            "ratio": self.ratio,
+            "patience": self.patience,
+            "box_size": lab_h50.PACE_CFG.box_size,
+            "agent_radius": lab_h50.PACE_CFG.agent_radius,
+            "pace_seed": lab_h50.PACE_SEED,
+            "chain": [
+                {"n_nodes": ECOLOGY_CHAIN[i][0]["n_nodes"],
+                 "seed": (self.followers[i]["seed"] if i < len(self.followers)
+                          else ECOLOGY_CHAIN[i][1])}
+                for i in range(ECOLOGY_MAX_LINKS)
+            ],
+        }
+
+
+# One live WebSocket per page, all speaking the shared protocol.
+for _name, _cls in (
+    ("wall", WallLive),
+    ("pursuit", PursuitLive),
+    ("traj", TrajLive),
+    ("repair", RepairLive),
+    ("ecology", EcologyLive),
+):
+    lab_app.websocket(f"/ws/{_name}")(_live_endpoint(_cls))

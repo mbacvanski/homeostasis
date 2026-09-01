@@ -9,21 +9,29 @@
 </head>
 <body>
 <header>
-  <h1>Homeostatic Reservoir — Wall Avoidance <span class="sub">Falandays et al. (2024), case study 3 · lab viewer</span></h1>
-  <div id="conn" class="conn">idle</div>
+  <h1>Homeostatic Reservoir — Wall Avoidance <span class="sub">Falandays et al. (2024), case study 3 · live lab viewer</span></h1>
+  <div id="conn" class="conn">connecting…</div>
 </header>
 
 <div id="controls">
   <span class="ctl labnav">
     <a href="/lab">single node</a>
     <a href="/lab/phase">phase maps</a>
-    <a href="/lab/traj">trajectories</a>
-    <a href="/lab/wall" class="here">wall</a>
-    <a href="/lab/pursuit">pursuit</a>
-    <a href="/lab/ecology">ecology</a>
+    <a href="/lab/traj">trajectories<span class="livemark">▶</span></a>
+    <a href="/lab/wall" class="here">wall<span class="livemark">▶</span></a>
+    <a href="/lab/pursuit">pursuit<span class="livemark">▶</span></a>
+    <a href="/lab/ecology">ecology<span class="livemark">▶</span></a>
     <a href="/lab/ecology3">ecology³</a>
     <a href="/lab/reproduce">reproduce</a>
-    <a href="/lab/repair">repair</a>
+    <a href="/lab/repair">repair<span class="livemark">▶</span></a>
+  </span>
+  <span class="ctl livebar">
+    <button id="btn-play" class="primary" title="space">▶ Play</button>
+    <button id="btn-step1" title="s">Step ×1</button>
+    <button id="btn-step10">Step ×10</button>
+    <button id="btn-step100">Step ×100</button>
+    <label>speed</label><input id="speed" type="range" min="0" max="100" value="50">
+    <span id="speed-val" class="mono val">60/s</span>
   </span>
   <span class="ctl">
     <label>variant</label>
@@ -32,74 +40,113 @@
       <option value="perturb" title="The published run: from step 1001 the two sensor values are swapped and doubled">perturb (swap at 1000)</option>
       <option value="noise" title="uniform ±0.2 noise added to each sensor each step">noise 0.2</option>
       <option value="no-learn" title="targets and weights frozen from step 0">no-learn</option>
-      <option value="flank-champion" title="The H30 evolved edge-holder — a TRACKING run, not a wall run">flank-champion (tracking)</option>
+      <option value="flank-champion" title="The H30 evolved edge-holder — a TRACKING run, not a wall run; batch section only">flank-champion (batch only)</option>
     </select>
   </span>
   <span class="ctl"><label>seed</label><input id="seed" type="number" value="0" min="0" step="1"></span>
-  <span class="ctl"><label>steps</label><input id="steps" type="number" value="3600" min="200" max="14400" step="200"></span>
-  <span class="ctl"><label title="weight_lr on WALL_RESERVOIR_CONFIG (released value 1.0)">wlr</label><input id="wlr" type="number" value="1.0" min="0" max="2" step="0.1"></span>
-  <span class="ctl"><label title="target_lr on WALL_RESERVOIR_CONFIG (released value 0.01)">tlr</label><input id="tlr" type="number" value="0.01" min="0" max="1" step="0.005"></span>
-  <button id="btn-run" class="primary">Run</button>
-  <span class="status mono" id="stat"></span>
+  <span class="ctl"><label title="weight_lr on WALL_RESERVOIR_CONFIG (released value 1.0); applied on Reset">wlr</label><input id="wlr" type="number" value="1.0" min="0" max="2" step="0.1"></span>
+  <span class="ctl"><label title="target_lr on WALL_RESERVOIR_CONFIG (released value 0.01); applied on Reset">tlr</label><input id="tlr" type="number" value="0.01" min="0" max="1" step="0.005"></span>
+  <button id="btn-reset">Reset</button>
+  <span class="ctl"><label title="Toggles plasticity live (targets and weights frozen while off)"><input id="live-learning" type="checkbox" checked> learning</label></span>
+  <span class="status mono live-t">t=<b id="live-t">0</b> · <span id="live-note"></span></span>
 </div>
 
 <main>
   <section class="panel explainer">
     <p>
-    A circular Braitenberg-style agent (radius 0.5) in a 15×15 box: two rim sensors at ±45°
-    read wall proximity, two effectors are wheel speeds, and the reservoir between them is the
-    same homeostatic core as the other case studies (input weights 4, per the released code).
-    Touching a wall clamps the position, kicks the heading ±45° at random, and scores a
-    <b>hit</b> — the case study's outcome measure. The <b>perturb</b> variant is the published
-    run: from step 1001 the sensors are swapped and doubled, and the hit burst then recovery
-    shows re-adaptation. The fifth variant, <b class="st-frozen">flank-champion</b>, is a
-    different animal — <b>an evolved edge-holder: selection aims where homeostasis cannot</b>.
-    It runs the <i>tracking</i> task with the H30-evolved config, which was selected for
-    holding |heading error| in the [50, 90]° band; on its good seeds (try 5, then 4) the agent
-    orbits the stimulus 65–90° off-center forever — a set-point no homeostatic comfort
-    condition expresses. It is seed-brittle (evolved on 3 random seeds per generation): other
-    seeds never latch.
+    A circular Braitenberg-style agent (radius 0.5) in a 15×15 box, simulated LIVE — press
+    Play. Two rim sensors at ±45° read wall proximity, two effectors are wheel speeds, and the
+    reservoir between them is the same homeostatic core as the other case studies (input
+    weights 4, per the released code). Touching a wall clamps the position, kicks the heading
+    ±45° at random, and scores a <b>hit</b> — the case study's outcome measure. The
+    <b>perturb</b> variant is the published run: from step 1001 the sensors are swapped and
+    doubled — watch the hit burst, then the recovery as the homeostatic rule re-adapts.
+    <b>Click (or drag) anywhere in the arena to teleport the agent</b> — the H28c displacement
+    probe by hand: drop a settled agent wall-adjacent and watch it drift back to its groove.
+    The <b class="st-frozen">flank-champion</b> variant is a <i>tracking</i> run and lives in
+    the batch section below.
     </p>
   </section>
 
-  <div id="view-wall">
+  <div class="livegrid">
     <section class="panel">
-      <h2>Arena <span class="hint">15×15 · trail fades with age · sensor rays red (+45°) / blue (−45°), length from the value the network saw · hits marked ×</span></h2>
-      <canvas id="arena" width="460" height="460"></canvas>
+      <h2>Arena (live) <span class="hint">15×15 · click / drag to teleport · sensor rays red (+45°) / blue (−45°), length = what the network saw · red flash on hit</span></h2>
+      <canvas id="live-arena" width="460" height="460"></canvas>
+      <div class="readout mono" id="live-readout"></div>
       <div class="sumrow">
-        <div class="sumstat"><div class="k">hits (total)</div><div class="v mono" id="w-hits">—</div></div>
-        <div class="sumstat"><div class="k">hits in last 1000</div><div class="v mono small" id="w-late-hits">—</div></div>
-        <div class="sumstat"><div class="k">late mean |dH| (rad/step)</div><div class="v mono small" id="w-late-dh">—</div></div>
+        <div class="sumstat"><div class="k">hits (total)</div><div class="v mono" id="lw-hits">—</div></div>
+        <div class="sumstat"><div class="k">hits / last 720 steps</div><div class="v mono small" id="lw-hw">—</div></div>
+        <div class="sumstat"><div class="k">prop. spiking</div><div class="v mono small" id="lw-prop">—</div></div>
       </div>
     </section>
-    <section class="panel">
-      <h2>Sensors <span class="hint">left +45° (red) · right −45° (blue) · perturbation marked in pink</span></h2>
-      <canvas id="sensors" width="960" height="130"></canvas>
-    </section>
-    <section class="panel">
-      <h2>Proportion spiking</h2>
-      <canvas id="propc" width="960" height="90"></canvas>
-    </section>
+    <div class="stack">
+      <section class="panel">
+        <h2>Sensors (live) <span class="hint">left +45° red · right −45° blue · exact, one column per step</span></h2>
+        <canvas id="live-sens" class="wide" width="960" height="120"></canvas>
+      </section>
+      <section class="panel">
+        <h2>Proportion spiking (live) <span class="hint">hits ticked red</span></h2>
+        <canvas id="live-prop" class="wide" width="960" height="120"></canvas>
+      </section>
+      <section class="panel">
+        <h2>Hits per rolling 720-step window (live)</h2>
+        <canvas id="live-hw" class="wide" width="960" height="100"></canvas>
+      </section>
+    </div>
   </div>
 
-  <div id="view-flank" style="display:none">
-    <section class="panel">
-      <h2>Stimulus relative to heading <span class="hint">egocentric: agent center, heading up · dots = stimulus position over time (fading) · target band |err| ∈ [50°, 90°] shaded</span></h2>
-      <canvas id="ring" width="460" height="460"></canvas>
-      <div class="sumrow">
-        <div class="sumstat"><div class="k">time in [50°, 90°] band</div><div class="v mono" id="f-band">—</div></div>
-        <div class="sumstat"><div class="k">band (last 1000)</div><div class="v mono small" id="f-band-late">—</div></div>
-        <div class="sumstat"><div class="k">within ±45°</div><div class="v mono small" id="f-w45">—</div></div>
-        <div class="sumstat"><div class="k">mean |err|</div><div class="v mono small" id="f-abs">—</div></div>
+  <details class="batch-box" id="batch-box">
+    <summary>Batch experiments (full runs, summary charts) — the original request→run→render viewer, incl. the flank-champion tracking run</summary>
+    <div class="batch-body">
+      <div class="batchctl">
+        <label>steps</label><input id="steps" type="number" value="3600" min="200" max="14400" step="200">
+        <button id="btn-run" class="primary">Run batch</button>
+        <span class="status mono" id="batch-status"></span>
+        <span class="status mono" id="stat"></span>
       </div>
-    </section>
-    <section class="panel">
-      <h2>Heading error <span class="hint">signed · [50°, 90°] bands shaded green</span></h2>
-      <canvas id="ferr" width="960" height="170"></canvas>
-    </section>
-  </div>
+
+      <div id="view-wall">
+        <section class="panel">
+          <h2>Arena <span class="hint">15×15 · trail fades with age · sensor rays red (+45°) / blue (−45°), length from the value the network saw · hits marked ×</span></h2>
+          <canvas id="arena" width="460" height="460"></canvas>
+          <div class="sumrow">
+            <div class="sumstat"><div class="k">hits (total)</div><div class="v mono" id="w-hits">—</div></div>
+            <div class="sumstat"><div class="k">hits in last 1000</div><div class="v mono small" id="w-late-hits">—</div></div>
+            <div class="sumstat"><div class="k">late mean |dH| (rad/step)</div><div class="v mono small" id="w-late-dh">—</div></div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>Sensors <span class="hint">left +45° (red) · right −45° (blue) · perturbation marked in pink</span></h2>
+          <canvas id="sensors" width="960" height="130"></canvas>
+        </section>
+        <section class="panel">
+          <h2>Proportion spiking</h2>
+          <canvas id="propc" width="960" height="90"></canvas>
+        </section>
+      </div>
+
+      <div id="view-flank" style="display:none">
+        <section class="panel">
+          <h2>Stimulus relative to heading <span class="hint">egocentric: agent center, heading up · dots = stimulus position over time (fading) · target band |err| ∈ [50°, 90°] shaded</span></h2>
+          <canvas id="ring" width="460" height="460"></canvas>
+          <div class="sumrow">
+            <div class="sumstat"><div class="k">time in [50°, 90°] band</div><div class="v mono" id="f-band">—</div></div>
+            <div class="sumstat"><div class="k">band (last 1000)</div><div class="v mono small" id="f-band-late">—</div></div>
+            <div class="sumstat"><div class="k">within ±45°</div><div class="v mono small" id="f-w45">—</div></div>
+            <div class="sumstat"><div class="k">mean |err|</div><div class="v mono small" id="f-abs">—</div></div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>Heading error <span class="hint">signed · [50°, 90°] bands shaded green</span></h2>
+          <canvas id="ferr" width="960" height="170"></canvas>
+        </section>
+      </div>
+    </div>
+  </details>
 </main>
 
+<script src="/lab/static/lab_live.js"></script>
+<script src="/lab/static/lab_wall_live.js"></script>
 <script src="/lab/static/lab_wall.js"></script>
 </body>
 </html>
