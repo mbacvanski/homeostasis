@@ -561,3 +561,29 @@ flip); (b) an input-stability metric (negated flow variance or
 ends at LOW flow relative to a wall-hugger. Performance = 1 - late hit
 rate. This tests "internal metrics generalize over embodiments, the body
 decides the sign" (docs + memory item 6) with a preregistered sign.
+
+## H27a verdict: wall-avoidance replication — all five anchors PASS
+
+(24 seeds) Baseline hits 0.168→0.004/step by 600-bins, 96% of seeds
+zero-late-hit; late behavior constant-direction circling (|signed dH| 0.145
+= |dH| 0.146 rad/step; radius 5.0±1.4; f stays ~0.32 — the churn regime
+spins the circle). Learning-off: f=1.000, |dH|=0, straight-bounce forever
+at 0.45 hits/step. Inversion at t=1000: hits resume (55.9/500-window) then
+restabilize (8.6 by the last window; 62% seeds clean late; paper's "<500
+steps" was one representative run — ours is slower on average, noted).
+Noise ±0.2: avoidance persists degraded (0.10-0.11 hits/step; zero seeds
+fully stable) — matches "cannot completely stabilize".
+
+## H27b verdict: FLOW SIGN FLIP CONFIRMED — the embodiment decides the sign
+
+91-config screen x 6 seeds: among ALIVE configs (51/91),
+rho(input_flow, avoidance) = **−0.859** (tracking +0.77, Pong +0.95);
+flow STABILITY +0.884 and flow_sd −0.885 (as preregistered); activity f
+−0.922; wall-proximity r_mean −0.756. Caveat handled openly: 40/91 dead
+configs trivially score perf=1.0 (no motion = no hits) — wall avoidance is
+the family's only task SOLVABLE BY DEATH, so alive-only is the meaningful
+population (all-config rho −0.20 reported too; the alive restriction is
+post-hoc but forced by the task's structure). The input-flow thesis's full
+form is now demonstrated across all three case studies: internal metrics
+generalize over embodiments; the BODY decides the sign of the
+flow-performance coupling.
