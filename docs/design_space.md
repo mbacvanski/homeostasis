@@ -6,7 +6,7 @@
 three cluster batches; four tasks — tracking, Pong, wall avoidance, and the
 new pursuit task — plus two-to-four-agent ecologies). Method: every
 hypothesis preregistered before its experiment; common-random-number wiring
-seeds; all scripts deterministic (two bit-identical cross-machine
+seeds; all scripts deterministic (three bit-identical cross-machine
 reproductions); every number below traceable to a JSON in
 `scripts/out/lab/`. Interactive verification: seven `/lab` pages in the
 visualizer (incl. `/lab/repair`, the noise slider, and ballistic pursuit,
@@ -519,16 +519,33 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   pacemaker (morphology + arena rescaling), one-way coupling, and selection
   warm-started from prior follower competence (cold-start GAs find
   toll-booths).
-- **Entrainment propagates — to depth four** (H49–H50,
-  [fig_chain4](../scripts/out/lab/fig_chain4.png)): successive agents lock
-  onto the previous *live* follower — a blind pacemaker plus three
-  phase-locked followers, four concentric rings, all stable through 10,800
-  steps. The chain's law is a **threshold, not a ramp**: orbit jitter stays
-  negligible for two links (sd 0.048 → 0.055), jumps 6× at the third
-  (0.38) as the rings contract toward a geometric floor (radii 7.8 → 6.5 →
-  5.6 → 2.3), and a fifth agent cannot evolve on the noisier, tighter
-  target. Link evolvability is start-basin sensitive (one false start
-  caught and fixed on the record) — IC-dependence at the collective level.
+- **Entrainment propagates — to depth four, and the ceiling's mechanism
+  is now closed** (H49–H50, H60–H68b,
+  [fig_chain4](../scripts/out/lab/fig_chain4.png),
+  [chain_truth](../scripts/out/lab/chain_truth.png)): successive agents
+  lock onto the previous *live* follower — a blind pacemaker plus three
+  phase-locked followers on four concentric rings about a shared
+  *off-center* point (≈(19.7, 19.7); measuring radii about the arena
+  center produced a night of eccentric-frame artifacts, caught, retracted,
+  and re-retracted on the ledger). All four agents co-rotate at the same
+  ω ≈ 1.9°/step, so **ring contraction (7.8 → 6.5 → 5.6 → 2.6) converts
+  directly into linear-speed loss** (0.255 → 0.212 → 0.184 → 0.086 =
+  ω·r at every link). The fifth agent fails because its target now crawls,
+  stop-and-go, below the followable speed band — the known unfollowable
+  near-stationary class. The band's edges were measured the same night:
+  0.184 and 0.237 followable, 0.086 and 0.313 not, so **followable target
+  speed ≈ (0.09, 0.28) arena-units/step for this body class**; the chain's
+  depth limit is a *speed floor*, not noise (the earlier
+  jitter-amplification reading is retracted: phase-aligned residuals
+  *shrink* down the chain, 0.31 → 0.11 — each follower is a regularizer,
+  broadcasting a cleaner signal than it receives). Controlled replays
+  bracket the rest: a follower tolerates the pacemaker's entire
+  deterministic waveform but almost no *stochastic* jitter (OU sd 0.1,
+  ~1% of ring radius, destroys the lock), and full-trajectory replay of
+  link D fails exactly as the live chain does — the signal is
+  intrinsically too slow, not too noisy. Link evolvability remains
+  start-basin sensitive (one false start caught and fixed on the record)
+  — IC-dependence at the collective level.
 
 ## What the two homeostatic channels actually do
 
@@ -601,9 +618,11 @@ the fast edge is sparse-and-informative.)
    ridge25? (Candidate: leak sets how long input context persists in x.)
 4. **Why the exact retinal drive formula underperforms the proxy** for the
    dead boundary — a closed-loop selection effect worth one figure.
-5. **What breaks entrainment chains** — H50 measured the threshold (jitter
-   6× at link 3, rings contracting to a floor) but not its mechanism; and
-   the max depth vs pacemaker radius curve is one clean sweep away.
+5. ~~What breaks entrainment chains~~ — CLOSED (H60–H68b): a speed
+   floor — co-rotating rings contract until the target's linear speed
+   falls below the followable band (~0.09–0.28 units/step). The live
+   follow-up: can a link be *designed* to hold radius (a speed
+   regenerator), where the naive heavy-wheel repeater failed (H63)?
 6. **Eligibility traces / multi-step credit** — the canonical untested rung
    between scalar neuromodulation (refuted, H35–H36) and full prediction
    machinery, at the motion-generality boundary.
