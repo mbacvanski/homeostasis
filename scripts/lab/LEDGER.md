@@ -664,3 +664,39 @@ a comfort-blind per-seed constant. "Reward becomes necessary" precisely as
 a SELECTOR among dynamically available orbits (and evolution's role, per
 the flow work, is to build bodies whose available orbits already fold the
 task into the absorbable band).
+
+## H30 (preregistered): selection finds the edge-holders homeostasis cannot aim at
+
+GA over the design space (fitness = flank-band occupancy over the last
+half; within45 recorded, never selected; seeds resampled per generation,
+the repo's evolve-* protocol): prediction — mean population flank occupancy
+exceeds 0.40 within 12 generations (vs 0.303 max random-grid cell), the
+champion exceeds 0.60, and champions' within45 stays near 0 (edge-holding
+is orthogonal to tracking). Confirms "reward = selector over the
+homeostatic repertoire" constructively.
+
+## H26 verdict: all three predictions REFUTED — channel competition is SIGNED by drive regime
+
+400 cluster runs (published sensors, 100k steps, 40 seeds/cell). Published
+cell (wlr 1.0, tlr 0.1) = 0.600±0.111 — EXACTLY the prior local validation
+(second bit-identical cross-machine reproduction). But: (a) tlr-insensitivity
+refuted at wlr=1.0 — (1.0, 0.01) collapses to 0.346; insensitivity holds
+only at wlr<=0.3 (±0.03) as the floor argument said; (b) "published
+near-optimal" refuted — **wlr 0.3/tlr 0.01 → 0.658** and 0.1/0.1 → 0.650
+both beat it; the moderate-wlr peak TRANSFERS; (c) "wlr 0.1 degrades"
+refuted (0.628-0.650). wlr=2.0 → 0.24 (the upper stability bound
+transfers). Corrected law: channel competition is SIGNED by the drive
+regime — supercritical (tracking): targets steal the error weights need to
+ERODE gain (harmful); subcritical (Pong): targets DAMP the weight channel's
+overshooting growth (necessary at wlr=1.0, unnecessary at moderate wlr).
+Practical: one lr change improves all three case studies' published
+configs.
+
+## H30 verdict: STRONGLY SUPPORTED — perfect edge-holders in 3 generations
+
+GA on flank occupancy: gen-1 champion 0.855, gen-3 champion **1.000** (100%
+of steps in the 50-90 deg band, within45 = 0.000), population mean 0.689 by
+gen 11 (prereg asked mean > 0.40, champion > 0.60 — exceeded). Champion:
+N=217, w0_mean 0.1 (subcritical), gain 38.8, leak 0.47, wlr 0.74, tlr
+0.0014. Reward-as-selector demonstrated constructively; the repertoire was
+rich all along.
