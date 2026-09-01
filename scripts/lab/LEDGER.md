@@ -1154,3 +1154,28 @@ Coherent multi-agent conclusion: interaction alone generates no sustained
 dynamics; collective entrainment needs a periodically-moving member (e.g.,
 a wall-avoidance circler as the "pacemaker") — a concrete, testable design
 principle for the mentors' multi-agent program.
+
+## H47 (preregistered): the pacemaker — can the family follow ITS OWN circler?
+
+Record a stable wall-avoidance circler's late trajectory (seed 0, steps
+1800-3600) and replay it cyclically as the pursuit stimulus; joint
+(genome, wiring) GA on following it. Prediction: because the circler is
+periodic with ~constant curvature, a genuine follower evolves (near3 >=
+0.8 within 10 generations) — closing the ecology loop: agent-generated
+motion is followable exactly when it is the periodic kind, so homeostatic
+collectives CAN sustain entrainment chains with a circler as pacemaker.
+
+## H47 verdict: REFUTED at native speed, CONFIRMED with the band clause — the law gains its second condition
+
+Design confounds fixed on the record (wrap-jump replay; then a clean
+single-period loop, period 56, closure 0.19). At the circler's native
+6.4 deg/step: best 0.50 = center-parking with the target skimming the
+3-unit line — no follower. Replayed at 1/3 speed (2.1 deg/step, the H34
+band): **perfect follower by generation 5 (near3 1.00, dist 1.55)**. The
+competence law is two-clause: (i) the co-moving frame requires ~constant
+control (shape), AND (ii) the frame's angular rate must sit inside the
+entrainment band (speed). Ecology corollary: entrainment chains with a
+circler pacemaker are possible iff the pacemaker is slow — a quantitative
+design principle for the multi-agent program (wall-circlers at default
+params turn ~8 deg/step: too fast; slow-circling wall configs are the
+predicted viable pacemakers).
