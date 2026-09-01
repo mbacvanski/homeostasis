@@ -546,7 +546,16 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   **with persistence** (keep the source unless the rival is 2× brighter
   for 100 straight steps) restores the lock completely (1.000, zero
   switches). One latched state variable is the whole difference between
-  a collapsed ecology and a working one.
+  a collapsed ecology and a working one — and the shared-world test
+  passes end-to-end (H85/H85b): with every agent seeing every other,
+  sticky attention lets follower C lock follower B (a genuine
+  all-visible chain), exposes one last emergent pathology — *the
+  follower seduces the leader* (C orbits close, becomes B's brightest
+  source, and captures B's attention away from the pacemaker; naive
+  salience inverts hierarchies) — and a conservative switching
+  threshold (rival must be 5× brighter for 300 steps) cures it:
+  **B holds A at 1.000 and C holds B at 1.000 simultaneously, zero
+  switches — the first stable all-visible homeostatic ecology.**
 - **Entrainment propagates — to depth four, and the ceiling's mechanism
   is now closed** (H49–H50, H60–H68b,
   [fig_chain4](../scripts/out/lab/fig_chain4.png),

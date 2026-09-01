@@ -1,0 +1,18 @@
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 1, "n_steps": 21600, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise_long"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 4, "n_steps": 7200, "pin_output_p": 0.1, "_cell": "stack_plain"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 7, "n_steps": 7200, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 9, "n_steps": 21600, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise_long"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 12, "n_steps": 7200, "pin_output_p": 0.1, "_cell": "stack_plain"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 15, "n_steps": 7200, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 17, "n_steps": 21600, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise_long"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 20, "n_steps": 7200, "pin_output_p": 0.1, "_cell": "stack_plain"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 23, "n_steps": 7200, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 25, "n_steps": 21600, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise_long"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 28, "n_steps": 7200, "pin_output_p": 0.1, "_cell": "stack_plain"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 31, "n_steps": 7200, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 33, "n_steps": 21600, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise_long"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 36, "n_steps": 7200, "pin_output_p": 0.1, "_cell": "stack_plain"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 39, "n_steps": 7200, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 41, "n_steps": 21600, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise_long"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 44, "n_steps": 7200, "pin_output_p": 0.1, "_cell": "stack_plain"}
+{"mode": "closed", "res": {"weight_lr": 0.03, "target_lr": 0.0, "p_link": 0.02, "input_p_link": 0.1}, "seed": 47, "n_steps": 7200, "pin_output_p": 0.1, "sensor_noise": 0.1, "_cell": "stack_noise"}

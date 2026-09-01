@@ -2358,3 +2358,50 @@ memoryless per-step WTA 0.074; attention-with-state 1.000. The minimal
 sufficient figure-ground machinery for homeostatic ecologies is source
 selection WITH persistence — a single latched state variable, not a
 filter and not new learning. (h84_sticky.json)
+
+## H85 (preregistered): a shared-visibility ecology, held together by sticky attention
+
+The real multi-agent test H81 demands: pacemaker A (seed 3) + two
+sticky-WTA followers (h48e champion nets, fresh follower-B and
+follower-C wiring seeds) in ONE arena where EVERY follower senses ALL
+other agents (retinal bumps summed per source, sticky selection over
+sources: keep current unless a rival is >= 2x brighter for 100 steps).
+B starts near A's ring; C starts farther out. n=10800. Predictions:
+(a) B locks A (>= 0.8 near4); (b) C locks SOMETHING (>= 0.6 on A or B
+— chain or star topology both count as a working shared-visibility
+ecology; which one is recorded); (c) the memoryless-WTA control of the
+same setup locks nothing (<= 0.2 everywhere); (d) zero or near-zero
+attention switches after the first 2000 steps (locks are stable).
+
+## H85 verdict (revised design): chains form — then the follower seduces the leader
+
+(a),(c) confirmed: sticky attention restores B's lock through shared
+visibility (1.000 vs 0.058 memoryless). My C arm was flawed (fresh
+wiring = lottery loser; recorded), and twin-wiring reruns found BOTH
+halves of the real answer: (b) YES — C locks B at 1.000 (twin at
+(15,8)): a genuine all-visible chain A->B->C forms; (d) FAILS in a new
+way — C orbits close to B, becomes the brightest source in B's view,
+and CAPTURES B's attention (B switches to its own follower, drops the
+pacemaker, and the pair goes adrift). Naive salience-based sticky
+attention INVERTS chain hierarchies. (h85_shared.json)
+
+## H85b (preregistered): capture-resistant attention stabilizes the ecology
+
+Same twin@15,8 setup with switch ratio 5x and patience 300. Predictions:
+(a) B holds A >= 0.9 AND C holds B >= 0.9 simultaneously (both, same
+run — the first stable all-visible homeostatic chain); (b) zero
+attention switches after step 2000; (c) if B is still captured, naive
+thresholds cannot save hierarchy and the fix requires asymmetric
+attention wiring (architecture again).
+
+## H85b verdict: the first stable all-visible homeostatic chain
+
+Ratio 5x / patience 300: B holds A 1.000 AND C holds B 1.000
+simultaneously, zero switches — (a),(b) fully confirmed. The ecology
+progression, all measured tonight: exclusive sensing (designed) ->
+works; all-visible, no attention -> collapse (0.034); memoryless filter
+-> collapse (0.074); sticky attention -> chains form but the follower
+seduces the leader (hierarchy inversion); capture-resistant sticky
+attention -> stable chain (1.000 + 1.000). One latched selection bit
+plus a conservative switching threshold is the complete minimal
+machinery for shared-world homeostatic ecologies. (h85_shared.json)

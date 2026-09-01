@@ -212,3 +212,15 @@ OFF, sensor-noise floor 0.1) yields the best tracking cell measured
 (0.607 short-run) and — with targets off — the long-horizon sag is gone
 entirely (late-run 0.582 vs 0.351 for the full-homeostatic ridge; the
 eq.-4 causal story validated end-to-end).
+
+**Final result of the night: the first stable shared-visibility
+homeostatic ecology.** The progression, each step measured: all-visible
+agents with no attention collapse (0.034); a memoryless winner-take-all
+filter still collapses (0.074 — selection flicker); sticky attention
+forms chains but exposes a new emergent pathology — the follower orbits
+close, becomes its leader's brightest stimulus, and seduces the
+leader's attention away from the pacemaker (salience inverts
+hierarchies); raising the switching threshold (5x for 300 steps) cures
+it: pacemaker→B→C all mutually visible, B holds A at 1.000 and C holds
+B at 1.000 with zero attention switches. One latched selection bit plus
+a conservative switch rule is the complete minimal machinery.
