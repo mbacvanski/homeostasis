@@ -1325,3 +1325,36 @@ duty=1.00 but washes out contrast (dir-agree 0.297 -> 0.227, eff_sat up):
 inverted-U in sigma, optimum = darkness abolished AND contrast preserved.
 A sensory noise floor is a design resource specifically for under-plastic
 networks. (h51c_movement.json)
+
+## H53 (preregistered): homeostasis is self-repair — mid-run node death
+
+Setup: ridge cell (wlr .1, tlr .01, leak .25), n=14400, at step 7200 kill
+k% of nodes (full adjacency removal in+out, input cut, x=0; caches rebuilt
+so plasticity cannot regrow; dead stay in output-pool denominators — silent
+neurons dilute the readout, gain must be re-earned). Arms: kill-mid
+(learning on) vs kill-mid-frozen (learning off at kill), 16 CRN seeds,
+k in {10,30,50}. Predictions: (a) k=10: learning recovers to >=80% of its
+own pre-kill late score within 2 segments; frozen degrades more and stays
+flat; (b) k=30: learning >=60% of pre-kill, frozen well below; (c) k=50:
+partial recovery, ordering learning>frozen everywhere; (d) mechanism per
+the comfort laws: survivor drive drops -> E<0 -> T falls and incoming W
+potentiates -> f returns to pre-kill (duty law); frozen f stays depressed.
+
+## H53 verdict: physiology always repairs; behavior only needs it for big wounds
+
+Score predictions (a)-(c) largely REFUTED — behavioral redundancy buffers
+structural damage: frozen 10% kill is free (rec 0.506 ~ baseline 0.510),
+frozen 30% keeps ~76% of baseline, and at k=0.1 the repair TRANSIENT is
+net harmful (paired learning-frozen -0.098, frozen wins 10/16) — the
+inflammation cost exceeds the wound. Repair pays only at big wounds:
+k=0.5 median 0.432 (learning) vs 0.295 (frozen). Learning abolishes the
+catastrophic tail at k=0.1 (dead seeds 0/16 vs 3/16 frozen).
+
+Mechanism (d) STRONGLY confirmed: f recovers under learning (k=0.3:
+0.174 -> 0.115 -> 0.136 vs frozen 0.046 -> 0.057 flat; k=0.5 doubles back
+0.042 -> 0.096 vs 0.029). The repair channel is Law 3: kill halves
+Sigma-w_in -> persistent E<0 -> integral controller re-inflates surviving
+weights (w_mean 0.106 -> 0.210 at k=0.5, near-exact 2x for halved
+in-degree; T gives only 0.07, blocked by floor 1.0). The model reproduces
+deafferentation-induced compensatory synaptic scaling (Turrigiano) from
+eq. 5 with nothing added. (h53_selfrepair.json)

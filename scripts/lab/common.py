@@ -126,8 +126,23 @@ def run_closed_loop(task: dict) -> dict:
     snaps = {"t": [], "w_mean": [], "neg_frac": [], "T_mean": [], "g": [], "f_win": []}
     f_win_acc = 0.0
 
+    kill_frac = float(task.get("kill_frac", 0.0))
     t_mid = None
     for i in range(n_steps):
+        if arm.startswith("kill-mid") and i == half and kill_frac > 0:
+            krng = np.random.default_rng(seed + 770007)
+            dead = krng.choice(rcfg.n_nodes, int(round(kill_frac * rcfg.n_nodes)),
+                               replace=False)
+            net.adjacency[dead, :] = False
+            net.adjacency[:, dead] = False
+            net.weights[dead, :] = 0.0
+            net.weights[:, dead] = 0.0
+            net.input_adjacency[:, dead] = False
+            net.input_weights[:, dead] = 0.0
+            net._rebuild_structure_caches()
+            net.x[dead] = 0.0
+            if arm == "kill-mid-frozen":
+                net.learning_enabled = False
         if arm.startswith("freeze-mid") and i == half:
             net.learning_enabled = False
             if arm == "freeze-mid-resetT":
