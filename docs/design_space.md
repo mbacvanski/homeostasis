@@ -199,6 +199,45 @@ avoidance has genuinely stationary solutions, so the loop parks in one.
 does not need to *sense* failure events for this; failure-free regions are
 simply the only places the dynamics can settle.
 
+## The fourth task: pursuit, and the family's competence boundary
+
+`src/homeostasis/pursuit.py` (new, beyond the paper — the mentors' ladder
+rung 3/4): tracking's bearing retina on the wall-avoidance body, moving
+stimulus in the walled arena. A P-controller solves it near-perfectly (dist
+0.81, 100% within 3 units). The homeostatic family **fails at every hand
+configuration tried** (~40 arms; LEDGER H32), and the five-round failure
+taxonomy is the finding:
+
+1. **Law 1 in space**: the intensity field has an *absorbing dead basin*
+   (wander far → starve → still → dead) that rotation-only tracking
+   geometrically could not have.
+2. Even distance-blind sensing dies: **wall-pinned outward-facing poses**
+   keep the stimulus behind the ±92° view forever — walls + translation
+   manufacture absorbing darkness; tracking's periodicity rescue needed a
+   body that cannot leave or permanently look away.
+3. A 360° retina restores aliveness — and pursuit *still* fails
+   (orientation at chance): the deficit is not survival.
+4. Motor-grain and velocity-floor hypotheses both refuted cleanly.
+
+Diagnosis: tracking's success rested on an effector-to-slip map that is
+1-DOF, sign-stable, and stillness-capable; the 2D body breaks all three
+(parallax adds a distance-dependent coupling that diverges on approach,
+churn forces a cruise so the ratchet's waiting state is unreachable, and
+dark poses exist).
+
+**Selection changes the answer — partially** (H33): a GA over the design
+space reaches near3 = 0.71 within 7 generations (subcritical recipe:
+w₀≈0.11, wlr at the floor 0.02, fast targets 0.06, agile wheel base), and
+one fresh wiring of the champion is a *perfect* pursuer (near3 = 1.00) —
+but the fresh-seed median is 0.00. Combined with H29/H30 (reward selects
+orbits homeostasis cannot aim at) and the H30 addendum (the evolved
+edge-holder is likewise seed-brittle): **the repertoire contains the
+competence; homeostasis cannot aim at it; genome-level selection finds it
+but cannot yet fix the wiring lottery.** The sharpest current form of "when
+does reward become necessary": reward/selection is needed as an *orbit- and
+genome-selector*, and something beyond both (wiring-level selection,
+development, scale) is needed for reliability.
+
 ## What the two homeostatic channels actually do
 
 - **The weight servo is the universal necessary channel**: freeze-W-only is
