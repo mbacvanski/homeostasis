@@ -46,8 +46,20 @@
       <option value="orbit">orbit</option>
       <option value="waypoint">waypoint</option>
       <option value="ballistic">ballistic</option>
+      <option value="ellipse" title="Elliptical path, semi-axes a=4.5 and b=4.5/ratio — the eccentricity dial. Live-only.">ellipse (live-only)</option>
+      <option value="wander" title="Heading-diffusion walk (per-step Gaussian turn of the stimulus heading). Live-only.">wander (live-only)</option>
     </select>
   </span>
+  <span class="ctl" id="ellipse-ctl" style="display:none"><label title="Ellipse eccentricity: a=4.5 fixed, b=4.5/ratio. Applied on Reset.">ellipse ratio</label>
+    <select id="ellipse-ratio">
+      <option value="1.0">1.0 (circle)</option>
+      <option value="1.27">1.27</option>
+      <option value="1.6" selected>1.6</option>
+      <option value="2.5">2.5</option>
+      <option value="4.0">4.0</option>
+    </select>
+  </span>
+  <span class="ctl" id="wander-ctl" style="display:none"><label title="wander_sigma: per-step heading diffusion of the stimulus (radians). Applied on Reset.">wiggle</label><input id="wander-sigma" type="range" min="0.001" max="0.05" step="0.001" value="0.05"><span id="v-wander" class="mono val"></span></span>
   <span class="ctl"><label title="Stimulus speed, arena units per step — applied LIVE via dataclasses.replace on the env config. Ballistic crossings last ~70 steps at 0.15 and ~275 at 0.04 — either side of the 90–225-step re-entrainment horizon (H31/H55b)">stim speed</label><input id="stim-speed" type="range" min="0.04" max="0.15" step="0.005" value="0.15"><span id="v-speed" class="mono val"></span></span>
   <span class="ctl"><label title="Wiring seed. The H34 champion is a genome+seed PAIR; fresh seeds mostly fail (genome lottery). The H55 sweeper is wiring-insensitive">seed</label><input id="seed" type="number" value="66777" min="0" step="1"></span>
   <button id="btn-reset">Reset</button>

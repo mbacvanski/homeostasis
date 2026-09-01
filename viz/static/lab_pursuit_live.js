@@ -48,12 +48,19 @@
     arenaX.strokeStyle = C.grid;
     arenaX.strokeRect(map.X(0), map.Y(box), box * map.s, box * map.s);
 
-    if (m.config.motion === "orbit") {  // the target's ideal path, faint
+    if (m.config.motion === "orbit" || m.config.motion === "ellipse") {
+      // the target's ideal path, faint
       arenaX.strokeStyle = C.orange;
       arenaX.globalAlpha = 0.25;
       arenaX.setLineDash([4, 4]);
       arenaX.beginPath();
-      arenaX.arc(map.X(box / 2), map.Y(box / 2), m.config.orbit_radius * map.s, 0, 2 * Math.PI);
+      if (m.config.motion === "orbit") {
+        arenaX.arc(map.X(box / 2), map.Y(box / 2), m.config.orbit_radius * map.s, 0, 2 * Math.PI);
+      } else {
+        arenaX.ellipse(map.X(box / 2), map.Y(box / 2),
+                       m.config.ellipse_a * map.s, m.config.ellipse_b * map.s,
+                       0, 0, 2 * Math.PI);
+      }
       arenaX.stroke();
       arenaX.setLineDash([]);
       arenaX.globalAlpha = 1;
@@ -146,8 +153,14 @@
     document.getElementById("live-readout").textContent =
       `agent (${now.x.toFixed(2)}, ${now.y.toFixed(2)}) · target (${now.sx.toFixed(2)}, ${now.sy.toFixed(2)})` +
       ` · effectors [${now.outputs[0].toFixed(2)}, ${now.outputs[1].toFixed(2)}]`;
+    const motionTag =
+      m.config.motion === "ellipse"
+        ? `ellipse ${m.config.ellipse_a.toFixed(1)}×${m.config.ellipse_b.toFixed(2)}`
+        : m.config.motion === "wander"
+          ? `wander σ=${m.config.wander_sigma.toFixed(3)}`
+          : m.config.motion;
     document.getElementById("live-note").textContent =
-      `${m.config.genome} · ${m.config.motion} @ ${m.config.speed.toFixed(3)}/step · seed ${m.seed} · N=${m.config.n_nodes}`;
+      `${m.config.genome} · ${motionTag} @ ${m.config.speed.toFixed(3)}/step · seed ${m.seed} · N=${m.config.n_nodes}`;
     document.getElementById("live-caption").textContent =
       (typeof CAPTIONS !== "undefined" &&
        CAPTIONS[`${m.config.genome}|${m.config.motion}`]) || "";
@@ -160,12 +173,29 @@
       genome: document.getElementById("genome").value,
       motion: document.getElementById("motion").value,
       speed: parseFloat(document.getElementById("stim-speed").value) || 0.15,
+      ellipse_ratio: parseFloat(document.getElementById("ellipse-ratio").value) || 1.6,
+      wander_sigma: parseFloat(document.getElementById("wander-sigma").value) || 0.05,
     }),
   });
 
-  for (const id of ["genome", "motion"]) {
-    document.getElementById(id).addEventListener("change", () => live.reset());
+  function syncMotionCtls() {
+    const motion = document.getElementById("motion").value;
+    document.getElementById("ellipse-ctl").style.display =
+      motion === "ellipse" ? "" : "none";
+    document.getElementById("wander-ctl").style.display =
+      motion === "wander" ? "" : "none";
+    document.getElementById("v-wander").textContent =
+      (parseFloat(document.getElementById("wander-sigma").value) || 0.05).toFixed(3);
   }
+  for (const id of ["genome", "motion", "ellipse-ratio"]) {
+    document.getElementById(id).addEventListener("change", () => {
+      syncMotionCtls();
+      live.reset();
+    });
+  }
+  document.getElementById("wander-sigma").addEventListener("change", () => live.reset());
+  document.getElementById("wander-sigma").addEventListener("input", syncMotionCtls);
+  syncMotionCtls();
   // stim speed is LIVE: dragging retargets the running stimulus
   document.getElementById("stim-speed").addEventListener("input", (ev) => {
     live.send({ cmd: "stim_speed", v: parseFloat(ev.target.value) || 0.15 });

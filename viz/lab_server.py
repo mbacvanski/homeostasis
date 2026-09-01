@@ -1586,6 +1586,11 @@ class WallLive(LiveSession):
 # /lab/ws/pursuit — the live chase arena.
 # ---------------------------------------------------------------------------
 
+# The live session also offers the package's ellipse and wander stimulus
+# motions (PursuitConfig fields, no new mechanics); the batch endpoint keeps
+# its original three.
+PURSUIT_LIVE_MOTIONS = PURSUIT_MOTIONS + ("ellipse", "wander")
+
 
 class PursuitLive(LiveSession):
     """A live PursuitSimulation of a stored champion genome — the exact
@@ -1597,7 +1602,12 @@ class PursuitLive(LiveSession):
     ends when the stimulus jumps >1 unit in one step; crossings shorter than
     20 steps are skipped; a catch is closest approach < 1.5 (dist measured
     at sensing time, exactly the batch index slicing). stim_speed{v} is
-    applied live via dataclasses.replace on the frozen env config."""
+    applied live via dataclasses.replace on the frozen env config.
+
+    Beyond the batch endpoint's orbit/waypoint/ballistic, the live session
+    also offers the package's "ellipse" (semi-axes a=4.5, b=4.5/ratio — the
+    eccentricity dial) and "wander" (heading-diffusion sigma) motions; both
+    are plain PursuitConfig fields, applied on Reset."""
 
     kind = "pursuit"
 
@@ -1605,6 +1615,8 @@ class PursuitLive(LiveSession):
         self.genome = "h34-champion"
         self.motion = "orbit"
         self.speed = 0.15
+        self.ellipse_ratio = 1.6
+        self.wander_sigma = 0.05  # the package default
         self._last = None
         self._last_hit = False
         super().__init__(seed=H34_CHAMP_SEED)
@@ -1612,20 +1624,32 @@ class PursuitLive(LiveSession):
     def _apply_reset(self, msg: dict) -> None:
         if msg.get("genome") in PURSUIT_GENOMES:
             self.genome = msg["genome"]
-        if msg.get("motion") in PURSUIT_MOTIONS:
+        if msg.get("motion") in PURSUIT_LIVE_MOTIONS:
             self.motion = msg["motion"]
         self.speed = _clampf(msg.get("speed", self.speed), 0.01, 0.3, self.speed)
+        self.ellipse_ratio = _clampf(
+            msg.get("ellipse_ratio", self.ellipse_ratio), 1.0, 4.0,
+            self.ellipse_ratio)
+        self.wander_sigma = _clampf(
+            msg.get("wander_sigma", self.wander_sigma), 0.001, 0.05,
+            self.wander_sigma)
 
     def _build(self) -> None:
         champ, _, src = PURSUIT_GENOMES[self.genome]
         if champ is None:
             raise RuntimeError(f"{src} not found")
+        extra = {}
+        if self.motion == "ellipse":
+            extra = dict(ellipse_a=4.5, ellipse_b=4.5 / self.ellipse_ratio)
+        elif self.motion == "wander":
+            extra = dict(wander_sigma=self.wander_sigma)
         pc = PursuitConfig(
             eye_offsets=(0.0,), sensors_per_eye=91,
             wheel_base=champ["wheel_base"],
             intensity_scale=champ["intensity_scale"],
             stimulus_motion=self.motion,
             stimulus_speed=self.speed,
+            **extra,
         )
         res = ReservoirConfig(
             n_inputs=pc.n_sensors, **{k: champ[k] for k in _PURSUIT_RES_KEYS}
@@ -1705,6 +1729,9 @@ class PursuitLive(LiveSession):
             "box_size": pc.box_size,
             "agent_radius": pc.agent_radius,
             "orbit_radius": pc.orbit_radius,
+            "ellipse_a": pc.ellipse_a,
+            "ellipse_b": pc.ellipse_b,
+            "wander_sigma": pc.wander_sigma,
             "n_nodes": self.sim.network.config.n_nodes,
             "wheel_base": round(pc.wheel_base, 3),
             "intensity_scale": round(pc.intensity_scale, 3),

@@ -54,6 +54,11 @@ function showSpeed() {
 async function run() {
   if (batchBox && !batchBox.open) return;  // batch is lazy: render only when shown
   const p = params();
+  if (p.motion === "ellipse" || p.motion === "wander") {  // live-only motions
+    connEl.textContent = `${p.motion} is live-only — use the live section above`;
+    connEl.className = "conn";
+    return;
+  }
   const seq = ++runSeq;
   connEl.textContent = "running…";
   connEl.className = "conn";
