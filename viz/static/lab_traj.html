@@ -2,80 +2,153 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Homeostatic Reservoir — Trajectory Viewer</title>
+<title>Homeostatic Reservoir — Trajectory Playground</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/lab/static/style.css">
 <link rel="stylesheet" href="/lab/static/lab.css">
 </head>
 <body>
 <header>
-  <h1>Homeostatic Reservoir — Trajectory Viewer <span class="sub">watch the entrainment · one closed-loop tracking run · lab viewer</span></h1>
-  <div id="conn" class="conn">idle</div>
+  <h1>Homeostatic Reservoir — Trajectory Playground <span class="sub">live tracking with the lab harness's powers · surgery any time</span></h1>
+  <div id="conn" class="conn">connecting…</div>
 </header>
 
 <div id="controls">
   <span class="ctl labnav">
     <a href="/lab">single node</a>
     <a href="/lab/phase">phase maps</a>
-    <a href="/lab/traj" class="here">trajectories</a>
-    <a href="/lab/wall">wall</a>
-    <a href="/lab/pursuit">pursuit</a>
-    <a href="/lab/ecology">ecology</a>
+    <a href="/lab/traj" class="here">trajectories<span class="livemark">▶</span></a>
+    <a href="/lab/wall">wall<span class="livemark">▶</span></a>
+    <a href="/lab/pursuit">pursuit<span class="livemark">▶</span></a>
+    <a href="/lab/ecology">ecology<span class="livemark">▶</span></a>
     <a href="/lab/ecology3">ecology³</a>
     <a href="/lab/reproduce">reproduce</a>
-    <a href="/lab/repair">repair</a>
+    <a href="/lab/repair">repair<span class="livemark">▶</span></a>
+  </span>
+  <span class="ctl livebar">
+    <button id="btn-play" class="primary" title="space">▶ Play</button>
+    <button id="btn-step1" title="s">Step ×1</button>
+    <button id="btn-step10">Step ×10</button>
+    <button id="btn-step100">Step ×100</button>
+    <label>speed</label><input id="speed" type="range" min="0" max="100" value="50">
+    <span id="speed-val" class="mono val">60/s</span>
   </span>
   <span class="ctl">
-    <label>variant</label>
+    <label>loadout</label>
     <select id="variant">
       <option value="ridge25">ridge25 (leak .25, wlr .1)</option>
       <option value="statue03">statue03 (leak .25, wlr .03)</option>
       <option value="w1prime">w1-prime (cfg 236, w₀ .75)</option>
+      <option value="stack" title="H83's stacked config: p_link .02, input_p_link .1, wlr .03, tlr 0, output pool thinned to p=0.1 (common.py pin_output_p, rng seed+880008). Live-only — the batch endpoint has no output-pool pin. Best with noise σ=0.1.">stack (H83, live-only)</option>
       <option value="default">default (paper config)</option>
     </select>
   </span>
   <span class="ctl"><label>seed</label><input id="seed" type="number" value="0" min="0" step="1"></span>
-  <span class="ctl"><label>steps</label><input id="steps" type="number" value="7200" min="720" max="14400" step="720"></span>
-  <span class="ctl"><label title="From this step on, the two effector outputs are exchanged before being applied — the swap-mid arm of scripts/lab/common.py, at an arbitrary step. Leave empty for no swap.">swap effectors at</label><input id="swap" type="number" placeholder="off" min="0" step="240"></span>
-  <span class="ctl"><label title="Sensor noise σ: uniform ±σ added to each sensor activation every step, clamped at 0 — common.py's sensor_noise key (H51). On statue03, σ=0.1 rescues tracking by abolishing dark states; σ=0.2 overdoes it and washes out contrast.">noise σ</label><input id="noise" type="range" min="0" max="0.25" step="0.01" value="0"><span id="v-noise" class="mono val"></span></span>
-  <button id="btn-run" class="primary">Run</button>
-  <span class="status mono" id="stat"></span>
+  <span class="ctl"><label title="Sensor noise σ, applied LIVE: uniform ±σ added to each sensor activation every step, clamped at 0 — common.py's sensor_noise key (H51), rng stream seed+900001 (created on first nonzero use; a run with σ set from step 0 matches the H51 harness bit for bit). On statue03, σ=0.1 rescues tracking; σ=0.2 washes out contrast.">noise σ</label><input id="noise" type="range" min="0" max="0.25" step="0.01" value="0"><span id="v-noise" class="mono val"></span></span>
+  <button id="btn-reset">Reset</button>
+  <span class="status mono live-t">t=<b id="live-t">0</b> · <span id="live-note"></span></span>
 </div>
 
 <main>
   <section class="panel explainer">
     <p>
-    One run of the closed-loop tracking task, stepped exactly as the lab campaign runs it
-    (<span class="mono">scripts/lab/common.py run_closed_loop</span>: sense → step → act → advance).
-    These agents follow by <b>velocity entrainment</b>: the loop locks the agent's turning
-    rate to the stimulus's angular velocity, with <b>no position servo</b> — the mean signed
-    turn per degree of heading error is ≈ 0 — so the heading rides parallel to the stimulus
-    and drifts within (and out of) the ±45° band rather than being pulled to its center.
-    The optional effector swap inverts the motor mapping mid-run; the segment strip shows
-    whether tracking recovers. The noise slider adds per-step uniform ±σ sensor noise
-    (the H51 arm): on <b>statue03</b> — the under-plastic regime that starves itself in
-    sensory dark states — σ&nbsp;=&nbsp;0.1 <i>rescues</i> tracking (16-seed mean 0.367&nbsp;→&nbsp;0.533)
-    by keeping input flowing, while σ&nbsp;=&nbsp;0.2 washes out the contrast it restored.
+    The closed-loop tracking task, simulated LIVE with the exact
+    <span class="mono">scripts/lab/common.py run_closed_loop</span> step order (sense → step →
+    act → advance) — and the campaign's intervention arms turned into buttons you can press
+    <b>at any time</b>, not just at a preplanned step. These agents follow by <b>velocity
+    entrainment</b>: the loop locks turning rate to the stimulus's angular velocity with no
+    position servo, so the heading rides parallel and drifts within (and out of) the ±45° band.
+    Try: <b>swap effectors</b> mid-lock (the swap-mid arm — watch the recovery), <b>kill
+    10/30/50%</b> of the reservoir (the H53 wound; first press uses the kill-mid arm's exact
+    node draw, rng seed+770007; later presses continue that stream and may overlap), freeze
+    weights / targets / both (the freeze-arm pins, applied from the freeze moment instead of
+    t=0), and the live <b>noise σ</b> slider (H51's rescue: on statue03, σ=0.1 abolishes the
+    dark states that starve the under-plastic regime).
     </p>
   </section>
 
   <section class="panel">
-    <h2>Heading vs stimulus <span class="hint">unwrapped degrees · heading (blue) · stimulus (yellow) · swap marked in pink</span></h2>
-    <canvas id="follow" width="960" height="250"></canvas>
+    <div class="surgery">
+      <b style="font-size:12.5px">Surgery (any time):</b>
+      <button id="sg-swap" title="Exchange the two effector outputs before they are applied, from now on — the swap-mid arm at the current step. Press again to swap back.">swap effectors</button>
+      <span class="sep">·</span>
+      <button id="sg-freeze-w" title="Pin the recurrent weights at their CURRENT values (restored after every step; targets keep learning) — the freeze-W arm from now">freeze weights</button>
+      <button id="sg-freeze-t" title="Pin the targets at their CURRENT values (weights keep learning) — the freeze-T-mid arm from now">freeze targets</button>
+      <button id="sg-freeze-both" title="learning_enabled = False — the freeze-mid arm from now">freeze both</button>
+      <button id="sg-unfreeze" title="Learning back on; weight/target pins released">unfreeze</button>
+      <span class="sep">·</span>
+      <button id="sg-kill10" title="Adjacency-level kill of 10% of nodes NOW — common.py's kill-mid surgery (in+out links removed, input cut, caches rebuilt, x=0; dead nodes stay in output-pool denominators). Node draw: rng stream seed+770007 — the first kill is bit-identical to the kill-mid arm's draw; later kills continue the stream and may overlap earlier dead nodes.">kill 10%</button>
+      <button id="sg-kill30" title="Kill 30% of nodes now (same rng stream, seed+770007)">kill 30%</button>
+      <button id="sg-kill50" title="Kill 50% of nodes now (same rng stream, seed+770007)">kill 50%</button>
+      <span class="state" id="sg-state"></span>
+    </div>
   </section>
 
-  <section class="panel">
-    <h2>Heading error <span class="hint">signed, ±45° band shaded</span></h2>
-    <canvas id="errc" width="960" height="150"></canvas>
-  </section>
+  <div class="livegrid">
+    <div class="stack">
+      <section class="panel">
+        <h2>Ring arena (live) <span class="hint">stimulus green · heading arrow white · FOV wedge ±92° shaded</span></h2>
+        <canvas id="live-arena" width="320" height="320"></canvas>
+        <div class="readout mono" id="live-readout"></div>
+      </section>
+      <section class="panel">
+        <h2>Sensors (62, live) <span class="hint">left eye red · right eye blue</span></h2>
+        <canvas id="live-sens" width="320" height="70"></canvas>
+      </section>
+      <section class="panel">
+        <h2>Segment scores <span class="hint">within-45 per 720-step segment · current segment hollow · 0.35 dashed</span></h2>
+        <canvas id="live-seg" width="320" height="90"></canvas>
+        <div class="readout mono" id="live-seg-readout"></div>
+      </section>
+    </div>
+    <div class="stack">
+      <section class="panel">
+        <h2>Heading vs stimulus (live) <span class="hint">heading red · stimulus white · surgery marked pink · exact, one column per step</span></h2>
+        <canvas id="live-strip" class="wide" width="960" height="170"></canvas>
+      </section>
+      <section class="panel">
+        <h2>Heading error (live) <span class="hint">±45° band shaded</span></h2>
+        <canvas id="live-err" class="wide" width="960" height="130"></canvas>
+      </section>
+      <section class="panel">
+        <h2>Proportion spiking (live)</h2>
+        <canvas id="live-prop" class="wide" width="960" height="110"></canvas>
+      </section>
+    </div>
+  </div>
 
-  <section class="panel">
-    <h2>Segment scores <span class="hint">within-45 fraction per 720-step segment · 0.35 dashed · chance ≈ 0.25</span></h2>
-    <canvas id="segc" width="960" height="120"></canvas>
-    <div class="hint mono" id="summary"></div>
-  </section>
+  <details class="batch-box" id="batch-box">
+    <summary>Batch experiments (full runs, summary charts) — the original request→run→render viewer with the fixed-step effector swap</summary>
+    <div class="batch-body">
+      <div class="batchctl">
+        <label>steps</label><input id="steps" type="number" value="7200" min="720" max="14400" step="720">
+        <label title="From this step on, the two effector outputs are exchanged before being applied — the swap-mid arm of scripts/lab/common.py, at an arbitrary step. Leave empty for no swap.">swap effectors at</label><input id="swap" type="number" placeholder="off" min="0" step="240">
+        <button id="btn-run" class="primary">Run batch</button>
+        <span class="status mono" id="batch-status"></span>
+        <span class="status mono" id="stat"></span>
+      </div>
+
+      <section class="panel">
+        <h2>Heading vs stimulus <span class="hint">unwrapped degrees · heading (blue) · stimulus (yellow) · swap marked in pink</span></h2>
+        <canvas id="follow" width="960" height="250"></canvas>
+      </section>
+
+      <section class="panel">
+        <h2>Heading error <span class="hint">signed, ±45° band shaded</span></h2>
+        <canvas id="errc" width="960" height="150"></canvas>
+      </section>
+
+      <section class="panel">
+        <h2>Segment scores <span class="hint">within-45 fraction per 720-step segment · 0.35 dashed · chance ≈ 0.25</span></h2>
+        <canvas id="segc" width="960" height="120"></canvas>
+        <div class="hint mono" id="summary"></div>
+      </section>
+    </div>
+  </details>
 </main>
 
+<script src="/lab/static/lab_live.js"></script>
+<script src="/lab/static/lab_traj_live.js"></script>
 <script src="/lab/static/lab_traj.js"></script>
 </body>
 </html>
