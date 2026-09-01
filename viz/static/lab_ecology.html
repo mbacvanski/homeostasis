@@ -9,68 +9,128 @@
 </head>
 <body>
 <header>
-  <h1>Homeostatic Reservoir — Ecology <span class="sub">the live two-agent homeostatic chain · lab viewer</span></h1>
-  <div id="conn" class="conn">idle</div>
+  <h1>Homeostatic Reservoir — Ecology <span class="sub">the live homeostatic chain, up to depth 4 · lab viewer</span></h1>
+  <div id="conn" class="conn">connecting…</div>
 </header>
 
 <div id="controls">
   <span class="ctl labnav">
     <a href="/lab">single node</a>
     <a href="/lab/phase">phase maps</a>
-    <a href="/lab/traj">trajectories</a>
-    <a href="/lab/wall">wall</a>
-    <a href="/lab/pursuit">pursuit</a>
-    <a href="/lab/ecology" class="here">ecology</a>
+    <a href="/lab/traj">trajectories<span class="livemark">▶</span></a>
+    <a href="/lab/wall">wall<span class="livemark">▶</span></a>
+    <a href="/lab/pursuit">pursuit<span class="livemark">▶</span></a>
+    <a href="/lab/ecology" class="here">ecology<span class="livemark">▶</span></a>
     <a href="/lab/ecology3">ecology³</a>
     <a href="/lab/reproduce">reproduce</a>
-    <a href="/lab/repair">repair</a>
+    <a href="/lab/repair">repair<span class="livemark">▶</span></a>
   </span>
-  <span class="ctl"><label title="Follower wiring seed. Default = the H48e warm-started champion pair">seed</label><input id="seed" type="number" value="77164" min="0" step="1"></span>
-  <span class="ctl"><label>steps</label><input id="steps" type="number" value="7200" min="300" max="21600" step="300"></span>
-  <button id="btn-run" class="primary">Run</button>
-  <span class="status mono" id="stat"></span>
+  <span class="ctl livebar">
+    <button id="btn-play" class="primary" title="space">▶ Play</button>
+    <button id="btn-step1" title="s">Step ×1</button>
+    <button id="btn-step10">Step ×10</button>
+    <button id="btn-step100">Step ×100</button>
+    <label>speed</label><input id="speed" type="range" min="0" max="100" value="50">
+    <span id="speed-val" class="mono val">60/s</span>
+  </span>
+  <span class="ctl">
+    <label title="How many saved-chain followers to run: B (h48e champion), then C, then D — the H50 chain">links</label>
+    <select id="links">
+      <option value="1">1 (A→B)</option>
+      <option value="2">2 (A→B→C)</option>
+      <option value="3">3 (A→B→C→D)</option>
+    </select>
+  </span>
+  <span class="ctl">
+    <label title="exclusive: each follower senses ONLY its chain predecessor (the designed chain). all-visible: every follower senses every other agent, with sticky attention doing source selection — H86's shared-visibility test">sensing</label>
+    <select id="mode">
+      <option value="exclusive">exclusive (each sees only its leader)</option>
+      <option value="sticky">all-visible + sticky attention</option>
+    </select>
+  </span>
+  <span class="ctl"><label title="Sticky attention: a rival source must be at least this many times stronger…">ratio</label><input id="ratio" type="number" value="5" min="1" max="20" step="0.5" style="width:52px"></span>
+  <span class="ctl"><label title="…for this many consecutive steps before attention switches. 5×/300 is the capture-resistant setting that lets the whole chain survive shared visibility (H86); 2×/100 admits leader capture.">patience</label><input id="patience" type="number" value="300" min="1" max="2000" step="10" style="width:60px"></span>
+  <span class="ctl"><label title="Follower B's wiring seed (default = the saved champion pair). Links C and D always use their saved seeds.">seed</label><input id="seed" type="number" value="77164" min="0" step="1"></span>
+  <button id="btn-reset">Reset</button>
+  <span class="status mono live-t">t=<b id="live-t">0</b> · <span id="live-note"></span></span>
 </div>
 
 <main>
-  <div class="headline">the first sustained two-agent homeostatic system: comfort-seeking + selection, nothing else.</div>
+  <div class="headline">the first sustained multi-agent homeostatic system: comfort-seeking + selection, nothing else.</div>
 
   <section class="panel explainer">
     <p>
-    Two coupled agents in one 30×30 arena, co-simulated live. The <b>pacemaker</b> is an
-    unmodified wall-avoidance agent (blind to the follower, wheel_base 2.5, wiring seed 3):
-    pure comfort-seeking that settles into a steady circle. The <b>follower</b> is the
-    H48e-evolved pursuit agent (N=64, single 91-sensor full-circle eye), which senses the
-    pacemaker's live position each step — its stimulus is another homeostatic agent's
-    behavior, not a scripted path. Every step: pacemaker moves, follower senses, follower
-    moves. Nothing coordinates them beyond the sensing link; the follower phase-locks inside
-    the pacemaker's orbit and holds ≈3.8 units of distance indefinitely. Change the seed to
-    play the wiring lottery with the same genome. This chain works because the follower sees
-    <i>only</i> its target — what happens when every agent sees every other (and what attention
-    machinery it takes to survive that) is the <a href="/lab/ecology3">ecology³ exhibit</a>.
+    Coupled agents in one 30×30 arena, co-simulated LIVE. The <b>pacemaker A</b> is an
+    unmodified wall-avoidance agent (blind to everyone, wheel_base 2.5, wiring seed 3): pure
+    comfort-seeking that settles into a steady circle. The followers are the saved H50
+    entrainment chain — <b>B</b> the H48e-evolved pursuit champion (N=64, single 91-sensor
+    full-circle eye), then <b>C</b> and <b>D</b> evolved to follow the agent above them. Each
+    step: A moves, then each follower senses and moves in chain order, reading its
+    predecessor's <i>already-updated</i> position (sequential same-step coupling — one step of
+    mid-chain sensory latency kills link C outright; LEDGER H86). <b>exclusive</b> sensing is
+    the designed chain: each follower sees only its leader. <b>all-visible + sticky
+    attention</b> is the H86 test: every follower senses every agent, and a latched
+    winner-take-all (switch only when a rival is ratio× stronger for patience consecutive
+    steps; the package's <span class="mono">homeostasis.attention.StickyAttention</span>)
+    keeps the hierarchy from collapsing — at 5×/300 the whole depth-4 chain survives shared
+    visibility with zero switches. Change B's seed to play the wiring lottery.
     </p>
   </section>
 
-  <section class="panel">
-    <h2>Arena <span class="hint">30×30 · trails fade with age · follower wall hits ×</span></h2>
-    <canvas id="arena" width="500" height="500"></canvas>
-    <div class="legend">
-      <span class="sw red"></span>pacemaker — blind wall-avoider, circles at 1.9°/step
-      <span class="sw blue"></span>follower — senses the pacemaker; evolved, phase-locks inside its orbit
+  <div class="livegrid">
+    <section class="panel">
+      <h2>Arena (live) <span class="hint">30×30 · A red · B blue · C green · D yellow · gaze line = who each follower is attending (sticky mode)</span></h2>
+      <canvas id="live-arena" width="500" height="500"></canvas>
+      <div class="readout mono" id="live-readout"></div>
+      <div class="sumrow" id="live-links"></div>
+    </section>
+    <div class="stack">
+      <section class="panel">
+        <h2>Link distances (live) <span class="hint">each follower to its chain predecessor · 4-unit lock line dashed · exact, one column per step</span></h2>
+        <canvas id="live-dist" class="wide" width="960" height="220"></canvas>
+      </section>
+      <section class="panel">
+        <h2>Attended source (live) <span class="hint">sticky mode: which agent each follower's attention is latched on · rows B, C, D · color = attended agent</span></h2>
+        <canvas id="live-att" class="wide" width="960" height="90"></canvas>
+      </section>
     </div>
-    <div class="sumrow">
-      <div class="sumstat"><div class="k">late mean distance</div><div class="v mono" id="e-dist">—</div></div>
-      <div class="sumstat"><div class="k">near-4 fraction (late)</div><div class="v mono small" id="e-near">—</div></div>
-      <div class="sumstat"><div class="k">follower wall hits</div><div class="v mono small" id="e-hits">—</div></div>
-      <div class="sumstat"><div class="k">pacemaker turn (late)</div><div class="v mono small" id="e-turn">—</div></div>
-    </div>
-  </section>
+  </div>
 
-  <section class="panel">
-    <h2>Pacemaker–follower distance <span class="hint">4-unit band shaded · late window (scored half) tinted · follower wall hits ticked red</span></h2>
-    <canvas id="distc" width="960" height="160"></canvas>
-  </section>
+  <details class="batch-box" id="batch-box">
+    <summary>Batch experiment (full run, summary charts) — the original two-agent chain viewer (A + B only, full-run trails)</summary>
+    <div class="batch-body">
+      <div class="batchctl">
+        <label>steps</label><input id="steps" type="number" value="7200" min="300" max="21600" step="300">
+        <button id="btn-run" class="primary">Run batch</button>
+        <span class="status mono" id="batch-status"></span>
+        <span class="status mono" id="stat"></span>
+      </div>
+
+      <section class="panel">
+        <h2>Arena <span class="hint">30×30 · trails fade with age · follower wall hits ×</span></h2>
+        <canvas id="arena" width="500" height="500"></canvas>
+        <div class="legend">
+          <span class="sw red"></span>pacemaker — blind wall-avoider, circles at 1.9°/step
+          <span class="sw blue"></span>follower — senses the pacemaker; evolved, phase-locks inside its orbit
+        </div>
+        <div class="sumrow">
+          <div class="sumstat"><div class="k">late mean distance</div><div class="v mono" id="e-dist">—</div></div>
+          <div class="sumstat"><div class="k">near-4 fraction (late)</div><div class="v mono small" id="e-near">—</div></div>
+          <div class="sumstat"><div class="k">follower wall hits</div><div class="v mono small" id="e-hits">—</div></div>
+          <div class="sumstat"><div class="k">pacemaker turn (late)</div><div class="v mono small" id="e-turn">—</div></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Pacemaker–follower distance <span class="hint">4-unit band shaded · late window (scored half) tinted · follower wall hits ticked red</span></h2>
+        <canvas id="distc" width="960" height="160"></canvas>
+      </section>
+    </div>
+  </details>
 </main>
 
+<script src="/lab/static/lab_live.js"></script>
+<script src="/lab/static/lab_ecology_live.js"></script>
 <script src="/lab/static/lab_ecology.js"></script>
 </body>
 </html>

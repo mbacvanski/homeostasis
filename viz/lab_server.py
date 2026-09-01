@@ -2155,6 +2155,10 @@ class EcologyLive(LiveSession):
             newpos = (float(env.x), float(env.y))
             f["d"] = float(np.hypot(newpos[0] - own[0], newpos[1] - own[1]))
             entry[f"d{j + 1}"] = round(f["d"], 3)
+            # attended agent index (0 = pacemaker, 1.. = followers) per step,
+            # for the attention timeline strip
+            entry[f"sel{j + 1}"] = (f["src_idx"][f["att"].selected]
+                                    if self.mode == "sticky" else j)
             agents[j + 1] = newpos
         self.pos = agents[1:]
         return entry
