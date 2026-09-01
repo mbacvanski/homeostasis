@@ -852,16 +852,26 @@ the fast edge is sparse-and-informative.)
 
 ## Instruments
 
-`scripts/lab/`: `common.py` (closed-loop arms incl. lesion / seven freeze
-variants / shuffle / effector-swap, open-loop scripted retina with sine and
-per-node law recording, observables), the k0–k4 kill tests, act2 batches,
-b6–b8, h21–h50 experiment scripts, cluster runner + batch generators, and
-`monday_update.md` (a pasteable summary). Six verified viewers: `/lab`
-(single-node explorer, duty law live), `/lab/phase` (the real planes,
-per-seed inspection), `/lab/traj` (entrainment trajectories, bit-exact
-against archived runs, effector swap), `/lab/wall` (arena + perturbation +
-the evolved edge-holder), `/lab/pursuit` (the perfect pursuer and its
-failure mode), `/lab/ecology` (the live two-agent chain, self-validating).
-Verification culture: preregistration ledger, CRN seeds, exact-law checks
-to machine precision, honest negatives — and eight of my own design bugs
-caught and recorded rather than papered over.
+`scripts/lab/`: `common.py` (closed-loop arms incl. lesion / freeze
+variants / shuffle / effector-swap / mid-run node kill, `pin_output_p`,
+`sensor_noise`, `freeze_T_at` ± reset, per-segment duty/flow; open-loop
+scripted retina with sine and per-node law recording), the k0–k4 kill
+tests, act2 batches, b6–b8, and the h21–h97 experiment scripts (see
+[README.md](../scripts/lab/README.md) for the reproduction map);
+cluster runner + batch generators; `monday_update.md` (pasteable
+summary); the forward predictor (`h59_dial.py`), the band and jitter
+psychometrics, and `src/homeostasis/attention.py` (StickyAttention, the
+minimal ecology-sufficient attention rule, with unit tests). Nine
+verified viewers: `/lab` (single-node explorer, duty law live),
+`/lab/phase` (the real planes, per-seed inspection), `/lab/traj`
+(entrainment trajectories + the sensor-noise rescue, bit-exact against
+archived runs), `/lab/wall` (arena + perturbation + the evolved
+edge-holder), `/lab/pursuit` (the perfect pursuer, ballistic
+interception, both champions), `/lab/repair` (mid-run node kill, both
+arms), `/lab/ecology` (the live two-agent chain), `/lab/ecology3` (the
+shared-visibility attention ecology, four regimes), `/lab/reproduce`
+(the budding ladder). Verification culture: preregistration ledger, CRN
+seeds, exact-law checks to machine precision, honest negatives, powered
+replications of surprising claims, a mean-reversion methods note — and
+the instrument bugs caught by their own preregistered controls, recorded
+rather than papered over.
