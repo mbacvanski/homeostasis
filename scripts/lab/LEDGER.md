@@ -1223,3 +1223,24 @@ the entrainment band (needs morphological wheel-base + arena rescaling),
 one-way sensory coupling, and selection warm-started from prior follower
 competence. The mentors' multi-agent question has its constructive answer
 and its recipe.
+
+## H49 (preregistered): transitive entrainment — the three-agent chain
+
+Agent C (warm-started from B's follower genome) evolved against the LIVE
+follower B's position while B follows the pacemaker A. B's orbit is a clean
+circle at ~1.9 deg/step (band-compatible). Prediction: C locks onto B
+(near4 >= 0.8), giving A -> B -> C — entrainment propagates through a
+chain of comfort-seeking agents. Failure mode to watch: B's orbit may be
+noisier than A's (jitter from B's own churn) — if C fails, measure B's
+orbit regularity vs A's.
+
+## H49 verdict: ENTRAINMENT PROPAGATES — the three-agent chain locks
+
+C (warm-started from B's genome) locks onto the LIVE B while B follows A:
+C-B dist 2.88, near4 1.00, stable through 10,800 steps — three concentric
+phase-locked circles (fig_chain3.png). A blind pacemaker's periodicity
+cascades down a sensing chain of comfort-seeking agents. The rings shrink
+~15% per link (radius 7.8 -> 6.5 -> 5.6), predicting a FINITE CHAIN DEPTH:
+successive orbits contract until curvature/speed leaves the entrainment
+band — an open, quantitative prediction for the multi-agent program
+(measure max depth vs pacemaker radius).
