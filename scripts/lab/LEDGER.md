@@ -2687,3 +2687,30 @@ ridge (48-seed), profile-carried damage (H80), w1' exempt (H95). The
 toxin-accumulation mechanism is OPEN with four single-coordinate
 stories now refuted (mean-T, anatomy, activity, error exposure).
 (h96_exposure.json)
+
+## H95/H96 power addenda + a methods note on mean reversion
+
+power48 (job 21732711): (i) w1' at 48 seeds — the exception SOFTENS:
+freezeT0 late trails full by only -0.016 (t=-0.57 NS); early
+calibration benefit +0.07 (not the 12-seed +0.20); full rises 0.819 ->
+0.880 (no toxin, confirmed). Eq. 4's value at w1' is transient-early
+only. (ii) wlr=0.3 island at 48 seeds: sag +0.034 (t=+1.28 NS) — no
+sag, but no significant improvement; "benign island" overstated, the
+robust contrast is wlr=0.1's -0.104 (t=-3.6) vs ~zero at 0.3.
+METHODS NOTE, now applied throughout: with wander SD ~0.29, early/late
+windows regress to the mean (corr(early, sag) ~ -0.5..-0.6);
+reversion-adjusted sags: full -0.102 (real), freezeT0 +0.006 (flat —
+its apparent "rise" was reversion), freezeT3600 -0.034. Cross-arm
+same-window comparisons on CRN seeds are the load-bearing statistics.
+(power48_results.jsonl)
+
+## Viewer: /lab/ecology3 (agent-built, bit-identical verification)
+
+The shared-visibility ecology exhibit: four attention regimes (summed /
+memoryless WTA / sticky 2x100 / resistant 5x300), animated replay with
+attention lines, switch markers, running locks. Verified bit-identical
+to h85_shared.py (1.000/1.000 zero switches at 5x300; the seduction
+switch at t=187 under 2x100). Observed deviation recorded: under
+memoryless WTA at this geometry, C captures B at t=0 and the leaderless
+PAIR coheres while unmoored from the pacemaker (C_B 1.000, B_A 0.134)
+— "collapse" means no chain to the pacemaker, not zero pair cohesion.

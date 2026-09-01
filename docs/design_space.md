@@ -677,9 +677,10 @@ competence clauses.
   net harmful *from step one* at 48-seed power, its damage rides
   entirely in the adapted profile, and freezing T at birth is the best
   policy measured — the calibration role survives only where evolved
-  heterogeneous profiles genuinely pay, as at w1′ — and w1′ is genuinely
-  exempt (H95): no sag at all [0.850 → 0.857] while early calibration
-  earns a real +0.20. The tempting mechanism — fast W starves T of
+  heterogeneous profiles genuinely pay, as at w1′ — and w1′ is
+  exempt from the toxin (H95, 48-seed: full rises 0.819 → 0.880) though
+  its calibration benefit is transient-early only (+0.07 at power;
+  frozen-T catches up to within −0.016 NS by late). The tempting mechanism — fast W starves T of
   error — was preregistered and refuted within the hour (H96): sag
   across wlr is non-monotonic [−0.05, −0.10, **+0.08**, −0.08] and does
   not track error exposure, so w1′'s exemption lives in its
