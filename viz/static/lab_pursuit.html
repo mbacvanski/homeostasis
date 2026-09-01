@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Pursuit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Pursuit <span class="sub">following a moving stimulus in 2D (beyond the paper) · lab viewer</span></h1>
+  <div id="conn" class="conn">idle</div>
+</header>
+
+<div id="controls">
+  <span class="ctl labnav">
+    <a href="/lab">single node</a>
+    <a href="/lab/phase">phase maps</a>
+    <a href="/lab/traj">trajectories</a>
+    <a href="/lab/wall">wall</a>
+    <a href="/lab/pursuit" class="here">pursuit</a>
+  </span>
+  <span class="ctl">
+    <label>preset</label>
+    <select id="preset">
+      <option value="perfect-pursuer">perfect-pursuer (orbit)</option>
+      <option value="pursuit-fails">pursuit-fails (waypoint)</option>
+    </select>
+  </span>
+  <span class="ctl"><label title="Wiring seed. The champion is a genome+seed PAIR; fresh seeds mostly fail (genome lottery)">seed</label><input id="seed" type="number" value="66777" min="0" step="1"></span>
+  <span class="ctl"><label>steps</label><input id="steps" type="number" value="3600" min="200" max="14400" step="200"></span>
+  <button id="btn-run" class="primary">Run</button>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main>
+  <section class="panel explainer">
+    <p>
+    The pursuit task joins the family's parts: the wall-avoidance body (differential drive,
+    invisible walls that clamp and kick) with a tracking-style retina aimed at a moving
+    stimulus — here a single full-circle eye of 91 sensors — whose activation falls off with
+    distance, so approach feeds the network and escape starves it. Both presets run the
+    <b>H34 jointly-evolved champion pair</b> (genome + wiring seed 66777, N=64; selection
+    minimized late distance on the <i>orbit</i> stimulus). <b class="st-spiking">perfect-pursuer</b>:
+    the champion on its evolved motion. <b class="st-frozen">pursuit-fails</b>: the same
+    champion, same wiring, with the stimulus switched to unpredictable waypoint motion.
+    The pair is also wiring-brittle: try a fresh seed and the genome lottery mostly fails
+    even on orbit.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Arena <span class="hint">15×15 · agent trail blue (fading) · stimulus trail/orbit red · wall hits ×</span></h2>
+    <canvas id="arena" width="460" height="460"></canvas>
+    <div class="caption mono" id="caption"></div>
+    <div class="sumrow">
+      <div class="sumstat"><div class="k">late mean distance</div><div class="v mono" id="p-dist">—</div></div>
+      <div class="sumstat"><div class="k">near-3 fraction (late)</div><div class="v mono small" id="p-near">—</div></div>
+      <div class="sumstat"><div class="k">wall hits</div><div class="v mono small" id="p-hits">—</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Agent–stimulus distance <span class="hint">3-unit band shaded · late window (scored half) tinted · wall hits ticked red</span></h2>
+    <canvas id="distc" width="960" height="160"></canvas>
+  </section>
+</main>
+
+<script src="/lab/static/lab_pursuit.js"></script>
+</body>
+</html>

@@ -20,6 +20,10 @@ Pages:
   /lab/wall   arena viewer for the wall-avoidance case study (package
               run_wall, the scripts/lab/wall_rep.py arms), plus the H30
               evolved edge-holder — a TRACKING run — as a fifth variant.
+  /lab/pursuit  the pursuit task (package run_pursuit): the H34 champion
+              PAIR on its evolved orbit motion (phase-locked pursuit) and
+              on waypoint motion (the collapse). Protocol is exactly
+              scripts/lab/h34b_verify.py's run_one.
 
 Run via the main app:  uvicorn viz.server:app --port 8471  ->  /lab
 """
@@ -36,8 +40,14 @@ from fastapi.staticfiles import StaticFiles
 
 import dataclasses
 
+from homeostasis.pursuit import PursuitConfig
 from homeostasis.reservoir import HomeostaticReservoir, ReservoirConfig
-from homeostasis.simulation import WALL_RESERVOIR_CONFIG, run_tracking, run_wall
+from homeostasis.simulation import (
+    WALL_RESERVOIR_CONFIG,
+    run_pursuit,
+    run_tracking,
+    run_wall,
+)
 from homeostasis.tracking import TrackingConfig, TrackingEnv
 from homeostasis.wall import WallConfig
 
@@ -435,6 +445,84 @@ def run_flank_champion(seed: int, steps: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Pursuit viewer (/lab/pursuit): the H34 champion pair, orbit vs waypoint.
+# ---------------------------------------------------------------------------
+
+PURSUIT_MAX_STEPS = 14_400
+PURSUIT_DEFAULT_STEPS = 3_600
+PURSUIT_SUBSAMPLE = 2
+H34_FILE = OUT_DIR / "lab/h34_joint.json"
+
+# The H34 jointly-evolved champion PAIR: genome (ReservoirConfig fields plus
+# wheel_base / intensity_scale for PursuitConfig) and its wiring seed.
+_H34_LAST = json.loads(H34_FILE.read_text())[-1] if H34_FILE.exists() else None
+H34_CHAMPION = _H34_LAST["champion"] if _H34_LAST else None
+H34_CHAMP_SEED = int(_H34_LAST["champ_seed"]) if _H34_LAST else 0
+
+# preset -> stimulus motion; the champion was evolved on orbit
+PURSUIT_PRESETS = {"perfect-pursuer": "orbit", "pursuit-fails": "waypoint"}
+_PURSUIT_RES_KEYS = (  # scripts/lab/h34b_verify.py RES_KEYS
+    "n_nodes", "p_link", "input_weight", "weight_init_mean",
+    "leak", "target_lr", "threshold_ratio", "weight_lr",
+)
+
+
+def run_pursuit_preset(preset: str, seed: int, steps: int) -> dict:
+    """One pursuit run of the H34 champion pair — the exact construction of
+    scripts/lab/h34b_verify.py run_one (single 91-sensor full-circle eye;
+    wheel_base and intensity_scale from the genome). Summary uses the same
+    late window (second half) and definitions as that script."""
+    if H34_CHAMPION is None:
+        return {"error": f"{H34_FILE} not found"}
+    motion = PURSUIT_PRESETS[preset]
+    pc = PursuitConfig(
+        eye_offsets=(0.0,), sensors_per_eye=91,
+        wheel_base=H34_CHAMPION["wheel_base"],
+        intensity_scale=H34_CHAMPION["intensity_scale"],
+        stimulus_motion=motion,
+    )
+    res = ReservoirConfig(
+        n_inputs=pc.n_sensors, **{k: H34_CHAMPION[k] for k in _PURSUIT_RES_KEYS}
+    )
+    h = run_pursuit(n_steps=steps, seed=seed, reservoir_config=res, pursuit_config=pc)
+    late = slice(steps // 2, None)
+    sl = slice(0, steps, PURSUIT_SUBSAMPLE)
+    return {
+        "kind": "pursuit",
+        "params": {
+            "preset": preset, "seed": seed, "steps": steps,
+            "subsample": PURSUIT_SUBSAMPLE,
+        },
+        "config": {
+            "motion": motion,
+            "box_size": pc.box_size,
+            "agent_radius": pc.agent_radius,
+            "orbit_radius": pc.orbit_radius,
+            "n_nodes": res.n_nodes,
+            "wheel_base": round(pc.wheel_base, 3),
+            "intensity_scale": round(pc.intensity_scale, 3),
+            "champ_seed": H34_CHAMP_SEED,
+        },
+        "trace": {
+            "t": np.arange(steps)[sl].tolist(),
+            "x": np.round(h.x[sl], 3).tolist(),
+            "y": np.round(h.y[sl], 3).tolist(),
+            "sx": np.round(h.sx[sl], 3).tolist(),
+            "sy": np.round(h.sy[sl], 3).tolist(),
+            "heading": np.round(h.heading[sl], 4).tolist(),  # radians
+            "dist": np.round(h.dist[sl], 3).tolist(),
+            "hit": _pair_any(h.hit, PURSUIT_SUBSAMPLE).astype(int).tolist(),
+            "prop": np.round(h.prop_spiked[sl], 4).tolist(),
+        },
+        "summary": {  # full resolution, definitions of h34b_verify.py
+            "dist_late": round(float(h.dist[late].mean()), 4),
+            "near3_late": round(float((h.dist[late] < 3).mean()), 4),
+            "hits_total": int(h.hit.sum()),
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # App and routes
 # ---------------------------------------------------------------------------
 
@@ -459,6 +547,11 @@ async def traj_page():
 @lab_app.get("/wall")
 async def wall_page():
     return FileResponse(STATIC_DIR / "lab_wall.html")
+
+
+@lab_app.get("/pursuit")
+async def pursuit_page():
+    return FileResponse(STATIC_DIR / "lab_pursuit.html")
 
 
 lab_app.mount("/static", StaticFiles(directory=STATIC_DIR), name="lab-static")
@@ -542,3 +635,17 @@ def wall(
     wlr = min(max(float(wlr), 0.0), 2.0)
     tlr = min(max(float(tlr), 0.0), 1.0)
     return run_wall_variant(variant, seed, steps, wlr, tlr)
+
+
+@lab_app.get("/api/pursuit")
+def pursuit(
+    preset: str = "perfect-pursuer",
+    seed: int = H34_CHAMP_SEED,
+    steps: int = PURSUIT_DEFAULT_STEPS,
+):
+    if preset not in PURSUIT_PRESETS:
+        return {"error": f"unknown preset {preset!r}; have {sorted(PURSUIT_PRESETS)}"}
+    steps = min(max(int(steps), 200), PURSUIT_MAX_STEPS)
+    steps -= steps % PURSUIT_SUBSAMPLE
+    seed = min(max(int(seed), 0), 1_000_000)
+    return run_pursuit_preset(preset, seed, steps)

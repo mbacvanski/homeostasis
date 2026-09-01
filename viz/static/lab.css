@@ -101,3 +101,7 @@ main {
 .panel canvas#sensors, .panel canvas#propc, .panel canvas#ferr { width: 100%; }
 #view-wall, #view-flank { display: flex; flex-direction: column; gap: 10px; }
 .panel canvas#arena, .panel canvas#ring { margin: 0 auto; }
+
+/* pursuit viewer */
+.panel canvas#distc { width: 100%; }
+.caption { text-align: center; color: var(--yellow); font-size: 12px; margin: 8px 0 2px; }
