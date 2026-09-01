@@ -2828,3 +2828,37 @@ aperture) — closing the loop with H70 (dips are dark) at the level of
 the crest itself. The ridge's remaining mystery is now two behavioral
 rates: view-keeping while locked, re-acquisition while dark.
 (analysis over ridge98_results.jsonl)
+
+## H100 (preregistered, analysis of data in hand): churn poisons the flicker
+
+Why does p_f fall with wlr at low leak (0.66 -> 0.18)? In deep darkness
+no afferents spike, so no updates fire and wlr cannot matter; in FLICKER
+(partial duty) the forming engagement is exposed to churn. Prediction:
+conditioning formation on the current segment's duty, the wlr-harm to
+p_f at leak 0.12 concentrates in flicker segments (duty 0.3-0.9) —
+ratio p_f(wlr .01)/p_f(wlr .4) >= 2 there — and is materially weaker
+in deep-dark segments (duty < 0.3), ratio <= 1.5. If the harm is equal
+or larger in deep dark, the churn account of the formation rate fails.
+
+## H100 verdict: CONFIRMED, sharper than predicted — churn poisons engagement
+
+Flicker ratio 3.46 (>= 2 as preregistered); the LIT contrast is 12.98x
+(p_f 0.837 at wlr .01 vs 0.065 at .4): fast weights most poison
+re-acquisition exactly where engagement is fullest — full flow means
+maximal churn on the forming carrier, the b3 self-noise account
+operating at the lock-event level. Deep-dark clause vacuous at this
+leak (n=0 — the agent never goes deeply dark; noted). BOTH rates of the
+two-state model now carry mechanisms: p_d = view-loss statistics (91%
+dark-mediated, H99); p_f = churn-limited engagement (H100). The crest
+is mechanistically assembled — balance of view-keeping against
+churn-limited re-locking — with only the quantitative exponent left
+phenomenological.
+
+## Campaign close (04:31): H1-H100
+
+One hundred preregistered hypotheses; ~28,000 local runs; nine cluster
+batches; three bit-identical cross-machine reproductions; nine
+interactive viewers, each bit-exact against its campaign data; two
+mechanisms promoted to first-class code (structural homeostasis,
+StickyAttention); 161-test suite green throughout; every reversal,
+instrument bug, and shrinking effect kept on the record.

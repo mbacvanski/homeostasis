@@ -1,7 +1,7 @@
 # How homeostatic reservoirs work: laws, phases, and the entrainment mechanism
 
 *Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/;
-99 preregistered hypotheses H1–H99 in
+100 preregistered hypotheses H1–H100 in
 [scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~28,000 local runs plus
 nine cluster batches; four tasks — tracking, Pong, wall avoidance, and the
 new pursuit task — plus two-to-four-agent ecologies). Method: every
@@ -137,9 +137,13 @@ crest exactly at two of three tested leaks (the third is a flat crest
 with ill-defined argmax). The universal wander, the dark-excursion dips,
 and the crest are one unlock/relock alternation — and the destruction
 rate is already mechanistic: 91% of lock losses are dark-mediated
-(P(destroy | next segment dark) = 0.78 vs 0.29 lit; H99). What remains
-is why view-keeping and dark re-acquisition rates depend on (leak, wlr)
-as they do.) Two corollaries,
+(P(destroy | next segment dark) = 0.78 vs 0.29 lit; H99). And the formation rate
+followed (H100): fast weights most poison re-acquisition exactly where
+engagement is fullest (lit-segment re-lock 0.837 at wlr=.01 vs 0.065 at
+.4 — a 13× deficit; churn on the forming carrier, the SNR account at
+the lock-event level). Both rates now carry mechanisms — p_d is
+view-loss, p_f is churn-limited engagement — leaving only the
+quantitative exponent phenomenological.) Two corollaries,
 both measured: activity under a *stationary* retina at wlr=1.0 stays at
 f ≈ 0.39 for every stimulus schedule (the canonical prop_spiked ≈ 0.34 is
 churn-set, not stimulus-set; k1), yet **total darkness silences every
