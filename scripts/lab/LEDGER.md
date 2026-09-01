@@ -2640,3 +2640,27 @@ character (saturation below, churn above) is MEASURED; the ridge
 exponent wlr* = 1.04*leak^1.41 remains EMPIRICAL and underived — the
 sharpest open theory question the campaign leaves behind.
 (h94_derive.json)
+
+## H95 (preregistered): does the T-liability reach w1'?
+
+w1' is the one place target adaptation documentedly adds ~0.1-0.2
+(act-2). Arms: w1' full vs freeze-T-at-birth, 12 CRN seeds, n=21600.
+Predictions (either resolves the last T question): (a) if freezeT0
+matches or beats full late (>= -0.02 difference), the calibration story
+falls everywhere on tracking and eq. 4 is a pure liability for this
+task family; (b) if full beats freezeT0 by >= 0.05 late, w1' is a real
+exception — its evolved heterogeneous T profile earns its keep — and
+the follow-up question is what w1' has that the ridge lacks.
+
+## H95 verdict: w1' is a genuine exception — and it explains the toxin
+
+Between the prereg branches (paired late -0.039, t=-0.77, NS): at w1',
+full shows NO sag (0.850 -> 0.857) and early T adaptation earns +0.20
+(freezeT0 starts 0.654, climbs to 0.818). The unifying account: w1'
+runs at wlr=1.0 — the fast weight channel absorbs error before T can
+integrate it (channel competition, working protectively). The T-toxin
+of H71/H76 is specific to SLOW-weight regimes where residual error is
+left for T to integrate into a harmful profile. Sharpened prescription:
+freeze T on slow-weight configs (ridge, sparse-slow); fast-weight
+configs self-protect by starving T — and there T's early calibration
+value is real. (h95_w1p.json)

@@ -677,7 +677,13 @@ competence clauses.
   net harmful *from step one* at 48-seed power, its damage rides
   entirely in the adapted profile, and freezing T at birth is the best
   policy measured — the calibration role survives only where evolved
-  heterogeneous profiles genuinely pay, as at w1′.)
+  heterogeneous profiles genuinely pay, as at w1′ — and H95 explains
+  why w1′ is exempt: at wlr=1.0 the fast weight channel absorbs error
+  before T can integrate it, so the toxic profile never accumulates
+  [no sag: 0.850 → 0.857] while early calibration earns a real +0.20.
+  The T-toxin is a slow-weight phenomenon: freeze T where W is slow;
+  where W is fast, T is starved into harmlessness and its calibration
+  value survives.)
 - **The learned structure is not the computation — the ongoing process is**:
   shuffling all learned weights mid-run (learning on) recovers to or above
   the unshuffled run everywhere (defaults 0.394 vs 0.325; w1′ 0.762 vs
