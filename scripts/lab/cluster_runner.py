@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 from common import run_closed_loop, run_open_loop
+from pong_eval import eval_pong
 
 
 def main():
@@ -23,7 +24,13 @@ def main():
             if not line.strip():
                 continue
             task = json.loads(line)
-            r = run_open_loop(task) if task.get("mode") == "open" else run_closed_loop(task)
+            mode = task.get("mode")
+            if mode == "pong":
+                r = eval_pong(task)
+            elif mode == "open":
+                r = run_open_loop(task)
+            else:
+                r = run_closed_loop(task)
             r.pop("snaps", None)
             r.pop("f_t", None)
             for k, v in task.items():

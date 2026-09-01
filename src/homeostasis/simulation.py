@@ -26,6 +26,7 @@ import numpy as np
 from .pong import PongConfig, PongEnv
 from .reservoir import HomeostaticReservoir, ReservoirConfig, StepState
 from .tracking import TrackingConfig, TrackingEnv
+from .wall import WallConfig, WallEnv
 
 __all__ = [
     "TrackingSimulation",
@@ -35,6 +36,10 @@ __all__ = [
     "PongHistory",
     "run_pong",
     "PONG_RESERVOIR_CONFIG",
+    "WallSimulation",
+    "WallHistory",
+    "run_wall",
+    "WALL_RESERVOIR_CONFIG",
 ]
 
 
@@ -153,6 +158,137 @@ def run_tracking(
 ) -> History:
     """Convenience one-shot run of the tracking experiment."""
     sim = TrackingSimulation(reservoir_config, tracking_config, seed=seed)
+    sim.network.learning_enabled = learning_enabled
+    return sim.run(n_steps, record_spikes=record_spikes)
+
+
+# Network parameters for case study 3, from the released wall-avoidance
+# script (reference/original_julia/WallAvoidance/BraitenbergAgent.jl). Note
+# input_amp = 4 is used for BOTH the input weights (the paper text says 2)
+# and the recurrent init mean Normal(4, 0.1); lrate_wmat = .01 is defined
+# but unused (full-error updates, weight_lr = 1.0), as in tracking.
+WALL_RESERVOIR_CONFIG = ReservoirConfig(
+    n_nodes=200,
+    n_inputs=2,
+    n_outputs=2,
+    p_link=0.1,
+    input_weight=4.0,
+    leak=0.25,
+    weight_init_mean=4.0,
+    weight_init_sd=0.1,
+    target_init=1.0,
+    target_floor=1.0,
+    target_lr=0.01,
+    threshold_ratio=2.0,
+    weight_lr=1.0,
+    clamp_negative_activations=False,
+)
+
+
+@dataclass
+class WallHistory:
+    """Per-step records of a wall-avoidance run."""
+
+    x: np.ndarray
+    y: np.ndarray
+    heading: np.ndarray          # radians, after this step's motion
+    hit: np.ndarray              # bool, wall contact on this step
+    inputs: np.ndarray           # (n_steps, 2) sensor values fed this step
+    outputs: np.ndarray          # (n_steps, 2) effector activations
+    d_heading: np.ndarray        # radians turned this step
+    prop_spiked: np.ndarray
+    mean_target: np.ndarray
+    mean_abs_error: np.ndarray
+    spikes: np.ndarray           # (n_steps, N) bool raster (optional)
+
+    def __len__(self) -> int:
+        return len(self.x)
+
+    def hit_rate(self, start: int = 0, stop: int | None = None) -> float:
+        seg = self.hit[start:stop]
+        return float(seg.mean()) if len(seg) else float("nan")
+
+
+class WallSimulation:
+    """A reservoir-controlled Braitenberg agent in the 15x15 box."""
+
+    def __init__(
+        self,
+        reservoir_config: ReservoirConfig = WALL_RESERVOIR_CONFIG,
+        wall_config: WallConfig = WallConfig(),
+        seed: int | None = None,
+    ):
+        if reservoir_config.n_inputs != wall_config.n_sensors:
+            raise ValueError(
+                f"reservoir expects {reservoir_config.n_inputs} inputs but the "
+                f"environment has {wall_config.n_sensors} sensors"
+            )
+        if reservoir_config.n_outputs != 2:
+            raise ValueError("the wall-avoidance task needs exactly 2 effectors")
+        self.network = HomeostaticReservoir(reservoir_config, seed=seed)
+        # Environment randomness (the +/-45 kick, optional sensor noise) draws
+        # from the network's generator AFTER all reservoir-init draws, so a
+        # seed fully determines the trajectory (variable-tracking pattern).
+        self.env = WallEnv(wall_config, rng=self.network.rng)
+        self.t = 0
+
+    def step(self) -> tuple[StepState, float, bool]:
+        """Advance one timestep; returns (network state, d_heading, hit)."""
+        inputs = self.env.sense()
+        state = self.network.step(inputs)
+        e_first, e_second = state.outputs
+        d_heading, hit = self.env.apply_action(e_first, e_second)
+        self.t += 1
+        return state, d_heading, hit
+
+    def run(self, n_steps: int, record_spikes: bool = False) -> WallHistory:
+        n_nodes = self.network.config.n_nodes
+        x = np.empty(n_steps)
+        y = np.empty(n_steps)
+        heading = np.empty(n_steps)
+        hit = np.zeros(n_steps, dtype=bool)
+        inputs = np.empty((n_steps, self.env.config.n_sensors))
+        outputs = np.empty((n_steps, 2))
+        d_heading = np.empty(n_steps)
+        prop_spiked = np.empty(n_steps)
+        mean_target = np.empty(n_steps)
+        mean_abs_error = np.empty(n_steps)
+        spikes = (
+            np.zeros((n_steps, n_nodes), dtype=bool)
+            if record_spikes
+            else np.zeros((0, n_nodes), dtype=bool)
+        )
+        for i in range(n_steps):
+            state, dh, h = self.step()
+            x[i] = self.env.x
+            y[i] = self.env.y
+            heading[i] = self.env.heading
+            hit[i] = h
+            inputs[i] = state.inputs
+            outputs[i] = state.outputs
+            d_heading[i] = dh
+            prop_spiked[i] = state.prop_spiked
+            mean_target[i] = float(np.mean(state.targets))
+            mean_abs_error[i] = float(np.mean(np.abs(state.error)))
+            if record_spikes:
+                spikes[i] = state.spiked
+        return WallHistory(
+            x=x, y=y, heading=heading, hit=hit, inputs=inputs, outputs=outputs,
+            d_heading=d_heading, prop_spiked=prop_spiked,
+            mean_target=mean_target, mean_abs_error=mean_abs_error, spikes=spikes,
+        )
+
+
+def run_wall(
+    n_steps: int = 3600,
+    seed: int | None = None,
+    learning_enabled: bool = True,
+    reservoir_config: ReservoirConfig = WALL_RESERVOIR_CONFIG,
+    wall_config: WallConfig = WallConfig(),
+    record_spikes: bool = False,
+) -> WallHistory:
+    """Convenience one-shot run of the wall-avoidance experiment."""
+    sim = WallSimulation(reservoir_config, wall_config, seed=seed)
     sim.network.learning_enabled = learning_enabled
     return sim.run(n_steps, record_spikes=record_spikes)
 

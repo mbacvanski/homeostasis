@@ -521,3 +521,43 @@ the local K4 value; cross-machine determinism verified. Figure:
 scripts/out/lab/fig_ridge_fine.png. Total cluster compute: 4m19s on
 mit_quicktest (the whole batch was ~3 core-hours; the fat-job provisioning
 was 40x oversized — lesson recorded).
+
+## H26 (preregistered): ridge-law transfer to Pong — the theory says it should NOT transfer naively
+
+Pong's published init is net-SUBCRITICAL (75% N(0,.2) + 25% N(-1,.1) → mean
+w ≈ -0.25, g_init < 0), the opposite regime from tracking's g_init=7.5. The
+weight servo must BUILD drive up, not absorb it down, and most nodes ride
+the target floor (T=1=floor, E<0 pins them; tlr is inert while pinned).
+Predictions for the published Pong config (hit rate, 40 seeds, 100k steps):
+(a) tlr 0.1 → 0.01 changes hit rate by < 0.03 (tlr-insensitive, UNLIKE
+tracking's channel competition); (b) hit rate is non-decreasing in wlr over
+{0.3, 0.65, 1.0, 2.0} (published wlr=1.0 near-optimal — subcritical growth
+wants fast weights; the tracking ridge does NOT transfer); (c) wlr=0.1
+degrades materially (>0.05).
+
+## H27a (preregistered): wall-avoidance replication anchors (paper is qualitative)
+
+Port follows the released Julia (input_weight=4 not the paper's 2; recurrent
+init Normal(4,.1); wlr effectively 1.0; clamp off; ±45° random kick on
+contact). Predictions from the paper's claims, quantified: (a) baseline —
+hits concentrated in the first ~600 steps; majority of seeds have ZERO hits
+in the last 1000 of 3600; (b) stable circling late (steady nonzero mean
+turn rate, bounded radius); (c) learning-off — near-total saturation, agent
+bounces continually (late hit rate ≫ baseline's); (d) sensor inversion at
+t=1000 — hits resume briefly, re-stabilization within ~500 steps; (e) noise
+U(±0.2) — avoidance persists (few late hits) though perfect stability is
+lost.
+
+## H27b (preregistered): the flow-sign inversion — the input-flow thesis's designed counterexample
+
+On tracking/Pong, input flow correlates POSITIVELY with performance (rho
++0.77/+0.95) because those embodiments make disengagement starve the
+sensors. Wall avoidance inverts the geometry: sensors read wall PROXIMITY,
+so high flow = hugging walls and success = keeping flow LOW and stable.
+Predictions across a random config screen (same battery as
+screen_metrics): (a) rho(input_flow, avoidance performance) < 0 (sign
+flip); (b) an input-stability metric (negated flow variance or
+1/(1+std(flow))) correlates POSITIVELY; (c) the paper's own baseline agent
+ends at LOW flow relative to a wall-hugger. Performance = 1 - late hit
+rate. This tests "internal metrics generalize over embodiments, the body
+decides the sign" (docs + memory item 6) with a preregistered sign.
