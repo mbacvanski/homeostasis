@@ -359,8 +359,19 @@ target approaches from far with a monotone intensity ramp the
 flow-ratchet climbs (the champion catches 33% of crossings inside 100
 steps; the blind control, 0.000 — its catches are all
 target-comes-to-you luck), while a loitering target flutters at
-mid-range and offers no ramp. Why ramplessness turns vision from useless
-into *harmful* is the sharpest open question this arc produced.
+mid-range and offers no ramp. And the harm mechanism is now measured
+(H61): entrained turning is not an internal motor program but a
+closed-loop product of *stable bearing geometry* — the true champion
+turns 6.14°/step on orbit with its bearing pinned, and 0.00°/step
+(median, two-sided) under loitering flow, where fluttering bearings
+cancel and only mean forward throttle survives. It cruises
+near-straight, ends wall-pinned (34–48% wall time), far from the
+interior the target loiters in, while a parked blind statue wins
+passively. **Flow is a throttle; stable geometry is the steering** —
+vision under rampless flow unparks the agent without aiming it. A
+footnote worth keeping: slow-ballistic interception was measured on
+fresh wirings and is wiring-robust, while the orbit lock is a wiring
+jackpot — the lottery differentiates by task.
 
 **The lottery's home, and the mechanism hierarchy** (H40–H42): the wiring
 lottery lives in the frozen adjacency — weight-space operations cannot touch

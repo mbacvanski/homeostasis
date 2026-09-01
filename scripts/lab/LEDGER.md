@@ -1683,3 +1683,33 @@ C 8.83/7.85/7.93, D 7.04/7.04/7.08 — no inward spiral; the chain is a
 true limit set. The artifact's earlier "7.8 -> 6.5 -> 5.6 -> 2.3" radii
 were wrong (eyeballed from overlapping trajectories); correct contraction
 is 9.3 -> 8.4 -> 7.9 -> 7.1, ~10%/link. (h60b_drift.json)
+
+## H61 (preregistered): the harm mechanism is motor stereotypy (broken record)
+
+Autopsy of the H34 champion on waypoint (speed .04, 8 seeds) vs its
+native orbit vs blind-on-waypoint. Predictions if the champion's policy
+is a stereotyped orbit program triggered by any flow: (a) its median
+|turn rate| on waypoint is within 25% of its orbit value (the program
+plays regardless of input); (b) rotation is one-sided on waypoint as on
+orbit (>=80% same-sign turning); (c) it spends MORE time wall-adjacent
+(<2 units) on waypoint than on orbit (the detached circle drifts);
+(d) consequently mean dist to target ~6 while a motionless agent at its
+average position would do better — vision harms by MOVING you wrongly,
+not by misreading the target.
+
+## H61 verdict: not a broken record — unparking without steering
+
+(a),(b) REFUTED: on waypoint the true champion pair (66777; orbit dist
+0.81, turn 6.14 deg/step) turns at median 0.00 deg/step, two-sided —
+no orbit program replays. (c) CONFIRMED: wall-time 0.34 vs 0.00 (fresh
+wirings: 0.48). Mechanism: entrained turning is a CLOSED-LOOP product of
+stable bearing geometry (bearing pinned at 34 deg -> constant asymmetric
+drive -> constant turn), not an internal motor program. Fluttering
+bearings cancel; what survives is mean forward drive: the agent cruises
+near-straight (speed 0.055), drifts to the walls, and sits far from the
+interior loiter zone (dist 5.21) while parked blindness (dist 3.41) wins
+passively. FLOW IS A THROTTLE; STABLE GEOMETRY IS THE STEERING; loitering
+supplies throttle without steering — vision harms by unparking the agent
+without aiming it. Bonus finding: slow-ballistic interception (H55b) was
+measured on FRESH wirings — it is wiring-ROBUST, while the orbit lock is
+a wiring jackpot; the lottery differentiates by task. (h61_autopsy.json)
