@@ -1574,3 +1574,58 @@ targets approach from far with a monotone intensity ramp the flow-ratchet
 climbs (champ pre-100 catch 0.332, blind 0.000 — blind's catches are all
 late target-comes-to-you luck); loitering targets flutter at mid-range
 with no ramp. Open, recorded. (h57d_kinkfixed.json)
+
+## H58 (preregistered): the sparsity laws generalize to Pong
+
+Pong starts at Sigma-w_in = p*N*w0 = 0.1*200*4 = 80 (a 5x-vs-tracking
+distance from comfort — hence its historic need for wlr=1.0 + target
+damping). p_link {0.02, 0.1} x wlr {0.03, 0.1, 0.3, 1.0}, tlr 0.01,
+12 CRN seeds, published PongConfig, 100k steps. Predictions:
+(a) conservation: final w*p*N approximately equal across p at matched
+wlr (within 30%) — the comfort total is wiring-invariant on Pong too;
+(b) sparse widens the window DOWNWARD: at p=.02, wlr .1 and .3 reach
+hit>=0.55 and wlr .03 stays >=0.45, while at p=.1 wlr<=0.1 degrades
+below 0.45 (unfinished renormalization from 80);
+(c) sparse+slow matches published+fast: some p=.02 cell with wlr<=0.3
+reaches >=0.60 (the published-config level).
+
+## H59 (preregistered): the duty law runs FORWARD — rate design without simulation
+
+With both channels frozen (wlr=0, tlr=0), stationary stimulus at bearing
+0, the network rate should be computable a priori from the drawn wiring:
+solve the scalar self-consistency f = mean_n clip((mu_in,n + f*Sw_n)/T
+- leak, 0, 1)/rho where mu_in,n = (acts @ W_in)_n and Sw_n = column sum
+of frozen weights — no free parameters, no simulation. Predictions:
+(a) per-seed predicted vs measured f: r >= 0.98, median |err| <= 10%
+relative, across 12 seeds x 6 design points; (b) DESIGN: prescriptions
+f* in {0.05, 0.2, 0.4} each hit within +-20% relative by two different
+parameter routes (varying T vs varying input_weight) chosen by inverting
+the same equation — equifinality of routes.
+
+## H59 rev-1: first predictor WRONG (r=0.35) — bug + basin, recorded
+
+Measured f is BIMODAL (1.000 or ~0.001; no interior cells). Predictor
+bugs: clipped mu/T-leak before /rho (breaks the saturated branch) and
+scalar mean-field (cannot select the cold-start basin of a bistable
+net). Rev-2, theory-consistent not refit: per-node VECTOR map
+f_n <- clip(((mu_in,n + (W^T f)_n)/T_n - leak)/rho, 0, 1), iterated from
+f=0 (cold start). Same prereg thresholds apply to rev-2.
+
+## H59 verdict: (a) exact; (b) refuted — THERE IS NO STATIC INTERIOR
+
+(a) Rev-3 (Laws 1+2 composed: duty gated by cold-start reachability
+drive >= leak*rho*T, per-node vector iteration from f=0): r = 1.0000,
+median rel err 0.0% across 72 frozen-network runs — network fate is
+computable from the wiring file with no simulation. Bug trail recorded
+(rev-1 branch clip, rev-2 missing reachability — each miss was one law).
+(b) Design-to-rate REFUTED constructively: the per-seed inversion
+converges to the same knob for every f* because predicted f is a CLIFF
+(discontinuous ~0 -> ~0.6; measured snaps to 1.000): homogeneous frozen
+networks have NO stable interior rates. All competent behavior lives at
+f ~ 0.1-0.3 — a state that exists only as the homeostat's dynamically
+maintained equilibrium. With the earlier freeze-T result (evolved
+heterogeneous targets, frozen, cost nothing) this closes the loop:
+adaptation both HOLDS the network on the cliff face and MANUFACTURES the
+heterogeneous target profile that turns interior rates into a valid
+static design. Self-organized marginality, made precise.
+(h59_dial.json, h59_design.json)

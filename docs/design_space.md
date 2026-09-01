@@ -45,6 +45,25 @@ sharing one spike-gating fabric, with f slaved by Law 2. First-order closure:
 the drive servo's absorption corner sits at period P* ≈ 2π/(wlr·f̄); measured
 240–960 steps at (wlr=0.1, f̄≈0.15), predicted ≈420 (b3).
 
+**The laws compose into a simulation-free predictor — and expose a cliff**
+(H59, `h59_dial.py`). Freeze both channels and the network's cold-start
+fate is computable from the wiring file alone: iterate the per-node map
+f_n ← clip((drive_n/T_n − leak)/ρ, 0, 1) with the Law-1 reachability gate
+(a node only ignites if drive ≥ leak·ρ·T, since x plateaus at
+drive/leak) from f = 0. Result: **r = 1.0000, median error 0.0%** over
+72 frozen runs spanning dead and saturated cells — including a
+bistable-basin case the ungated duty law gets wrong. But inverting the
+model to *design* an interior rate fails constructively: predicted f is
+discontinuous (≈0 → ≈0.6 at a knob cliff; simulated networks snap to
+1.000 on the live side). **Homogeneous frozen networks have no stable
+interior rates at all.** Every competent behavior in this campaign lives
+at f ≈ 0.1–0.3 — a state that exists only as the homeostat's dynamically
+maintained equilibrium; and since freezing *evolved heterogeneous*
+targets costs nothing (act-2 autopsies), adaptation both holds the
+network on the cliff face and manufactures the per-node target profile
+that turns interior rates into a legal static design. This is
+self-organized marginality made precise.
+
 ## The phase geography
 
 Single nodes end in one of four states (k2): dead-floor, silent-comfortable,
