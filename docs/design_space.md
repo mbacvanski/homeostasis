@@ -1,9 +1,9 @@
 # How homeostatic reservoirs work: laws, phases, and the entrainment mechanism
 
 *Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/;
-75 preregistered hypotheses H1–H75 in
-[scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~25,000 local runs plus
-five cluster batches; four tasks — tracking, Pong, wall avoidance, and the
+94 preregistered hypotheses H1–H94 in
+[scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~26,000 local runs plus
+six cluster batches; four tasks — tracking, Pong, wall avoidance, and the
 new pursuit task — plus two-to-four-agent ecologies). Method: every
 hypothesis preregistered before its experiment; common-random-number wiring
 seeds; all scripts deterministic (three bit-identical cross-machine

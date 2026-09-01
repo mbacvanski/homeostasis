@@ -1,7 +1,7 @@
 # Overnight research update (2026-09-01) — pasteable for Slack
 
 **TL;DR for the 4pm meeting.** The design-space campaign ran overnight to
-74 preregistered hypotheses (~25k runs, three cluster batches, all
+94 preregistered hypotheses (~26k runs, six cluster batches, all
 pushed). The model family now has: three exact laws that compose into a
 simulation-free predictor (r = 1.0000); a mechanistic account of every
 task in the repo (tracking = velocity entrainment; wall = stability
