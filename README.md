@@ -191,6 +191,18 @@ Validation, 40 runs × 100,000 steps each (chance 0.20), against the paper's
 500-run figures: see `scripts/out/pong/results.json` and
 `scripts/out/pong/pong_validation.png`.
 
+## Beyond the paper: the design-space campaign
+
+`scripts/lab/` is an open investigation into why these networks work: three
+exact laws (comfort split, duty law, gated-integral weight servo), the phase
+geography (dead / statue / absorption ridge / churn / exploded), the
+matched-timescale ridge as a signal-to-noise optimum, and the finding that
+tracking is velocity entrainment with a flow ratchet rather than servo
+control. Every hypothesis was preregistered in
+[scripts/lab/LEDGER.md](scripts/lab/LEDGER.md); the synthesis with verified
+numbers is [docs/design_space.md](docs/design_space.md); interactive
+verification lives at `/lab` in the visualizer.
+
 ## Beyond the paper: the language track
 
 `scripts/stage1*`–`scripts/stage5a_*` are an exploratory track applying the
