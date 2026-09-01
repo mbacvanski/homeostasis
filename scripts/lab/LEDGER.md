@@ -1713,3 +1713,32 @@ supplies throttle without steering — vision harms by unparking the agent
 without aiming it. Bonus finding: slow-ballistic interception (H55b) was
 measured on FRESH wirings — it is wiring-ROBUST, while the orbit lock is
 a wiring jackpot; the lottery differentiates by task. (h61_autopsy.json)
+
+## H62 (preregistered): sparse pre-adaptation on the wall task (embodiment 3)
+
+Wall truly starts at Sigma-w = p*N*w0 = 0.1*200*4 = 80 (the number H58
+misattributed to Pong). p_link {0.02, 0.1} x wlr {0.03, 1.0} x 16 seeds,
+n=3600, input wiring pinned (input_p_link=0.1) and output pools rebuilt
+at 0.1 (side rng) as in H54. Predictions: (a) at wlr=0.03 dense FAILS
+(cannot erode 80 in 3600 steps: zero-late-hit fraction <= 0.2) while
+sparse (starts at 16) SUCCEEDS (>= 0.6); (b) at wlr=1.0 both densities
+work (>= 0.7 zero-late-hit); (c) conservation: final Sigma-w_in within
+30% across p at wlr=1.0.
+
+## H62/H62b verdict: sparse pre-adaptation does NOT transfer to wall — the storm is the search
+
+The prereg metric (zero-late-hit) was confounded by wall's degenerate
+death solution, caught by an aliveness check: dense+slow "perfect" cells
+are 16/16 DEAD statues; sparse+slow is 12/16 dead (3/16 alive+clean).
+Full sparse window at p=.02: wlr .03 -> 3/16 alive+clean, .1 -> 1/16,
+.3 -> 8/16 (peak), 1.0 -> half crashing; the paper cell (p=.1, wlr=1.0,
+same pins) is 15/16 alive+clean. Conservation at wlr=1.0 holds across p
+(Sigma-w 2.09 vs 2.24). Synthesis: sparse pre-adaptation pays on the
+flow-POSITIVE embodiments (tracking 0.566/0.94, Pong 0.679) and fails on
+the flow-NEGATIVE one, where the supercritical storm is FUNCTIONAL — the
+exploratory phase that finds the live circling attractor before eroding
+into it. Weak-drive starts fall into stillness before finding the
+circle. The flow-sign law reappears inside the sparsity chapter: whether
+the storm is a pathology to skip or the search to keep depends on the
+body's sign. Also: ProcessPool-in-heredoc trap hit again — workers must
+live in real files. (h62_wall_sparse.json, h62b_window.json)

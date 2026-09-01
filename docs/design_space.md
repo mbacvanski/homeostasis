@@ -466,6 +466,22 @@ unpinned p=0.8 output pools (~160 nodes) average away the left/right
 asymmetry that steers the body (0.251 vs 0.443 pinned). Sparse readout
 pools are the motor symmetry-breakers.
 
+The generality check across embodiments (H58, H62) returned a signed
+answer. On Pong — which starts at Σw ≈ 0 (mean-zero weights, 25%
+inhibitory) so the controller *grows* input to comfort, the mirror image
+of tracking's erosion — sparse+slow is again the best cell (hit 0.679 at
+p=.02/wlr=.03 vs published 0.600), running nearly silent (f ≈ 0.02: ten
+active neurons of five hundred). But on wall avoidance the transfer
+FAILS, and the failure is the flow-sign law resurfacing: wall's
+"perfect" slow-wlr cells are dead statues (the task's degenerate death
+solution; an aliveness check caught the confounded metric), and the best
+sparse cell (wlr 0.3) reaches only 8/16 alive-and-clean versus the paper
+cell's 15/16. On the flow-negative embodiment the supercritical storm is
+*functional* — the exploration that finds the live circling attractor
+before eroding into it; pre-adapted weak-drive starts fall still before
+finding the circle. Whether the storm is a pathology to skip (tracking,
+Pong) or the search to keep (wall) depends on the body's sign.
+
 ## The two-body problem, and the band clause
 
 First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
