@@ -37,6 +37,14 @@ Pages:
               attention rule is scripts/lab/h85_shared.py's StickyFollower,
               imported — not duplicated — and the co-simulation loop is
               exactly h85_shared.run's.
+  /lab/reproduce  the H97 four-rung inheritance ladder: a locked follower of
+              the blind pacemaker spawns offspring at its own position after
+              1200 consecutive locked steps, under four cumulative
+              inheritance variants (position only / + wiring heredity /
+              pure clone / full-state budding). The Agent class, champion
+              genome, mutation operator and all constants are imported from
+              scripts/lab/h97_reproduce.py; the co-simulation loop mirrors
+              its run(reproduce=True) bit for bit and only adds recording.
   /lab/repair  the H53 self-repair exhibit: the ridge config with a mid-run
               node kill, learning-on vs learning-frozen side by side. Runs
               go straight through the lab harness (scripts/lab/common.py
@@ -95,6 +103,18 @@ try:
     _h85_spec.loader.exec_module(lab_h85)
 finally:
     sys.path.remove(str(_H85_PATH.parent))
+
+# The H97 machinery (Agent, champion genome, mutate, pacemaker config, the
+# LOCK_D / SPAWN_AFTER / CAP constants). Same bare-name sibling imports as
+# h85_shared, so the same sys.path dance applies.
+_H97_PATH = _COMMON_PATH.parent / "h97_reproduce.py"
+_h97_spec = importlib.util.spec_from_file_location("lab_h97_reproduce", _H97_PATH)
+lab_h97 = importlib.util.module_from_spec(_h97_spec)
+sys.path.insert(0, str(_H97_PATH.parent))
+try:
+    _h97_spec.loader.exec_module(lab_h97)
+finally:
+    sys.path.remove(str(_H97_PATH.parent))
 
 STATIC_DIR = Path(__file__).parent / "static"
 OUT_DIR = Path(__file__).resolve().parent.parent / "scripts/out"
@@ -843,6 +863,172 @@ def run_ecology3(mode: str, steps: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Reproduction ladder (/lab/reproduce): H97's four inheritance rungs.
+# ---------------------------------------------------------------------------
+
+REPRODUCE_MAX_STEPS = 21_600  # the H97 campaign length
+REPRODUCE_DEFAULT_STEPS = 21_600
+REPRODUCE_SUBSAMPLE = 3
+REPRODUCE_LATE = 3_600  # run()'s late classification window (D[-3600:])
+
+# mode -> (label, INHERIT_WIRING, CLONE_TEST, BUDDING): exactly the flag
+# combinations h97_reproduce.main() sets for its four arms.
+REPRODUCE_MODES = {
+    "position": ("position only (fresh wiring, mutated genome)",
+                 False, False, False),
+    "wiring": ("+ wiring heredity", True, False, False),
+    "clone": ("pure clone", True, True, False),
+    "budding": ("budding (full dynamical state)", True, True, True),
+}
+
+
+def _nan_round(arr: np.ndarray, nd: int) -> list:
+    """Round for transport; NaN (pre-birth slots) -> null (strict JSON)."""
+    return [round(float(v), nd) if np.isfinite(v) else None for v in arr]
+
+
+def run_reproduce(mode: str, steps: int) -> dict:
+    """One H97 arm, the exact co-simulation loop of h97_reproduce.run(True).
+
+    Everything simulated is the imported H97 machinery: the pacemaker (an
+    unmodified WallSimulation on lab_h97.PACE_CFG, seed lab_h97.PACE_SEED),
+    lab_h97.Agent (champion genome + wiring from h48e_warm.json), the h33
+    mutation operator, and the spawn rule (lock_streak >= SPAWN_AFTER, one
+    spawn per agent, population cap CAP, lineage rng seed 971). The loop
+    below mirrors run(reproduce=True) bit for bit — same construction order,
+    same rng draw order, verbatim spawn and late-lock expressions — and only
+    adds recording (positions, distances, streaks, population, spawn events,
+    lineage). The variant flags are read here rather than from the module's
+    globals; they select the identical branches run() selects.
+    """
+    label, inherit_wiring, clone_test, budding = REPRODUCE_MODES[mode]
+    cap = lab_h97.CAP
+    lock_d = lab_h97.LOCK_D
+    spawn_after = lab_h97.SPAWN_AFTER
+    champ = lab_h97.CHAMP
+
+    rng = np.random.default_rng(971)  # run()'s lineage_seed default
+    A = WallSimulation(wall_config=lab_h97.PACE_CFG, seed=lab_h97.PACE_SEED)
+    agents = [lab_h97.Agent(dict(champ["champion"]), champ["champ_seed"],
+                            (15.0, 10.0))]
+    parents = [-1]
+    births = [-1]  # founder is present from step 0
+    seeds = [int(champ["champ_seed"])]
+    spawns: list[dict] = []
+
+    ax = np.empty(steps)
+    ay = np.empty(steps)
+    X = np.full((steps, cap), np.nan)
+    Y = np.full((steps, cap), np.nan)
+    D = np.full((steps, cap), np.nan)  # run()'s D, columns padded with NaN
+    S = np.full((steps, cap), np.nan)  # lock_streak after the step
+    pop = np.empty(steps, dtype=int)
+
+    for i in range(steps):
+        A.step()
+        target = (A.env.x, A.env.y)
+        ds = [ag.step(target) for ag in agents]
+        D[i, :len(ds)] = ds
+        for j, ag in enumerate(agents):
+            X[i, j] = ag.env.x
+            Y[i, j] = ag.env.y
+            S[i, j] = ag.lock_streak
+        ax[i], ay[i] = target
+        if len(agents) < cap:  # run()'s `reproduce and len(agents) < CAP`
+            for ag in list(agents):
+                if ag.lock_streak >= spawn_after and ag.spawned == 0 and len(agents) < cap:
+                    child_g = (dict(ag.genome) if clone_test
+                               else lab_h97.mutate(dict(ag.genome), rng))
+                    child_seed = (champ["champ_seed"] if inherit_wiring
+                                  else int(rng.integers(0, 100000)))
+                    child = lab_h97.Agent(child_g, child_seed,
+                                          (ag.env.x, ag.env.y))
+                    if budding:
+                        child.net.x = ag.net.x.copy()
+                        child.net.targets = ag.net.targets.copy()
+                        child.net.weights = ag.net.weights.copy()
+                        child.net.spiked = ag.net.spiked.copy()
+                        child.net._spiked_f = ag.net._spiked_f.copy()
+                        child.env.heading = ag.env.heading
+                    child.mutant = child_g != ag.genome
+                    spawns.append({
+                        "t": i, "parent": agents.index(ag), "child": len(agents),
+                        "x": round(float(ag.env.x), 3),
+                        "y": round(float(ag.env.y), 3),
+                    })
+                    agents.append(child)
+                    parents.append(spawns[-1]["parent"])
+                    births.append(i)
+                    seeds.append(int(child_seed))
+                    ag.spawned = 1
+                    ag.lock_streak = 0
+        pop[i] = len(agents)
+
+    # run()'s verbatim late-window classification
+    late = D[-REPRODUCE_LATE:]
+    locked = [(bool(np.nanmean(late[:, j] < lock_d) >= 0.8)
+               if not np.all(np.isnan(late[:, j])) else False)
+              for j in range(cap)]
+    mutants_locked = sum(1 for j, ag in enumerate(agents)
+                         if j < cap and locked[j] and getattr(ag, "mutant", False))
+
+    sl = slice(0, steps, REPRODUCE_SUBSAMPLE)
+    return {
+        "kind": "reproduce",
+        "params": {"mode": mode, "steps": steps, "subsample": REPRODUCE_SUBSAMPLE},
+        "config": {
+            "label": label,
+            "inherit_wiring": inherit_wiring, "clone": clone_test,
+            "budding": budding,
+            "box_size": lab_h97.PACE_CFG.box_size,
+            "agent_radius": lab_h97.PACE_CFG.agent_radius,
+            "pace_seed": lab_h97.PACE_SEED,
+            "champ_seed": int(champ["champ_seed"]),
+            "n_nodes": champ["champion"]["n_nodes"],
+            "lock_d": lock_d, "spawn_after": spawn_after, "cap": cap,
+            "lineage_seed": 971, "late_window": REPRODUCE_LATE,
+        },
+        "agents": [
+            {
+                "id": j, "parent": parents[j], "birth": births[j],
+                "seed": seeds[j],
+                "mutant": bool(getattr(ag, "mutant", False)),
+                "locked": locked[j],
+                # the same quantity run() thresholds at 0.8
+                "lock_late": round(float(np.nanmean(late[:, j] < lock_d)), 4),
+            }
+            for j, ag in enumerate(agents)
+        ],
+        "spawns": spawns,
+        "trace": {
+            "t": np.arange(steps)[sl].tolist(),
+            "ax": np.round(ax[sl], 3).tolist(),
+            "ay": np.round(ay[sl], 3).tolist(),
+            "pop": pop[sl].tolist(),
+            # streak clipped at spawn_after for transport: the page only draws
+            # progress toward a spawn, and the spawn events above are exact
+            "agents": [
+                {
+                    "x": _nan_round(X[sl, j], 3),
+                    "y": _nan_round(Y[sl, j], 3),
+                    "dist": _nan_round(D[sl, j], 3),
+                    "streak": [int(v) if np.isfinite(v) else None
+                               for v in np.minimum(S[sl, j], spawn_after)],
+                }
+                for j in range(len(agents))
+            ],
+        },
+        "summary": {  # exactly run()'s returned dict, plus the spawn count
+            "n_agents": len(agents),
+            "locked": int(sum(locked)),
+            "locked_list": locked,
+            "mutants_locked": int(mutants_locked),
+            "n_spawns": len(spawns),
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # Self-repair exhibit (/lab/repair): H53's mid-run node kill, both arms.
 # ---------------------------------------------------------------------------
 
@@ -933,6 +1119,11 @@ async def ecology_page():
 @lab_app.get("/ecology3")
 async def ecology3_page():
     return FileResponse(STATIC_DIR / "lab_ecology3.html")
+
+
+@lab_app.get("/reproduce")
+async def reproduce_page():
+    return FileResponse(STATIC_DIR / "lab_reproduce.html")
 
 
 @lab_app.get("/repair")
@@ -1059,6 +1250,16 @@ def ecology3(mode: str = "resist", steps: int = ECOLOGY3_DEFAULT_STEPS):
     steps = min(max(int(steps), 600), ECOLOGY3_MAX_STEPS)
     steps -= steps % ECOLOGY3_SUBSAMPLE
     return run_ecology3(mode, steps)
+
+
+@lab_app.get("/api/reproduce")
+def reproduce(mode: str = "budding", steps: int = REPRODUCE_DEFAULT_STEPS):
+    if mode not in REPRODUCE_MODES:
+        return {"error": f"unknown mode {mode!r}; have {sorted(REPRODUCE_MODES)}"}
+    # >= the late window, so the lock classification always sees a full window
+    steps = min(max(int(steps), REPRODUCE_LATE), REPRODUCE_MAX_STEPS)
+    steps -= steps % REPRODUCE_SUBSAMPLE
+    return run_reproduce(mode, steps)
 
 
 @lab_app.get("/api/repair")

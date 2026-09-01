@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homeostatic Reservoir — Reproduce</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/lab/static/style.css">
+<link rel="stylesheet" href="/lab/static/lab.css">
+</head>
+<body>
+<header>
+  <h1>Homeostatic Reservoir — Reproduce <span class="sub">the H97 four-rung inheritance ladder · lab viewer</span></h1>
+  <div id="conn" class="conn">idle</div>
+</header>
+
+<div id="controls">
+  <span class="ctl labnav">
+    <a href="/lab">single node</a>
+    <a href="/lab/phase">phase maps</a>
+    <a href="/lab/traj">trajectories</a>
+    <a href="/lab/wall">wall</a>
+    <a href="/lab/pursuit">pursuit</a>
+    <a href="/lab/ecology">ecology</a>
+    <a href="/lab/ecology3">ecology³</a>
+    <a href="/lab/reproduce" class="here">reproduce</a>
+    <a href="/lab/repair">repair</a>
+  </span>
+  <span class="ctl"><label title="The four cumulative inheritance variants of the H97 verdict">inheritance</label>
+    <select id="mode">
+      <option value="position">1 · position only</option>
+      <option value="wiring">2 · + wiring heredity</option>
+      <option value="clone">3 · pure clone</option>
+      <option value="budding" selected>4 · budding (full state)</option>
+    </select>
+  </span>
+  <span class="ctl"><label>steps</label><input id="steps" type="number" value="21600" min="3600" max="21600" step="1200"></span>
+  <button id="btn-run" class="primary">Run</button>
+  <span class="status mono" id="stat"></span>
+</div>
+
+<main>
+  <div class="headline">structure-only heredity fails three ways; only full-state budding cascades — you can't inherit a lock.</div>
+
+  <section class="panel explainer">
+    <p>
+    Whether a fresh follower ever acquires the pacemaker's orbit is a lottery over wiring and early
+    state (H87/H88). H97 asked if <i>reproduction at comfort</i> beats it: a follower that has held
+    lock (dist&nbsp;&lt;&nbsp;4.8 to the blind wall-circling pacemaker) for <b>1,200 consecutive
+    steps</b> spawns one offspring at its own position — one spawn per agent, population cap 6,
+    everyone sensing the pacemaker exclusively. All machinery is imported from the H97 script, never
+    re-implemented: the co-simulation loop replayed here is bit-identical to the campaign run. The
+    four rungs add inheritance cumulatively. <b>1 · position only</b> — the child gets the parent's
+    in-basin position but fresh wiring and a mutated genome: it loses the competence lottery and
+    fails. <b>2 · + wiring heredity</b> — the parent's exact wiring seed too: still fails, because it
+    starts cold (the acquisition lottery). <b>3 · pure clone</b> — genome and wiring bit-identical,
+    mutation exonerated: <i>still</i> fails, so the barrier is internal state. <b>4 · budding</b> —
+    copy the parent's entire dynamical state (activations x, targets T, weights W, spike buffers,
+    heading): the child is born mid-lock, and spawns cascade until the population fills its cap with
+    every agent locked. The heritable unit is the entire dynamical state, not the structure —
+    you can't inherit a lock.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Arena <span class="hint">30×30 · replay of the co-simulation · faint line parent→child = lineage · arc around an agent = lock streak charging toward a spawn · expanding ring = a birth · concentric rings = exact copies in lockstep at one position</span></h2>
+    <canvas id="arena" width="500" height="500"></canvas>
+    <div class="playrow">
+      <button id="btn-play">⏸ pause</button>
+      <span class="ctl"><label>speed</label>
+        <select id="speed">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+          <option value="4">4×</option>
+          <option value="8">8×</option>
+        </select>
+      </span>
+      <input id="scrub" type="range" min="0" max="1" value="0" step="1">
+      <span class="mono" id="tlab">t = 0</span>
+    </div>
+    <div class="legend" id="legend" style="flex-wrap: wrap; row-gap: 4px;"></div>
+    <div class="caption" id="caption">—</div>
+    <div class="sumrow">
+      <div class="sumstat"><div class="k">population (cap 6)</div><div class="v mono" id="e-pop">—</div></div>
+      <div class="sumstat"><div class="k">locked late (≥0.8 of last 3600)</div><div class="v mono" id="e-locked">—</div></div>
+      <div class="sumstat"><div class="k">spawns</div><div class="v mono small" id="e-spawns">—</div></div>
+      <div class="sumstat"><div class="k">locked mutants</div><div class="v mono small" id="e-mut">—</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Population <span class="hint">agent count per step · dashed vertical = a spawn, colored by the child · a parent spawns once, after 1200 consecutive locked steps</span></h2>
+    <canvas id="popc" width="960" height="110"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Distance to pacemaker <span class="hint">per agent · 4.8-unit lock band shaded · late window (last 3600, the scored window) tinted · dashed verticals = spawns · right tags = late lock fraction</span></h2>
+    <canvas id="distc" width="960" height="190"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Lineage &amp; verdict <span class="hint">one tag per agent · lock = fraction of the late window with dist&lt;4.8 (locked at ≥0.8) · exactly the campaign's classification</span></h2>
+    <div class="legend" id="verdict" style="flex-wrap: wrap; row-gap: 6px;"></div>
+  </section>
+</main>
+
+<script src="/lab/static/lab_reproduce.js"></script>
+</body>
+</html>
