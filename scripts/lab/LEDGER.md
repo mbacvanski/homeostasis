@@ -2751,3 +2751,27 @@ what biology has: scaffolded development that re-derives state (naive
 world-slowing scaffolds already shown insufficient, H90). This measures
 the exact gap the reproduction-as-action agenda must cross.
 (h97_reproduce.json, h97b/c/d)
+
+## H98 (preregistered): the crest as formation/destruction balance
+
+Decompose score into two measurable per-segment rates: FORMATION p_f =
+P(next segment >= 0.5 | current < 0.5) and DESTRUCTION p_d = P(next
+segment < 0.5 | current >= 0.5), estimated from 30-segment runs.
+Steady-state locked fraction = p_f/(p_f+p_d); its argmax over wlr is
+the predicted crest. Batch: leak {0.12, 0.25, 0.5} x wlr {6 values
+straddling each measured crest} x 24 CRN seeds, n=21600, pins.
+Predictions: (a) p_f increases with wlr at every leak (faster servo
+locks faster); (b) p_d also increases with wlr (churn destroys locks);
+(c) argmax_wlr[p_f/(p_f+p_d)] lands within factor 1.5 of the measured
+crest wlr* for >= 2/3 leaks — the ridge derived from two rates. If (c)
+fails, the crest is not a lock-statistics balance either.
+
+## Viewer: /lab/reproduce (agent-built, bit-identical to H97)
+
+The budding-ladder exhibit: four rungs selectable, animated arena with
+birth pulses and lineage lines, population staircase, lock-streak arcs,
+per-rung captions. Verified bit-identical to h97_reproduce (per-step
+distance streams exactly equal for all four rungs; 2/1, 2/1, 2/1, 6/6).
+Exhibit-surfaced detail now stated in its caption: budded copies receive
+identical input forever after, so the lineage moves in perfect lockstep
+— six agents, one trajectory (the H87 twin-superposition, inherited).
