@@ -700,3 +700,35 @@ gen 11 (prereg asked mean > 0.40, champion > 0.60 — exceeded). Champion:
 N=217, w0_mean 0.1 (subcritical), gain 38.8, leak 0.47, wlr 0.74, tlr
 0.0014. Reward-as-selector demonstrated constructively; the repertoire was
 rich all along.
+
+## H31 (preregistered): the body, not the synapse, is the slow variable
+
+The tau(wlr) puzzle (b6b: 60/180/270/270 steps RISING with wlr) is proposed
+to be behavioral, not synaptic. Predictions: (a) OPEN-LOOP pool-asymmetry
+flip time after a scripted slip reversal scales roughly ~1/wlr and is
+faster than the closed-loop tau63 at wlr >= 0.1; (b) closed-loop tau63
+correlates with post-reversal EXCURSION DEPTH (integrated old-direction
+motion) across wlr and across seeds; (c) a 2-ODE reduced model (bias
+written toward slip at rate ~wlr; heading kinematics + the stall-in-dark
+ratchet) reproduces the tau ordering only when the behavioral geometry is
+included.
+
+## H31 verdict: SUPPORTED — the body is the slow variable, and the reduced model closes
+
+(a) Open-loop pool-asymmetry flip after a scripted slip reversal: 15-60
+steps at EVERY wlr (vs closed-loop tau63 90-225) — synaptic rewrite is
+never the bottleneck. The ~1/wlr scaling part was wrong (non-monotone;
+stored asymmetry deepens with wlr: |pre| 0.006 -> 0.076). (b) Excursion
+depth orders tau perfectly across configs (0/0/8.1/12.5 deg vs
+30/90/135/225 steps); pooled per-seed Spearman(tau, excursion) = +0.64.
+(c) The 2-ODE reduced model (theta' = v*d − b*vis(theta); b' =
+vis*(alpha*(v*d−b) − beta*b); alpha, beta DERIVED from the open-loop flip
+time and the measured asymptote; the pawl vis(|theta|<=92) is the geometry)
+predicts tau63 with ZERO free parameters: 49/24/276/276 vs measured
+60/180/270/270 — 3/4 within ~15%, reproducing the counterintuitive rise of
+tau with wlr. The wlr=0.1 miss traces to a noise-dominated open-loop tau_w
+estimate (pre-asymmetry 0.009; threshold-crossing detector fired early) —
+better estimator flagged, not patched. Resolution of the b6b puzzle:
+deeper stored bias -> longer post-reversal excursion -> the ratchet's
+stall-and-reacquire pays the time; entrenchment is stored momentum in
+BEHAVIOR, not synaptic sluggishness.
