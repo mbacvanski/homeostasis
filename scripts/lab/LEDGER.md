@@ -2807,3 +2807,24 @@ p_d); the SNR physics lives inside the two rates, still phenomenological
 — but the structure unifies the campaign: the universal wander (H66),
 the dark-excursion dips (H70), and the crest are one unlock/relock
 alternation. (ridge98_results.jsonl, h98_analyze.py)
+
+## H99 (preregistered, analysis of data in hand): destruction = darkening?
+
+From ridge98's per-segment duty: among locked segments (score >= 0.5),
+compare destruction probability when the NEXT segment goes dark
+(duty < 0.9) vs stays lit. Predictions: (a) P(destroy | next dark) >=
+2x P(destroy | next lit) pooled across cells; (b) the dark-mediated
+share of destruction events exceeds 50%; (c) if the contrast is < 1.5x,
+destruction is mostly a lit-state phenomenon and the dark-excursion
+account of dips does not extend to lock loss.
+
+## H99 verdict: CONFIRMED — lock destruction IS darkening
+
+P(destroy | next segment dark) = 0.780 vs 0.290 lit (2.69x >= 2x), and
+91% of all destruction events are dark-mediated (>= 50%). The two-state
+model's p_d reduces to the rate of dark excursions from the locked
+state — a geometric/behavioral quantity (heading error exceeding the
+aperture) — closing the loop with H70 (dips are dark) at the level of
+the crest itself. The ridge's remaining mystery is now two behavioral
+rates: view-keeping while locked, re-acquisition while dark.
+(analysis over ridge98_results.jsonl)

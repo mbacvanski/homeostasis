@@ -135,8 +135,11 @@ the plane at r = +0.878 — calibration line score ≈ 0.25 + 0.46·locked
 fraction, i.e. chance plus locked-time × locked-quality — and lands the
 crest exactly at two of three tested leaks (the third is a flat crest
 with ill-defined argmax). The universal wander, the dark-excursion dips,
-and the crest are one unlock/relock alternation; what shapes the two
-rates is the remaining question.) Two corollaries,
+and the crest are one unlock/relock alternation — and the destruction
+rate is already mechanistic: 91% of lock losses are dark-mediated
+(P(destroy | next segment dark) = 0.78 vs 0.29 lit; H99). What remains
+is why view-keeping and dark re-acquisition rates depend on (leak, wlr)
+as they do.) Two corollaries,
 both measured: activity under a *stationary* retina at wlr=1.0 stays at
 f ≈ 0.39 for every stimulus schedule (the canonical prop_spiked ≈ 0.34 is
 churn-set, not stimulus-set; k1), yet **total darkness silences every
