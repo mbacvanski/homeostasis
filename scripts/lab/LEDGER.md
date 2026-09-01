@@ -504,3 +504,20 @@ paper's 0.83 anchor is thus a follow statistic, consistent with the
 entrainment mechanism. The lab harness's error-sign variant reads ~0.47-0.49
 on constant-offset followers by construction (offset keeps err positive in
 both travel directions) — do not interpret it as "no direction sense".
+
+## H14 verdict (cluster, 4800 runs, 48 seeds/cell): SUPPORTED with a broad crest
+
+Fine (leak x wlr) ridge: **wlr* = 1.04 · leak^1.41** fit on the 75% non-held
+cells (b=1.41 inside the preregistered [1.2, 1.8]); 7/10 held-out rows'
+peaks within factor 2 of the law — the misses are rows whose crest is FLAT
+(argmax ill-defined at low leak, where near-peak score spans a decade of
+wlr). Structure: dead-statue triangle upper-left with an escape threshold in
+wlr that RISES with leak; crest height ~0.46-0.55 along the whole diagonal;
+crest narrows at high leak. R2 confirms the headline at 48 seeds: wlr 0.1 →
+0.467-0.525 vs default 0.386 (regression from the 12-seed 0.633 as the
+wander analysis predicted). R3 reproduces the fixed-p N-collapse (confound
+demo). Bonus: remote (wlr 1.0, tlr 0.01) cell = 0.386 on 48 seeds — EXACTLY
+the local K4 value; cross-machine determinism verified. Figure:
+scripts/out/lab/fig_ridge_fine.png. Total cluster compute: 4m19s on
+mit_quicktest (the whole batch was ~3 core-hours; the fat-job provisioning
+was 40x oversized — lesson recorded).

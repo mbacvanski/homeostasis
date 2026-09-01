@@ -79,10 +79,19 @@ performance*:
   removes the wiring lottery (48-seed check: 0.467±0.200 vs 0.386±0.138).
 
 - The (leak × wlr) plane has a **diagonal ridge**: score peaks where the
-  plasticity rate matches dissipation (leak 0.05 → wlr* ≈ 0.03, score 0.681;
-  0.25 → 0.1, 0.633; 0.75 → 1.0, 0.494). This retroactively explains the
-  historic sweep winners: both chose leak ≈ 0.56–0.57 under forced wlr = 1.0
-  — they were the wlr=1.0 slice of this same ridge.
+  plasticity rate matches dissipation. Confirmed at cluster scale (4800 runs,
+  48 CRN seeds/cell, 25% held-out checkerboard;
+  [fig_ridge_fine](../scripts/out/lab/fig_ridge_fine.png)): **wlr* =
+  1.04·leak^1.41** (fit on non-held cells; 7/10 held-out rows within factor
+  2, the misses being flat-crest rows where the argmax is ill-defined).
+  Crest height ≈ 0.46–0.55 along the whole diagonal, broad at low leak
+  (near-peak across a decade of wlr) and narrow at high leak; below it, a
+  dead-statue triangle whose escape threshold in wlr rises with leak. This
+  retroactively explains the historic sweep winners: both chose leak ≈
+  0.56–0.57 under forced wlr = 1.0 — they were the wlr=1.0 slice of this
+  same ridge. (48-seed replication of the headline: wlr 0.1 → 0.467–0.525
+  vs default 0.386; and the cluster's default cell reproduced the local run
+  EXACTLY, 0.386 on the same 48 seeds — cross-machine determinism.)
 
 **Why the ridge: signal-to-noise.** Driving the retina with a sinusoidal slip
 and reconstructing stimulus position from spikes (b3): reconstruction gain at
@@ -219,8 +228,10 @@ the fast edge is sparse-and-informative.)
    ridge25? (Candidate: leak sets how long input context persists in x.)
 4. **Why the exact retinal drive formula underperforms the proxy** for the
    dead boundary — a closed-loop selection effect worth one figure.
-5. Cluster-scale confirmations in flight: 48-seed fine ridge (H14: ridge
-   follows wlr* = c·leak^b; held-out checkerboard), N-line dual-scaling.
+5. ~~Cluster-scale confirmations~~ — landed (H14 supported; see the ridge
+   section). Remaining cluster-scale item: none blocking; the harness and
+   Slurm lane are in place for future sweeps (whole 6k-run batch = 4m19s on
+   mit_quicktest).
 
 ## Instruments
 
