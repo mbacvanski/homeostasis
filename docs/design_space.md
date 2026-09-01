@@ -648,13 +648,15 @@ family:
    networks — it abolishes the absorbing dark state while sparing
    contrast. Sparse wiring's internal fluctuations buy the same thing
    architecturally.
-6. **Keep the weight channel plastic; freeze the target channel after
-   calibration.** Long-horizon competence decays by metastable lock
-   loss, and weight plasticity is the re-locking mechanism (full-frozen
-   networks sag faster) — while the *target* channel's slow profile
-   drift is what causes the sag (freeze-T-only abolishes it and wins:
-   0.519 vs 0.336 late). Structural rewiring: developmental window
-   only.
+6. **Keep the weight channel plastic; freeze the target channel — from
+   birth, on supercritical tracking.** Long-horizon competence decays by
+   metastable lock loss, and weight plasticity is the re-locking
+   mechanism (full-frozen networks sag faster) — while *any* target
+   adaptation is net harmful at the ridge (48 seeds: freeze-T-at-birth
+   +0.115 over full, t=+3.24; even the first 3600 steps cost +0.090
+   lastingly). Elsewhere the knob is task-dependent: neutral at Pong's
+   sparse-slow optimum, a needed damper at Pong's fast-weight cells.
+   Structural rewiring: developmental window only.
 7. **Targets are the calibration surface.** Only heterogeneous, adapted
    per-node target profiles hold interior spike rates statically;
    homogeneous frozen networks are dead-or-saturated (the cliff).

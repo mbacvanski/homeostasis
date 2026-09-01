@@ -174,3 +174,19 @@ cheat-sheet (task screen via the three-clause law, wlr from
 distance-to-comfort, flow-sign rules, readout sparsity, noise floors,
 never-freeze). Three new interactive pages (/lab/repair, noise slider,
 ballistic pursuit) reproduce their campaign JSONs bit-exactly.
+
+**Late addition (48-seed powered): the target channel is a liability on
+the flagship task.** Freezing targets at birth beats full homeostasis by
++0.115 late-run score (t=+3.24, n=48, 21,600-step runs); even the first
+3,600 steps of target adaptation do lasting damage (+0.090 vs freezing
+at birth, t=+2.65). Long-horizon competence decays by metastable lock
+loss; weight plasticity is the re-locking mechanism (freezing weights
+makes decay worse), while the target channel's profile drift causes the
+decay (mechanism boxed by three preregistered nulls: not the mean, not
+anatomically-, not activity-selective). Practical rule: keep W plastic,
+freeze T — on supercritical tracking; Pong's sparse-slow optimum finds
+the target knob simply neutral. The speed band of followable motion also
+got its full psychometric (plateau 0.10–0.26 units/step), and
+information-per-spike is now in units: density buys code sparsity buys
+~11x bits/spike (dense-quiet networks carry more information absolutely
+at a third of the spikes).
