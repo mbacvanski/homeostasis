@@ -1,5 +1,24 @@
 # Overnight research update (2026-09-01) — pasteable for Slack
 
+**TL;DR for the 4pm meeting.** The design-space campaign ran overnight to
+74 preregistered hypotheses (~25k runs, three cluster batches, all
+pushed). The model family now has: three exact laws that compose into a
+simulation-free predictor (r = 1.0000); a mechanistic account of every
+task in the repo (tracking = velocity entrainment; wall = stability
+selection; Pong best at ~10 active neurons; pursuit bounded by a
+three-clause competence law with measured constants); answers to the
+meeting's "simple questions" (sparsity: a conservation law + a
+pre-adaptation effect; target adaptation: calibration early, erosion
+late — freeze it after calibration; why stable: self-organized
+marginality, now precise — frozen homogeneous networks have NO interior
+rates); a four-agent ecology whose depth ceiling has a closed geometric
+mechanism (speed floor); and a designer's cheat-sheet in
+docs/design_space.md. Interactive verification: seven /lab pages, each
+bit-exact against its campaign JSON. Read order: this file → the
+"Three Laws and a Ridge" artifact → docs/design_space.md →
+scripts/lab/LEDGER.md for any specific number.
+
+
 Ran a preregistered design-space campaign on the homeostatic reservoirs
 (~42 hypotheses H1–H42 in scripts/lab/LEDGER.md, ~15k runs local + 6.4k on
 engaging; every number re-derivable; all pushed). Headlines:
