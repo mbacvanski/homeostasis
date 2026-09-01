@@ -1179,3 +1179,17 @@ circler pacemaker are possible iff the pacemaker is slow — a quantitative
 design principle for the multi-agent program (wall-circlers at default
 params turn ~8 deg/step: too fast; slow-circling wall configs are the
 predicted viable pacemakers).
+
+## H45 verdict: CONFIRMED — the phenomenology is N-invariant (200 → 2000)
+
+Cluster N-line (288 runs, in-degree pinned at 20, input_p_link pinned 0.1,
+24 CRN seeds/cell): ridge position in wlr does not move with N; scores are
+trendless across the table (ridge column 0.503 / 0.390 / 0.441 / 0.560 —
+spread slightly wider than the preregistered ±0.05, with N=500 dipping;
+no monotone trend, and N=2000 is nominally the BEST cell, 0.560/0.83).
+Internal coordinates are rock-steady across 10x size: f 0.144-0.164,
+|E| 0.534-0.592, flow 2.15-2.52. With the duty law at 0.988 (N=2000):
+**the answer to "scaling up network sizes" is that size per se is inert —
+the organizing variables are degrees and rates, not counts.** (Batch
+lesson: shuffled chunks must respect the lane's wall-time; size-4 chunks on
+quicktest finished 288 runs incl. N=2000 in ~9 min.)

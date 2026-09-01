@@ -296,6 +296,17 @@ wiring-level selection reliable-on-its-pair — hands the mentors'
 connectivity/DNA agenda both an empirical mandate and a working first local
 rule.
 
+## Scaling: the phenomenology is N-invariant
+
+The cluster N-line (288 runs; in-degree pinned at 20, input wiring pinned;
+N ∈ {200, 500, 1000, 2000} × wlr {0.05, 0.1, 0.2}, 24 CRN seeds/cell): the
+ridge does not move, scores show no monotone trend (N=2000 is nominally the
+best cell, 0.560 with 83% of seeds working), and the internal coordinates
+are constant across a 10× size range (f 0.14–0.16, |E| 0.53–0.59, flow
+2.2–2.5). The duty law holds at N=2000 (corr 0.988). **Size per se is
+inert; the organizing variables of this model family are degrees and
+rates, not counts** — the direct answer to "scaling up network sizes."
+
 ## The two-body problem, and the band clause
 
 First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
