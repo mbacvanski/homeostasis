@@ -2612,3 +2612,31 @@ noted); (c) all cells functional (0.49-0.56). Slow-leak agents lean on
 x-carried input context; fast-leak agents must store the bias in the
 weights. The carrier-regionalization question is answered: the locus
 follows dissipation. (h93_locus.json)
+
+## H94 (preregistered): the ridge law, derived from the matched-timescale identity
+
+Hypothesis: the crest sits where the weight servo's absorption corner
+P* = 2pi/(wlr*f) matches a single behavioral timescale P_eff common to
+the whole plane: wlr*(leak) = 2pi / (f_crest(leak) * P_eff), with f
+MEASURED (mean prop_spiked at each leak row's crest cell in the 4800-run
+cluster plane) and P_eff the ONE fitted constant. The leak-dependence is
+then parameter-free. Predictions: (a) predicted wlr* within factor 1.5
+of the measured crest for >= 7/10 leak rows (the same standard the
+empirical power-law fit met); (b) the fitted P_eff lands in the measured
+entrainment range (90-720 steps); (c) shape test — corr(log wlr*_meas,
+-log f_crest) >= corr(log wlr*_meas, log leak): the duty-rate regressor
+explains the crest at least as well as the raw power law. Failure of
+(a)+(c) refutes matched-timescale as the crest's origin.
+
+## H94 verdict: REFUTED — the ridge is not a matched-timescale phenomenon
+
+1/10 leak rows within 1.5x, and the shape test has the WRONG SIGN:
+corr(log wlr*, -log f_crest) = -0.797 (crest wlr RISES with duty rate;
+the absorption-corner identity predicts the opposite) vs +0.928 for the
+raw power law. P_eff fit lands at 331 steps but explains nothing. The
+b3-era single-point match (P* ~ 420) was coincidence. Standing state of
+theory: frozen-network fate is DERIVED (r=1.0000, H59); the ridge's SNR
+character (saturation below, churn above) is MEASURED; the ridge
+exponent wlr* = 1.04*leak^1.41 remains EMPIRICAL and underived — the
+sharpest open theory question the campaign leaves behind.
+(h94_derive.json)

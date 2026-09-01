@@ -101,8 +101,8 @@ performance*:
   of the 2024 code's full-error convention — roughly doubles tracking and
   removes the wiring lottery (48-seed check: 0.467±0.200 vs 0.386±0.138).
 
-- The (leak × wlr) plane has a **diagonal ridge**: score peaks where the
-  plasticity rate matches dissipation. Confirmed at cluster scale (4800 runs,
+- The (leak × wlr) plane has a **diagonal ridge**: score peaks along a
+  rising diagonal in (leak, wlr). Confirmed at cluster scale (4800 runs,
   48 CRN seeds/cell, 25% held-out checkerboard;
   [fig_ridge_fine](../scripts/out/lab/fig_ridge_fine.png)): **wlr* =
   1.04·leak^1.41** (fit on non-held cells; 7/10 held-out rows within factor
@@ -121,8 +121,14 @@ and reconstructing stimulus position from spikes (b3): reconstruction gain at
 wlr=0.1 is 0.22–0.23 across P=30–480 — **3–10× every other regime**. Below
 the ridge (wlr=0.03) saturation destroys selectivity (f≈1 → the readout sees
 everything, hence nothing); above it (wlr=1.0) the servo's own churn buries
-the stimulus (gain ≈ 0.02). The matched-timescale ridge is where plasticity
-whitens saturation away without generating self-noise. Two corollaries,
+the stimulus (gain ≈ 0.02). The ridge is where plasticity
+whitens saturation away without generating self-noise — an SNR optimum
+as *measured* characterization. (Its once-favored "matched-timescale"
+*mechanism* — the absorption corner P* = 2π/(wlr·f̄) meeting a
+behavioral period — was later refuted at plane scale, H94: crest wlr
+rises *with* duty rate, the opposite sign, so the b3-era single-point
+match was coincidence. The ridge exponent remains empirical and
+underived — the sharpest theory question the campaign leaves open.) Two corollaries,
 both measured: activity under a *stationary* retina at wlr=1.0 stays at
 f ≈ 0.39 for every stimulus schedule (the canonical prop_spiked ≈ 0.34 is
 churn-set, not stimulus-set; k1), yet **total darkness silences every
