@@ -1013,3 +1013,28 @@ on) and try again; keep the configuration once input goes stationary.
 Prediction: lock rate on the pursuit champion genome rises from ~2/16
 (baseline jackpot rate) to >= 8/16 within 14400 steps — reliability from
 the network's own comfort signal, no external reward.
+
+## H40 verdict: UNDERPOWERED (1/32 lockers); H41 as-designed under-triggered
+
+H40: the champion genome's jackpot rate at seeds 3000+ is 1/32 — one
+positive case cannot establish a predictor (feature deltas suggestive but
+n=1; a ~300-wiring version would be needed). H41: the "non-stationarity"
+trigger fired ~0.9 times/run and lifted lock rate only 2/16 vs 0/16 —
+because failed agents are STATIONARY-AT-MEDIOCRE (absorbed wandering, low
+steady flow), not unstable. Corrected trigger preregistered: shuffle when
+600-window mean flow < 2.2 (insufficient engagement — flow-seeking
+annealing, the input-flow thesis as a reset rule). Same prediction: >= 8/16
+locked.
+
+## H41b verdict: REFUTED — and the lottery's home is found
+
+Flow-seeking annealing fires every check (21 shuffles/run) and locks 0/16.
+Diagnosis: the shuffle operator permutes weight VALUES on the FIXED
+adjacency — but the lottery lives in the ADJACENCY DRAW, which no
+within-life weight operation can resample (K3's shuffle recovered function
+on good structure; it cannot repair bad structure). Closing statement of
+the lottery thread: **the family's reliability ceiling is set by frozen
+wiring structure; learning, shuffling, and annealing all act in weight
+space and cannot cross it. Structural plasticity (grow/prune) or
+wiring-level selection is the missing mechanism** — precisely the mentors'
+connectivity/DNA agenda, now with an empirical mandate.
