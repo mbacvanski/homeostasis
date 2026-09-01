@@ -776,3 +776,31 @@ Across fresh seeds 0-7 at 7200 steps the champion's band fraction is
 lottery, the same pattern as the historical flow-evolution champions.
 Selection finds seed-specific solutions when fitness is averaged over few
 resampled seeds.
+
+## H33 (preregistered): can selection find the pursuit hand-design could not?
+
+GA over the pursuit design space (360-retina fixed for aliveness; genes:
+n_nodes, p_link, input_weight, w0_mean, leak, tlr, rho, wlr, wheel_base,
+intensity_scale; fitness = near3 − dist/15, 3 resampled seeds/gen, orbit
+0.15). Predictions: (a) IF the repertoire contains pursuit, champion near3
+≥ 0.5 within 14 generations; a null result at N≤320 marks a harder
+boundary than H30's; (b) any champion will be seed-brittle (the family's
+lottery pattern).
+
+## H33 verdict: pursuit exists as (genome x wiring) jackpots; nothing yet makes it reliable
+
+Evolution reached best-of-generation near3 0.71 / dist 3.35 (gen 7) — far
+beyond any hand-designed arm (0.16) — with the predicted generation-to-
+generation noise. Champion genome is the SUBCRITICAL recipe (w0 0.11,
+wlr 0.02 at the range floor, tlr 0.06 fast-damping, inputs 9.2, agile
+wheel_base 1.06 — motor-grain intuition refuted a second time). Fresh-seed
+verification: near3 = [1.00, 0.49, 0.25, ...] median 0.00 — ONE perfect
+pursuer among 16 wirings. Conclusion: the repertoire contains perfect 2D
+pursuit, but (a) homeostasis cannot aim at it (H32), and (b) genome-only
+selection cannot fix the wiring lottery at N<=320 and 14 generations.
+Reliable rung-3 competence requires something qualitatively new: wiring-
+level/developmental selection, larger N, or architectural priors. This is
+the sharpest available statement of the mentors' "when does reward/
+evolution become necessary" question: reward selects orbits within a
+lifetime (H29/H30); evolution selects genomes; NEITHER, so far, selects
+past the wiring lottery.
