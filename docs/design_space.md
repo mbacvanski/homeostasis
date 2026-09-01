@@ -634,6 +634,27 @@ supercritical tracking. (Pong's subcritical regime still wants fast
 targets as a damper at high wlr; at the slow-wlr cells that now win
 there, the question is open.)
 
+## Reproduction as action: the budding theorem
+
+The mentors' reproduction question, run to ground in one four-rung
+ladder (H97): let a locked follower spawn offspring at its own position
+once it has held comfort for 1,200 steps. Position inheritance alone
+fails (the fresh-wired child loses the competence lottery); adding
+wiring heredity fails (the cold-state child loses the acquisition
+lottery); even a *pure clone* at the parent's exact position fails —
+mutation exonerated, internal state is the barrier. Only **budding** —
+copying the parent's full dynamical state (x, T, W, spike buffers,
+heading) — works, and then it works completely: the population cascades
+to its cap with 6/6 locked. **The heritable unit in this family is the
+entire dynamical state, not the structure.** This is the statics cliff
+at the population level: competence exists only as a held equilibrium,
+so structure-only (DNA-like) heredity cannot transmit it — you cannot
+inherit a lock. What biology inserts between genome and competence —
+scaffolded development that re-derives the state — is precisely the
+machinery this family lacks (and a naive world-slowing scaffold is
+already shown insufficient, H90). That is the measured gap the
+reproduction-as-action agenda must cross.
+
 ## Relation to the large-scale ecology program (arXiv 2510.18221)
 
 The meeting notes point at Bejjani et al.'s 60,000-agent evolutionary

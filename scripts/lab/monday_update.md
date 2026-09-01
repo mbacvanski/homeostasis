@@ -233,3 +233,14 @@ reward rules) is the certified mechanism; stable inter-agent behavior
 needs persistent selective attention (raw mutual visibility collapses);
 and scale buys emergence through niches that satisfy the competence
 clauses, not through network size (which is inert).
+
+**Coda — reproduction as action, measured (the budding theorem).** A
+locked follower spawning offspring at its own position: position
+inheritance alone fails (fresh wiring), adding wiring heredity fails
+(cold state), a pure clone fails (state, not mutation, is the barrier)
+— only full-state budding works, and then completely (population
+cascades to cap, 6/6 locked). The heritable unit is the entire
+dynamical state, not the structure: you can't inherit a lock, because
+competence is a held equilibrium. What DNA-like heredity needs — and
+this family lacks — is scaffolded development that re-derives state.
+That's the measured gap for the reproduction/DNA direction.

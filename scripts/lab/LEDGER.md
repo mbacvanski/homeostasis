@@ -2733,3 +2733,21 @@ by-comfort all present — evolution running on homeostatic viability
 alone). Note: offspring wirings are fresh (the wiring lottery still
 applies); the claim is that POSITION inheritance alone lifts the
 acquisition barrier.
+
+## H97 verdict (four-rung ladder): reproduction works only as budding
+
+(a) as designed FAILED, and the failure decomposed into the campaign's
+deepest closure: position inheritance alone -> child fails (fresh
+wiring loses the competence lottery); + wiring heredity -> fails (cold
+state loses the acquisition lottery); + pure genome clone -> STILL
+fails (mutation exonerated; internal state is the barrier); + FULL
+STATE COPY (budding: x, T, W, spike buffers, heading) -> 6/6 locked,
+the population fills its cap by cascading spawns, every agent locked.
+THE HERITABLE UNIT IS THE ENTIRE DYNAMICAL STATE, NOT THE STRUCTURE:
+competence is a held equilibrium (H59's cliff at the population level),
+so structure-only DNA-like heredity cannot transmit it — you can't
+inherit a lock. For DNA-like reproduction to work, this family needs
+what biology has: scaffolded development that re-derives state (naive
+world-slowing scaffolds already shown insufficient, H90). This measures
+the exact gap the reproduction-as-action agenda must cross.
+(h97_reproduce.json, h97b/c/d)
