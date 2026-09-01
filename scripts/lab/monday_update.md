@@ -61,3 +61,18 @@ Everything is interactive: /lab pages in the visualizer (single-node
 explorer, phase maps, entrainment trajectories, wall arena, the perfect
 pursuer and its failure mode). Synthesis: docs/design_space.md. Shareable
 writeup: the "Three Laws and a Ridge" artifact.
+
+**Late-night additions:** (1) Structural trilogy — the wiring lottery lives
+in the frozen adjacency (no weight-space operation fixes it, 0/16); a
+minimal grow/prune structural-homeostasis rule is the first within-life fix
+(3/16); lifelong rewiring destroys solved tasks; a developmental window
+(structural exploration that closes) keeps the benefit at zero cost — the
+family, minimally extended, rediscovers why development exists. (2) First
+multi-agent data — two mutually-tracking homeostats collapse to collective
+stillness (a static partner is already stationary input); churn pairs chase
+without locking; the pacemaker test shows a recorded wall-circler orbit is
+unfollowable at its native 6.4°/step but PERFECTLY followed at 2.1°/step:
+the competence law is two-clause (constant-control shape AND frame rate in
+the entrainment band), and collective entrainment needs a slow periodic
+pacemaker. (3) Duty law verified at N=2000 (corr 0.988); full N-scaling
+ridge batch on the cluster.
