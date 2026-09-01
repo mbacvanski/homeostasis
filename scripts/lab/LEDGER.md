@@ -2437,3 +2437,25 @@ link C entirely (0.011) while sequential coupling gives 1.000 — one
 step of sensory latency mid-chain is fatal; the ecology requires
 within-step freshness, consistent with the knife-edge theme.
 (h86_chain_shared.json)
+
+## H87 (preregistered): the flock — ecology width instead of depth
+
+Chains cap at depth 4 (speed floor), but WIDTH shouldn't: 4 identical
+twin followers (h48e champion wiring), all sticky-attending pacemaker A
+directly, starting at (15,10), (15,6), (24,15), (6,15). n=10800.
+Predictions: (a) >= 3/4 lock A (near-dist < 4.8 for >= 0.8 of late
+steps); (b) locked followers hold DISTINCT phases (pairwise angular
+separations about the ring stay > 15 deg on average — a ring of
+followers, not a superposed clump); (c) phases are IC-dependent
+(different starts -> different final phases).
+
+## H87 verdict: twins superpose — no flock without diversity
+
+2/4 lock ((a) not met): the two far-outside starts (~6 units beyond the
+ring) never acquire — the acquisition basin is limited. The two locked
+TWINS converge to the SAME phase (0.6 deg apart at r~7: superposed
+ghosts) — (b)/(c) refuted for locked twins: lock phase is
+WIRING-determined, not IC-determined. Ecology width by direct attention
+works only near the ring, and a true ring-flock needs wiring diversity
+or agent-agent repulsion — neither of which the family provides for
+free. (h87_flock.json)
