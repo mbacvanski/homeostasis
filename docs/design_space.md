@@ -1,13 +1,16 @@
 # How homeostatic reservoirs work: laws, phases, and the entrainment mechanism
 
-*Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/, ~2600
-local runs + cluster replication in flight). Method: every hypothesis was
-preregistered in [scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md) before its
-experiment; common-random-number wiring seeds across cells; all scripts
-deterministic; every number below traceable to a JSON in `scripts/out/lab/`.
-Interactive verification: the `/lab` pages of the visualizer (single-node
-explorer; phase maps; trajectory viewer). Chance score is 0.25; "score" is
-within-45° occupancy over reversal segments 6–10 unless noted.*
+*Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/;
+50 preregistered hypotheses H1–H50 in
+[scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~20,000 local runs plus
+three cluster batches; four tasks — tracking, Pong, wall avoidance, and the
+new pursuit task — plus two-to-four-agent ecologies). Method: every
+hypothesis preregistered before its experiment; common-random-number wiring
+seeds; all scripts deterministic (two bit-identical cross-machine
+reproductions); every number below traceable to a JSON in
+`scripts/out/lab/`. Interactive verification: six `/lab` pages in the
+visualizer. Chance score is 0.25; "score" is within-45° occupancy over
+reversal segments 6–10 unless noted.*
 
 ## The three exact laws
 
@@ -294,7 +297,12 @@ the first within-life mechanism to cross the ceiling: 3/16 locks vs 0/16.
 The measured hierarchy — weight ops 0/16, local structural plasticity 3/16,
 wiring-level selection reliable-on-its-pair — hands the mentors'
 connectivity/DNA agenda both an empirical mandate and a working first local
-rule.
+rule. And the rule's cost was measured too (H43/H44): left on for life it
+*destroys* solved tasks (tracking working-seed fraction 0.88 → 0.00 —
+perpetual rewiring breaks the entrained balance), while a **developmental
+window** — rewiring allowed for the first 3,600 steps, frozen after —
+keeps the exploration benefit at zero cost to solved behavior. Minimally
+extended, the family rediscovers why development exists.
 
 ## Scaling: the phenomenology is N-invariant
 
@@ -341,14 +349,16 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   pacemaker (morphology + arena rescaling), one-way coupling, and selection
   warm-started from prior follower competence (cold-start GAs find
   toll-booths).
-- **Entrainment propagates** (H49,
-  [fig_chain3](../scripts/out/lab/fig_chain3.png)): a third agent
-  warm-started from the follower's genome locks onto the *live follower*
-  (C–B dist 2.88, near4 1.00, 10,800 steps) — **three concentric
-  phase-locked circles**, a blind pacemaker's periodicity cascading down a
-  sensing chain. The rings contract ~15% per link (7.8 → 6.5 → 5.6),
-  predicting a *finite chain depth* when the innermost orbit leaves the
-  entrainment band — an open quantitative prediction.
+- **Entrainment propagates — to depth four** (H49–H50,
+  [fig_chain4](../scripts/out/lab/fig_chain4.png)): successive agents lock
+  onto the previous *live* follower — a blind pacemaker plus three
+  phase-locked followers, four concentric rings, all stable through 10,800
+  steps. The chain's law is a **threshold, not a ramp**: orbit jitter stays
+  negligible for two links (sd 0.048 → 0.055), jumps 6× at the third
+  (0.38) as the rings contract toward a geometric floor (radii 7.8 → 6.5 →
+  5.6 → 2.3), and a fifth agent cannot evolve on the noisier, tighter
+  target. Link evolvability is start-basin sensitive (one false start
+  caught and fixed on the record) — IC-dependence at the collective level.
 
 ## What the two homeostatic channels actually do
 
@@ -421,17 +431,28 @@ the fast edge is sparse-and-informative.)
    ridge25? (Candidate: leak sets how long input context persists in x.)
 4. **Why the exact retinal drive formula underperforms the proxy** for the
    dead boundary — a closed-loop selection effect worth one figure.
-5. ~~Cluster-scale confirmations~~ — landed (H14 supported; see the ridge
-   section). Remaining cluster-scale item: none blocking; the harness and
-   Slurm lane are in place for future sweeps (whole 6k-run batch = 4m19s on
-   mit_quicktest).
+5. **What breaks entrainment chains** — H50 measured the threshold (jitter
+   6× at link 3, rings contracting to a floor) but not its mechanism; and
+   the max depth vs pacemaker radius curve is one clean sweep away.
+6. **Eligibility traces / multi-step credit** — the canonical untested rung
+   between scalar neuromodulation (refuted, H35–H36) and full prediction
+   machinery, at the motion-generality boundary.
+7. ~~Cluster-scale confirmations~~ — landed (H14, H45). The Slurm lane runs
+   a 6k-run batch in ~4 minutes on mit_quicktest; batch chunks must respect
+   the lane's wall-time.
 
 ## Instruments
 
-`scripts/lab/`: `common.py` (closed-loop arms incl. lesion/freeze/shuffle/
-swap variants, open-loop scripted retina, observables), k0–k4, act2 batches,
-b6/b6b/b7, cluster runner + batch generator. Viewers: `/lab` single-node
-explorer (all four end states as verified presets; duty law live), `/lab/phase`
-and `/lab/traj` (phase-map browser; entrainment trajectory viewer).
-Verification culture: preregistration ledger, CRN seeds, exact-law checks to
-machine precision, and honest negatives kept on the record.
+`scripts/lab/`: `common.py` (closed-loop arms incl. lesion / seven freeze
+variants / shuffle / effector-swap, open-loop scripted retina with sine and
+per-node law recording, observables), the k0–k4 kill tests, act2 batches,
+b6–b8, h21–h50 experiment scripts, cluster runner + batch generators, and
+`monday_update.md` (a pasteable summary). Six verified viewers: `/lab`
+(single-node explorer, duty law live), `/lab/phase` (the real planes,
+per-seed inspection), `/lab/traj` (entrainment trajectories, bit-exact
+against archived runs, effector swap), `/lab/wall` (arena + perturbation +
+the evolved edge-holder), `/lab/pursuit` (the perfect pursuer and its
+failure mode), `/lab/ecology` (the live two-agent chain, self-validating).
+Verification culture: preregistration ledger, CRN seeds, exact-law checks
+to machine precision, honest negatives — and eight of my own design bugs
+caught and recorded rather than papered over.
