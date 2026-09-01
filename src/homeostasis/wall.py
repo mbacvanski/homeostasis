@@ -77,6 +77,9 @@ class WallConfig:
     # sensor values are SWAPPED and multiplied by perturb_gain. None disables.
     perturb_at: int | None = None
     perturb_gain: float = 2.0
+    # Morphological knob (beyond the paper): omega = (e2 - e1) / wheel_base;
+    # None = 2 * agent_radius (the released kinematics).
+    wheel_base: float | None = None
 
     @property
     def n_sensors(self) -> int:
@@ -141,7 +144,8 @@ class WallEnv:
         vel = (e_first + e_second) / 2.0
         dx = vel * np.cos(self.heading)
         dy = vel * np.sin(self.heading)
-        omega = (e_second - e_first) / (2.0 * c.agent_radius)
+        wb = c.wheel_base if c.wheel_base is not None else 2.0 * c.agent_radius
+        omega = (e_second - e_first) / wb
         self.heading += omega
 
         nx, ny = self.x + dx, self.y + dy

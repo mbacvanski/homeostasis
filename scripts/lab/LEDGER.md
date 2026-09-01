@@ -1193,3 +1193,33 @@ Internal coordinates are rock-steady across 10x size: f 0.144-0.164,
 the organizing variables are degrees and rates, not counts.** (Batch
 lesson: shuffled chunks must respect the lane's wall-time; size-4 chunks on
 quicktest finished 288 runs incl. N=2000 in ~9 min.)
+
+## H48 (preregistered): the live ecology — a slow circler as a real pacemaker
+
+(a) Wall task at wlr {0.05, 0.1, 0.2}: prediction — absorption-regime wall
+agents still avoid (late hits ~0 for most seeds) and circle SLOWER at
+similar radius (angular rate scales with f; radius = v/omega is
+f-independent), yielding a natural pacemaker at <= 2.5 deg/step. (b) Live
+one-way chain (circler blind to follower; follower senses circler's
+position): an evolved follower entrains to the LIVE slow circler (near3 >=
+0.8 over the last half), completing the first sustained two-agent
+homeostatic ecology.
+
+## H48 verdict: THE LIVE ECOLOGY EXISTS (with its requirements measured)
+
+(a) Naturally slow circlers do NOT exist in the paper's arena: absorption-
+regime wall agents are dead statues (avoidance-by-death), churn circlers
+turn at >= 5.6 deg/step — above the follower band. The family cannot pace
+itself AT THE PAPER'S SCALE. But morphology+world rescaling opens it: wall
+wheel_base 2.5-4 in a 30-unit arena yields clean circlers at 1.9-2.6
+deg/step (radius ~4.5-7.8). (b) Cold-start GA on the live chain fails
+(toll-booth, 0.17) and champion transfer is partial (h34 follower: 0.57);
+(c) WARM-STARTED evolution (population seeded from the h34 follower) locks
+by generation ~9: **near4 1.00, dist 3.77, stable through 10,800 steps —
+the blind wall-circling pacemaker entrains a live follower into a
+concentric phase-locked orbit** (fig_live_chain.png). First sustained
+two-agent homeostatic system. Requirements, all measured: a pacemaker in
+the entrainment band (needs morphological wheel-base + arena rescaling),
+one-way sensory coupling, and selection warm-started from prior follower
+competence. The mentors' multi-agent question has its constructive answer
+and its recipe.
