@@ -296,6 +296,30 @@ wiring-level selection reliable-on-its-pair — hands the mentors'
 connectivity/DNA agenda both an empirical mandate and a working first local
 rule.
 
+## The two-body problem, and the band clause
+
+First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
+`h47_pacemaker.py`):
+
+- **Two mutually-tracking homeostats collapse to collective stillness** in
+  the absorption regime — instantly, wherever they start in view of each
+  other, because a static partner is already a stationary stimulus (and an
+  out-of-view start freezes them forever: mutual darkness is absorbing).
+  Churn pairs chase weakly without locking; a mixed pair shows the churner
+  *animating* the absorber (f 0.000 → 0.038) but not leading it — churn
+  motion is aperiodic, exactly the class the competence law forbids.
+- **The pacemaker test** closes the loop on the family's own artifacts: a
+  recorded wall-circler orbit is unfollowable at its native 6.4°/step (best
+  evolved agent: center-parking, 0.50) yet **perfectly followed at 2.1°/step**
+  (near3 1.00 by generation 5). The competence law is therefore two-clause:
+  *(i) the target's co-moving frame must require ~constant control (shape,
+  tolerance ≈ 2× curvature modulation), and (ii) the frame's angular rate
+  must sit inside the entrainment band (speed).*
+- Ecology corollary for the multi-agent program: sustained collective
+  entrainment requires a **slow periodic pacemaker** — interaction alone
+  yields stillness or unfollowable churn. Slow-circling wall-avoidance
+  configs are the predicted viable pacemakers.
+
 ## What the two homeostatic channels actually do
 
 - **The weight servo is the universal necessary channel**: freeze-W-only is
