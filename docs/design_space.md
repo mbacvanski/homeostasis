@@ -1,9 +1,9 @@
 # How homeostatic reservoirs work: laws, phases, and the entrainment mechanism
 
 *Findings of the design-space campaign of 2026-08-31/09-01 (scripts/lab/;
-60 preregistered hypotheses H1–H60 in
-[scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~20,000 local runs plus
-three cluster batches; four tasks — tracking, Pong, wall avoidance, and the
+75 preregistered hypotheses H1–H75 in
+[scripts/lab/LEDGER.md](../scripts/lab/LEDGER.md), ~25,000 local runs plus
+five cluster batches; four tasks — tracking, Pong, wall avoidance, and the
 new pursuit task — plus two-to-four-agent ecologies). Method: every
 hypothesis preregistered before its experiment; common-random-number wiring
 seeds; all scripts deterministic (three bit-identical cross-machine
@@ -676,21 +676,19 @@ family:
 regional. Former upper-edge question answered by h22: no averaging corner;
 the fast edge is sparse-and-informative.)
 
-1. **What sets the wander floor.** The "seed lottery" partially dissolves:
-   late segment scores within a run are mutually uncorrelated (+0.03) — much
-   of the seed variance is sampling noise of a *wandering* process, and w1′'s
-   100%-seed reliability is a wander floor above threshold. The fixed seed
-   effect that remains (early↔late +0.45 at the ridge) is modest. The right
-   question is what design choices raise the floor of the wander — and it is
-   now known to be **non-additive** (h24/h25): necessity analysis names
-   {gain, leak, N} as w1′'s load-bearing trio, yet no subset transplants
-   (grafts onto ridge25 all hurt; the trio at N=200 reaches only 0.534 vs
-   w1′'s 0.84), and the ridge law itself failed to extrapolate to w1′'s
-   corner (wlr=1.0 ≥ 0.65 there). The best configs are jointly-tuned wholes;
-   the floor lives in ≥3-way interactions.
-2. **Formalize information-per-spike**: the h22 sparse-informative fast edge
-   suggests an efficiency curve (bits/spike vs slip frequency) worth one
-   clean experiment; also the secondary resonance near sensor-spacing/speed.
+1. **What sets the wander floor** — now half-answered. The wander's SD is
+   *universal* (~0.26–0.28 in every long-run cell tested; H66): design
+   moves the mean, and "reliability" is threshold-crossing statistics
+   around it. Its bad segments are *dark excursions* (r(segment score,
+   segment duty) = +0.52–0.81; H70) — the H51 trap visited transiently.
+   What remains open is the microdynamics generating that invariant SD
+   (and the earlier non-additivity results stand: the best configs are
+   jointly-tuned wholes; the floor lives in ≥3-way interactions).
+2. **Formalize information-per-spike** — sharpened by H65's refutation:
+   info-per-spike *rises* with wiring density (gain/f 1.4 → 9.0 across
+   p = .02 → .4 at the ridge; density creates code sparsity), and the
+   best Pong players run at f ≈ 0.02. A decoding-based bits/spike curve
+   is one clean experiment away; also the sensor-spacing resonance.
 3. **Why does the carrier regionalize** — pure W-storage at w1′ vs mixed at
    ridge25? (Candidate: leak sets how long input context persists in x.)
 4. **Why the exact retinal drive formula underperforms the proxy** for the
@@ -700,12 +698,23 @@ the fast edge is sparse-and-informative.)
    falls below the followable band (~0.09–0.28 units/step). The live
    follow-up: can a link be *designed* to hold radius (a speed
    regenerator), where the naive heavy-wheel repeater failed (H63)?
-6. **Eligibility traces / multi-step credit** — the canonical untested rung
-   between scalar neuromodulation (refuted, H35–H36) and full prediction
-   machinery, at the motion-generality boundary.
-7. ~~Cluster-scale confirmations~~ — landed (H14, H45). The Slurm lane runs
-   a 6k-run batch in ~4 minutes on mit_quicktest; batch chunks must respect
-   the lane's wall-time.
+6. ~~Eligibility traces / multi-step credit~~ — CLOSED (H56): traces
+   fail at two decay constants, and so does the decisive
+   erosion-免-arm (homeostasis frozen mid-run while reward continues).
+   The barrier is task-side (the competence clauses), not rule-side;
+   beyond this only structured machinery (prediction) remains untested.
+7. **The target channel's slow erosion** (H71): freeze-T-only abolishes
+   the long-horizon sag and wins outright; the per-node selectivity of
+   the harmful drift is dynamic, not anatomical (H72 null) — one
+   activity-conditioned measurement away.
+8. **Why the sag's cure and the statics cliff point opposite ways** — T
+   adaptation is needed early (calibration; cliff escape) and harmful
+   late (erosion): the natural synthesis is a target-channel
+   developmental window, untested.
+9. ~~Cluster-scale confirmations~~ — landed (H14, H45, plus the sparse
+   and durability batches). The Slurm lane runs a 6k-run batch in ~4
+   minutes on mit_quicktest; batch chunks must respect the lane's
+   wall-time.
 
 ## Instruments
 
