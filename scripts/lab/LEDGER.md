@@ -2560,3 +2560,19 @@ working ecology and champion in this campaign implicitly used. Closes
 the acquisition arc: speckle basins (H91), noise fails (H89),
 curriculum fails (H90), below-horizon selection prefers blindness
 (H55). (h91_patch.json)
+
+## Campaign statistics (as of H91, 2026-09-01 03:45)
+
+85 preregistered hypothesis entries, 106 verdict/addendum entries,
+~2,550 ledger lines. 52 entries contain a refutation — the productive
+majority: most of tonight's strongest results (the third competence
+clause, the speed-floor chain mechanism, the T-channel liability, the
+static cliff, no-figure-ground, speckle acquisition basins) began as
+the refutation of a preregistered prediction, ours included. Instrument
+bugs and design confounds caught and kept on the record: 7 (H28 epoch,
+H37 wrap-jump, H47 replay, H57c hazard selection, H59 rev-1/2, H67
+rev-1/2 chirality+shape, H85 fresh-wiring arm, H86 parallel-update
+staleness). Three lotteries now named: wiring, wander (threshold-
+crossing), and acquisition phase (speckle). Two mechanisms added to the
+repo as first-class code: structural grow/prune homeostasis (H42-era)
+and StickyAttention (H84).
