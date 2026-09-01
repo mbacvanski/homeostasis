@@ -1038,3 +1038,28 @@ wiring structure; learning, shuffling, and annealing all act in weight
 space and cannot cross it. Structural plasticity (grow/prune) or
 wiring-level selection is the missing mechanism** — precisely the mentors'
 connectivity/DNA agenda, now with an empirical mandate.
+
+## H42 (preregistered): structural homeostasis — can grow/prune cross the ceiling?
+
+Marked model EXTENSION (like input_plastic; implemented in the lab loop,
+core untouched): every 120 steps each node with window-mean error < -0.05
+(persistently starved) GROWS one incoming link from a random non-neighbor
+(weight = weight_init_mean draw); each node with window-mean error > +0.05
+(persistently overdriven) PRUNES its weakest incoming link. In-degree
+bounded [2, 3*p*N]. Test: pursuit champion genome x 16 fresh wirings x
+{structural on, off} x 14400 steps. Prediction (risky): lock rate rises
+from 0-1/16 to >= 6/16 — the agent rewires its way into the lock basin.
+Failure narrows the fix to wiring-level SELECTION (structure search may
+need population-level exploration, not local hill-climbing).
+
+## H42 verdict: PARTIAL — structural plasticity is the first within-life mechanism to cross the ceiling
+
+Grow/prune lifts lock rate 0/16 → 3/16 (mean near3 0.09 → 0.25; 1132
+grown / 758 pruned, mean degree 6.4 → 13). Below the preregistered >= 6/16
+(recorded), but qualitatively decisive: the mechanism HIERARCHY for the
+structure ceiling is now measured — weight-space operations 0/16; local
+structural hill-climbing 3/16; population selection over wirings (H34)
+reliable on its pair. First-guess parameters (theta ±0.05, window 120,
+random growth source) untuned; the direction, not the number, is the
+finding. This hands the mentors' connectivity/DNA agenda its empirical
+mandate and its first working local rule.
