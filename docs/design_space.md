@@ -284,6 +284,18 @@ reward-scaled (H35) nor one-step reward-directed (H36) plasticity crosses,
 leaving *minimal structural additions* (eligibility traces? prediction?) as
 the live question.
 
+**The lottery's home, and the mechanism hierarchy** (H40–H42): the wiring
+lottery lives in the frozen adjacency — weight-space operations cannot touch
+it (flow-seeking annealing fires 21 times/run and locks 0/16, because
+shuffles permute values on fixed structure). A minimal *structural
+homeostasis* extension (persistently starved nodes grow a random afferent,
+persistently overdriven nodes prune their weakest; core untouched) becomes
+the first within-life mechanism to cross the ceiling: 3/16 locks vs 0/16.
+The measured hierarchy — weight ops 0/16, local structural plasticity 3/16,
+wiring-level selection reliable-on-its-pair — hands the mentors'
+connectivity/DNA agenda both an empirical mandate and a working first local
+rule.
+
 ## What the two homeostatic channels actually do
 
 - **The weight servo is the universal necessary channel**: freeze-W-only is
