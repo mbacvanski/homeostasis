@@ -1358,3 +1358,53 @@ weights (w_mean 0.106 -> 0.210 at k=0.5, near-exact 2x for halved
 in-degree; T gives only 0.07, blocked by floor 1.0). The model reproduces
 deafferentation-induced compensatory synaptic scaling (Turrigiano) from
 eq. 5 with nothing added. (h53_selfrepair.json)
+
+## H54 (preregistered): sparsity acts through drive variance, not drive mean
+
+p_link in {.02,.05,.1,.2,.4,.8}, input wiring pinned (input_p_link=.1) and
+output pools pinned (rebuilt at p=.1, side rng) so ONLY recurrent sparsity
+varies; wlr {0.1 ridge, 0.03 statue} x 16 CRN seeds; plus two unpinned
+output cells (p=.02,.8 at wlr .1) to measure the readout-pool confound.
+Predictions from the laws: (i) controller renormalization — w_mean*p*N
+(total recurrent input) spread <25% across the 40x p range, g_final
+~p-invariant; (ii) f ~invariant (duty law: rates set by mu/T); (iii) RISKY:
+dense (.4-.8) DEGRADES score at the ridge — fluctuation starvation, drive
+variance ~1/sqrt(pN) too small to break stillness; (iv) sparse (.02-.05)
+RESCUES wlr=0.03 the way sigma=0.1 sensor noise did (internal fluctuation
+substitutes for external).
+
+## H54 verdict: conservation confirmed; dense-harm refuted; sparse pre-adaptation
+
+(i) CONFIRMED at ridge: w*p*N = 2.01-2.17 over 40x p (8% spread << 25%),
+g_final 0.93-1.02 — total recurrent input is conserved; criticality is
+wiring-invariant. At wlr=0.03 renormalization goes UNFINISHED for dense
+wiring (w*p*N 7.12 at p=.8, f 0.70 spiking storm) — lawful violation.
+(ii) f roughly invariant at ridge (0.111-0.176). (iii) REFUTED: dense is
+NOT worse at the ridge (flat 0.42-0.48) — no fluctuation starvation.
+(iv) CONFIRMED and then some: p=.02 at wlr=.03 scores 0.566 with 15/16
+reliability — best cell of the campaign. Mechanism: sparsity sets the
+INITIAL Sigma-w near comfort (g_init ~1.5 vs 7.5), so nearly-frozen
+plasticity suffices — sparse wiring is PRE-ADAPTED and avoids churn.
+Readout confound measured: unpinned dense output pools (~160-node) average
+away L/R asymmetry (0.251 vs 0.443 pinned); sparse readout pools are the
+motor symmetry-breakers. (h54_sparsity.json)
+
+## H54b (preregistered): the ridge is matched to initial distance-from-comfort
+
+If wlr* exists to renormalize Sigma-w_in to comfort without churn, optimal
+wlr should INCREASE with p. Predictions: at p=.02, wlr=1.0 is terrible
+(<0.30 — 4-link columns take huge per-link kicks) and wlr<=0.03 optimal;
+at p=.8, score becomes monotone-increasing in wlr over {.03,.1,.3,1.0}.
+
+## H54b verdict: sparse lowers wlr* (confirmed); dense narrows, not raises
+
+p=.02 monotone decreasing in wlr (0.566/0.94 at .03 -> 0.299/0.31 at 1.0):
+optimum matched to the small initial distance-from-comfort, as predicted.
+p=.8 REFUTES the monotone-increase claim: peak stays at wlr=.1 (0.443) and
+the band NARROWS — wlr .3 and 1.0 both collapse to 0/16. Two distinct
+dense failures: wlr=1.0 is runaway potentiation (w*p*N -> +235; the
+explosion threshold falls with density); wlr=.3 renormalizes fine
+(w*p*N 2.41, f 0.23) yet competence dies — a carrier-level loss (same
+total spread over 160 links), mechanism open. Summary law: sparsity
+WIDENS the viable plasticity window and shifts it down; density narrows
+it. Sparse is forgiving, dense is brittle. (h54b_matched.json)

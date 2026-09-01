@@ -98,6 +98,13 @@ def run_closed_loop(task: dict) -> dict:
     net = HomeostaticReservoir(rcfg, seed=seed)
     env = TrackingEnv(tcfg)
 
+    pin_out = task.get("pin_output_p")
+    if pin_out:
+        orng = np.random.default_rng(seed + 880008)
+        net.output_adjacency = orng.random(
+            (rcfg.n_nodes, rcfg.n_outputs)) < float(pin_out)
+        net._rebuild_structure_caches()
+
     if arm == "no-learn":
         net.learning_enabled = False
     elif arm == "lesion":
