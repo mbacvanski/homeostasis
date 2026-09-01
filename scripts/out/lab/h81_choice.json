@@ -1,0 +1,1 @@
+{"a2_only": {"label": "A2-only followability", "lock": [0.021]}, "startA1": {"label": "start near A1", "lock": [0.034, 0.088], "rival_closer_frac": 0.513}, "startA2": {"label": "start near A2", "lock": [0.046, 0.065], "rival_closer_frac": 0.564}, "teleport": {"label": "teleport to A2 at 5400", "lock": [0.071, 0.058], "rival_closer_frac": 0.46}}

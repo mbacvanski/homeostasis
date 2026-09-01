@@ -190,3 +190,13 @@ got its full psychometric (plateau 0.10–0.26 units/step), and
 information-per-spike is now in units: density buys code sparsity buys
 ~11x bits/spike (dense-quiet networks carry more information absolutely
 at a third of the spikes).
+
+**And the last boundary of the night: no figure-ground.** Give the
+proven follower two visible pacemakers — even one it cannot follow
+anyway — and it locks nothing (1.000 alone → 0.034 with the second bump;
+a distractor at 10% salience already abolishes the lock). Superposed
+flows leave no constant-control frame, and the architecture has no
+source separation. The depth-4 chain worked only because each link sees
+exclusively its own target — selective attention, not prediction, looks
+like the first structural addition a real multi-agent homeostatic
+ecology needs.

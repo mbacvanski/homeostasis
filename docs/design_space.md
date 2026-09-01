@@ -524,6 +524,21 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   pacemaker (morphology + arena rescaling), one-way coupling, and selection
   warm-started from prior follower competence (cold-start GAs find
   toll-booths).
+- **There is no figure-ground** (H81/H81b, `h81_choice.py`): give the
+  proven follower TWO visible pacemakers — even one it cannot follow
+  anyway — and it locks *nothing* (A1 lock 1.000 alone → 0.034 with the
+  second bump present; a distractor at just 10% salience already
+  abolishes the lock, 0.064). Superposed flows at different rates leave
+  no co-moving frame with constant control: the mixture violates clause
+  (i), and the architecture has no source separation to escape it. Two
+  corollaries: the depth-4 chain's per-link exclusive sensing (each
+  follower sees only its own target) was *load-bearing*, not a
+  simplification — an all-visible ecology would collapse; and with
+  H67's ~1% jitter tolerance this completes the knife-edge theme —
+  perfect locks, self-repair, and N-invariance inside the single-source
+  clean-flow manifold, collapse at every measured edge. **Selective
+  attention is the missing machinery for real multi-agent ecologies**,
+  arguably ahead of "prediction" in the structural-additions queue.
 - **Entrainment propagates — to depth four, and the ceiling's mechanism
   is now closed** (H49–H50, H60–H68b,
   [fig_chain4](../scripts/out/lab/fig_chain4.png),

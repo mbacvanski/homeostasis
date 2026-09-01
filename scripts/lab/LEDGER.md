@@ -2231,3 +2231,55 @@ fast weight erosion (paper cell 15/16 vs ~6-7/16 slow): the storm is
 not the guardian of aliveness (that was eq. 4's victim count) but it
 remains a genuine search accelerator for attractor quality. With tlr=0
 the wall task runs on eq. 5 alone — and works. (h79_wall_t.json)
+
+## H81 (preregistered): two pacemakers, one follower — attention and hysteresis
+
+A1 = the proven pacemaker (seed 3; ring r7.8 at (19.7,19.7), speed
+0.255); A2 = seed 33 (r3.85 at (24.1,4.8), speed 0.234 in linear band
+but omega ~3.5 deg/step — angularly fast). Follower = h48e champion,
+sensing the SUM of both retinal bumps. Pre-test: A2-only followability.
+BRANCH 1 (A2 followable, lock >= 0.6): predictions (a) exclusive lock
+(one >= 0.7, other <= 0.1); (b) bistability — start near A1 locks A1,
+start near A2 locks A2; (c) stickiness — lock survives >= 80% of
+rival-closer episodes; (d) teleporting the follower to the rival's ring
+at 5400 switches the lock. BRANCH 2 (A2 unfollowable): the experiment
+becomes distractor resistance — predictions (a') start-near-A1 still
+locks A1 >= 0.6 despite the added moving bump; (b') the A1 lock's
+quality drops < 0.15 vs the single-pacemaker baseline (near4 1.00,
+known); (c') the teleport arm re-acquires A1 (returns) rather than
+locking A2.
+
+## H81 verdict: NO FIGURE-GROUND — a second bump abolishes the lock
+
+Branch 2 applied (A2 unfollowable alone, 0.021) and its predictions
+failed in the harsh direction: with both pacemakers visible the
+follower locks NOTHING (A1 lock 0.034 vs 1.00 single; all arms
+0.03-0.09). A second moving stimulus — even an unfollowable one —
+poisons entrainment on the first: superposed flows at different rates
+leave no co-moving frame with constant control (clause i, violated by
+mixture). Homeostatic entrainment has no source separation. Corollary
+recorded: the depth-4 chain's per-link exclusive sensing (each follower
+sees only its own target) was LOAD-BEARING, not a simplification — an
+all-visible ecology would collapse. (h81_choice.json)
+
+## H81b (preregistered): the distractor-tolerance curve
+
+Same setup, A2's retinal contribution scaled by lambda in {0, 0.1,
+0.3, 1.0} (A1 full). Predictions: (a) lock-on-A1 is monotone decreasing
+in lambda; (b) tolerance is weak — lock (>= 0.6) survives lambda=0.1
+but not 0.3; (c) at the lambda where lock fails, failure is global
+(locks neither), not a switch.
+
+## H81b verdict: distractor tolerance is ~zero
+
+lambda=0 -> lock 1.000; lambda=0.1 -> 0.064; 0.3 -> 0.047; 1.0 ->
+0.034. (b) REFUTED harshly: even a 10%-salience second bump abolishes
+entrainment ((a) monotone, (c) global failure — no switching, ever).
+With H67's ~1% jitter tolerance this completes a theme: the family's
+competence is a knife-edge — perfect locks, self-repair and
+N-invariance inside the single-source clean-flow manifold; collapse at
+every measured edge (1% noise, <10% distractor, sub-horizon
+engagements, out-of-band speeds). Selective attention / figure-ground
+is the missing machinery for any real multi-agent ecology — arguably
+ahead of "prediction" in the structural-additions queue.
+(h81b_tolerance.json)
