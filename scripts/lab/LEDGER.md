@@ -2664,3 +2664,26 @@ left for T to integrate into a harmful profile. Sharpened prescription:
 freeze T on slow-weight configs (ridge, sparse-slow); fast-weight
 configs self-protect by starving T — and there T's early calibration
 value is real. (h95_w1p.json)
+
+## H96 (preregistered): the T-toxin follows error exposure
+
+If the toxin is T integrating residual error that slow W leaves behind
+(H95's account), the long-horizon sag with T on should DECREASE in wlr.
+Ridge-line cells wlr {0.03, 0.1, 0.3, 1.0} at leak .25, tlr .01, pins,
+12 CRN seeds, n=21600. Predictions: (a) sag is monotone decreasing in
+wlr (rank order holds); (b) sag at wlr=1.0 within +-0.03 of zero;
+(c) sag at wlr=0.03 <= -0.08.
+
+## H96 verdict: REFUTED — the error-exposure account dies in an hour
+
+Sag across wlr at leak .25: -0.046 (0.03), -0.104 (0.1), +0.076 (0.3!),
+-0.081 (1.0); |E| falls monotonically (0.61 -> 0.21) while sag does
+not follow. (a),(b),(c) all refuted: NOT monotone, wlr=1.0 sags despite
+the lowest error, and 0.3 is a benign island. The H95 unification
+("fast W starves T") is wrong as a general law — w1's exemption must
+live in its jointly-tuned whole (leak .59 x gain x N — the h24/h25
+non-additivity theme again). Facts standing: T-channel causality at the
+ridge (48-seed), profile-carried damage (H80), w1' exempt (H95). The
+toxin-accumulation mechanism is OPEN with four single-coordinate
+stories now refuted (mean-T, anatomy, activity, error exposure).
+(h96_exposure.json)
