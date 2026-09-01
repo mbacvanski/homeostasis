@@ -860,3 +860,59 @@ slightly harmful). Mechanism: the homeostatic update's DIRECTION is fixed
 by drive error; reward-scaling changes when it learns, never what. The
 sharpened boundary statement: crossing it requires reward-DIRECTED credit
 (e.g., a three-factor term), not reward-scaled comfort. (H36 candidate.)
+
+## H36 (preregistered): does reward-DIRECTED credit cross the boundary?
+
+Minimal three-factor addition ON TOP of the intact homeostatic rules:
+after each step, dw[pre,post] += eta_r * r * pre_spike(t-1) * post_spike(t)
+on existing links (same eligibility window as the homeostatic gate), r =
+approach rate as in H35. This deliberately ADDS machinery (a marked
+design-space extension). Arms: eta_r {0, 0.01, 0.05, 0.2} x 12 fresh
+wirings on waypoint pursuit + a time-shuffled-r control at the best eta_r
+(same reward statistics, no contingency). Predictions: (a) if directed
+credit suffices at N=64, some eta_r lifts median near3 to >= 0.3 (baseline
+0.13) and shuffled-r does not; (b) failure at all eta_r means the boundary
+needs more than scalar-modulated Hebbian credit (structured
+prediction/planning) — either way the boundary sharpens.
+
+## H36 verdict: REFUTED — one-step three-factor credit does not cross it either
+
+eta {0.01, 0.05, 0.2}: best 0.14 vs control 0.13; shuffled-reward control
+identical (0.13). Neither reward-scaled (H35) nor reward-directed one-step
+Hebbian (H36) modulation produces unpredictable-target pursuit at N=64
+within a lifetime. Scope caveats on the record: one genome, global scalar
+reward, no eligibility traces, 7200 steps — traces/multi-step credit are
+the canonical next rung. As a minimal-additions statement it stands: the
+boundary needs structured machinery, not scalar neuromodulation.
+
+## H37 (preregistered): the followability law
+
+Stimulus "wander" motion: constant speed 0.15, heading diffusing with
+per-step sigma (direction correlation time T_c ~ 1/sigma^2), reflecting at
+the walls. Champion pair (H34, seed 66777). Predictions: (a) near3 is a
+decreasing function of 1/T_c with a knee where T_c crosses the agent's own
+re-lock time (order 10^2 steps): near3 >= 0.5 for T_c >= ~1000 and
+collapse toward the 0.12 waypoint level by T_c ~ 100; (b) the law's form —
+followable iff the target's co-moving frame outlives re-entrainment — is
+the quantitative boundary of ladder rung 3.
+
+## H37 verdict: unmeasurable as designed — and the probe found something better
+
+Two failures on the record: (1) the rep-variation hack (extra tail steps)
+did not vary trajectories (identical runs, ±0.00 SDs) — env randomness
+draws from the same rng stream regardless; (2) the sigma=0 "persistence
+reference" is a straight-line wall-bouncing shuttle, not the orbit — and
+the perfect orbit-pursuer scores **0.02** on it (vs 1.00 on its orbit).
+PERFECTLY PREDICTABLE but differently-SHAPED motion destroys the solution:
+the champion is a resonator tuned to one closed absorbable manifold, not a
+persistence-limited follower. The followability-vs-persistence law cannot
+be measured because the family produces no general follower to measure.
+Final rung-3 statement: **the homeostatic family produces target-specific
+resonators** — following exists only as entrainment onto a specific
+stationary-izable manifold (tracking's circle, wall's orbit, pursuit's
+co-rotating ring); no tested mechanism (hand design, genome selection,
+joint wiring selection, reward-scaled or reward-directed plasticity)
+yields motion-general pursuit. Theory note: a shuttle also has a periodic
+co-moving frame, but with heading-flip discontinuities at the turning
+points that absorption cannot smooth — shape-specificity is
+absorbability-of-the-frame, consistent with everything above.

@@ -55,7 +55,8 @@ class PursuitConfig:
     # to the retina's angular grain.
     wheel_base: float | None = None
     # stimulus
-    stimulus_motion: str = "orbit"        # orbit | waypoint | still
+    stimulus_motion: str = "orbit"        # orbit | waypoint | still | wander
+    wander_sigma: float = 0.05            # per-step heading diffusion (rad), wander mode
     stimulus_speed: float = 0.15          # arena units per step
     orbit_radius: float = 4.5
     waypoint_margin: float = 2.0          # keep targets this far from walls
@@ -92,6 +93,10 @@ class PursuitEnv:
             self._phase = 0.0
             self.sx = center + c.orbit_radius
             self.sy = center
+        elif c.stimulus_motion == "wander":
+            self.sx = center + 2.0
+            self.sy = center
+            self._sphi = 0.0
         else:
             self.sx = center
             self.sy = center + 3.0
@@ -158,6 +163,18 @@ class PursuitEnv:
             self._phase += c.stimulus_speed / c.orbit_radius
             self.sx = center + c.orbit_radius * np.cos(self._phase)
             self.sy = center + c.orbit_radius * np.sin(self._phase)
+        elif c.stimulus_motion == "wander":
+            self._sphi += float(self.rng.normal(0.0, c.wander_sigma))
+            nx = self.sx + c.stimulus_speed * np.cos(self._sphi)
+            ny = self.sy + c.stimulus_speed * np.sin(self._sphi)
+            lo, hi = c.waypoint_margin, c.box_size - c.waypoint_margin
+            if nx < lo or nx > hi:
+                self._sphi = np.pi - self._sphi
+                nx = float(np.clip(nx, lo, hi))
+            if ny < lo or ny > hi:
+                self._sphi = -self._sphi
+                ny = float(np.clip(ny, lo, hi))
+            self.sx, self.sy = float(nx), float(ny)
         elif c.stimulus_motion == "waypoint":
             tx, ty = self._target
             d = np.hypot(tx - self.sx, ty - self.sy)
