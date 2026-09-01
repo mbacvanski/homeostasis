@@ -804,3 +804,59 @@ the sharpest available statement of the mentors' "when does reward/
 evolution become necessary" question: reward selects orbits within a
 lifetime (H29/H30); evolution selects genomes; NEITHER, so far, selects
 past the wiring lottery.
+
+## H33c (autopsy): the perfect pursuer is a phase-locked co-rotating orbit
+
+Seed 1004: the agent circles concentrically JUST INSIDE the stimulus's
+orbit — revolution rate +1.9 deg/step = the stimulus's own angular rate
+(phase lock), dist 2.40±0.27, bearing ~34 deg constant, f=0.08 (deep
+absorbed regime), 9 hits all early. It does not chase; it found the
+co-rotating frame in which its retina is STATIC — the wall task's
+stability-selected circle transported into the target's moving frame.
+Velocity entrainment (tracking), orbit stability-selection (wall), and
+pursuit are one mechanism: **behavior settles on absorbable sensory
+manifolds**. The competence boundary refines to: such manifolds exist for
+pursuit but are rare in wiring space (the lottery); servo controllers need
+no luck because they use sign information explicitly.
+Figure: scripts/out/lab/fig_perfect_pursuer.png.
+
+## H34 (preregistered): the lottery is fixable by selecting wirings
+
+Joint evolution of (genome, seed) — the wiring seed as a gene (re-drawn
+with p 0.25 on mutation), fitness on the individual's own wiring.
+Predictions: champion near3 >= 0.8 by generation 8; final population mean
+>= 0.4; and the champion GENOME re-tested across fresh seeds remains a
+lottery (the fix is keeping the wiring, not improving the genome).
+
+## H34b verdict: a permanent orbit resonance, not general pursuit
+
+Champion pair holds near3 1.00 / dist 0.84 for 14400 steps (3 hits) — a
+stable attractor. Genome on fresh wirings: median 0.11 with TWO perfect
+(2/16; jackpot rate raised, lottery intact — prereg (c) ✓). WAYPOINT
+(unpredictable) motion: collapse to 0.12 / dist 6.68 / 351 hits. The
+evolved solution is an orbit-commensurate limit cycle — entrainment onto
+the target's co-moving frame — and unpredictable motion offers no such
+frame. Empirical settlement of the mentors' meeting-note conjecture: the
+"predictable following" half of ladder rung 3 IS an entirely homeostatic
+process (their baseball intuition, confirmed); the unpredictable half is
+where the family's competence ends.
+
+## H35 (preregistered): minimal reward-gating at the established boundary
+
+Reward-modulated weight servo on WAYPOINT pursuit: after each step, rescale
+the just-applied weight delta by (1 + beta*r), r = clip(approach rate /
+0.15, -1, 1) (targets untouched; beta=0 is the control). Champion genome,
+fresh wirings 2000-2015, beta {0, 2, 5}. Prediction (risky): if the missing
+ingredient is merely credit-for-approach, near3 rises well above the 0.12
+baseline within a lifetime; failure would mean unpredictable pursuit needs
+machinery beyond modulated homeostasis (prediction/planning). Either
+outcome sharpens the boundary.
+
+## H35 verdict: REFUTED — reward-as-gain on homeostasis is not reinforcement
+
+Scaling the weight servo's magnitude by an approach reward does nothing on
+waypoint pursuit (beta 2: near3 0.14 vs control 0.13; beta 5: 0.10 —
+slightly harmful). Mechanism: the homeostatic update's DIRECTION is fixed
+by drive error; reward-scaling changes when it learns, never what. The
+sharpened boundary statement: crossing it requires reward-DIRECTED credit
+(e.g., a three-factor term), not reward-scaled comfort. (H36 candidate.)
