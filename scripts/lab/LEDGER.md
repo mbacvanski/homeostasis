@@ -1675,3 +1675,11 @@ D 7.06 (~10%/link, refining the earlier ~15% eyeball). Entrainment
 chains are finite because each follower re-broadcasts its pacemaker's
 phase noise amplified; without regeneration the signal exits the band
 clause within ~4 links. (h60_depth5.json)
+
+## H60b: rings are stationary; an artifact caption stands corrected
+
+Radii by thirds over 21,600 steps: A 9.99/9.25/9.29, B 8.74/8.31/8.38,
+C 8.83/7.85/7.93, D 7.04/7.04/7.08 — no inward spiral; the chain is a
+true limit set. The artifact's earlier "7.8 -> 6.5 -> 5.6 -> 2.3" radii
+were wrong (eyeballed from overlapping trajectories); correct contraction
+is 9.3 -> 8.4 -> 7.9 -> 7.1, ~10%/link. (h60b_drift.json)
