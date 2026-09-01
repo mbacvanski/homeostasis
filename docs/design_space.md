@@ -533,8 +533,12 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   ω·r at every link). The fifth agent fails because its target now crawls,
   stop-and-go, below the followable speed band — the known unfollowable
   near-stationary class. The band's edges were measured the same night:
-  0.184 and 0.237 followable, 0.086 and 0.313 not, so **followable target
-  speed ≈ (0.09, 0.28) arena-units/step for this body class**; the chain's
+  0.184 and 0.237 followable, 0.086 and 0.313 not — and the full
+  psychometric (H75) has a plateau at 0.10–0.26 (near4 0.94–1.00)
+  falling to 0.59 at 0.06 and 0.48 at 0.30, so **followable target speed
+  ≈ 0.08–0.28 arena-units/step for this body class**, with the low edge
+  jointly set by speed and speed-*regularity* (a clean 0.06 circle
+  nearly locks; D's stop-and-go 0.086 does not); the chain's
   depth limit is a *speed floor*, not noise (the earlier
   jitter-amplification reading is retracted: phase-aligned residuals
   *shrink* down the chain, 0.31 → 0.11 — each follower is a regularizer,

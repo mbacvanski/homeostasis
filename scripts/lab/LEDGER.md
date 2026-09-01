@@ -2083,3 +2083,23 @@ do not hurt either). The damper role exists only against fast-weight
 overshoot; at the sparse-slow optimum Pong runs on the weight channel
 alone — tlr=0 is nominally the campaign's best Pong cell (0.684).
 (h74_pong_tlr.json)
+
+## H75 (preregistered): the followable speed band, measured as a curve
+
+Synthetic circles (correct chirality, r=7.0, box 30) at speeds {0.06,
+0.10, 0.14, 0.18, 0.22, 0.26, 0.30}; per speed, the h50-protocol GA
+(warm from the D genome, 6 gens, pop 16) defines attainability.
+Predictions: (a) lock (near4 >= 0.6) attainable across [0.10, 0.26];
+(b) falloff outside is monotone; (c) edges consistent with tonight's
+brackets: lower in (0.086, 0.14), upper in (0.26, 0.31).
+
+## H75 verdict: the band, measured — plateau 0.10-0.26, edges ~0.08 / ~0.28
+
+GA-attainability psychometric on clean circles (r=7): 0.06 -> 0.59,
+0.10-0.26 -> 0.94-1.00 (plateau), 0.30 -> 0.48. (a) confirmed exactly;
+(b) monotone on both flanks; (c) upper edge in (0.26, 0.30) as
+bracketed; lower edge sits at ~0.06-0.08 — slightly below the D-derived
+bracket, which resolves cleanly: a CLEAN slow circle nearly locks while
+D (same mean speed 0.086 but 67% speed modulation, stop-and-go) does
+not. The low edge is jointly set by speed AND speed-regularity — the
+constant-control clause in the speed dimension. (h75_band.json)
