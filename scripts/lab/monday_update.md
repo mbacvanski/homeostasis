@@ -244,3 +244,13 @@ dynamical state, not the structure: you can't inherit a lock, because
 competence is a held equilibrium. What DNA-like heredity needs — and
 this family lacks — is scaffolded development that re-derives state.
 That's the measured gap for the reproduction/DNA direction.
+
+**Scale calibrations (run at the end of the night).** At the paper's own
+500-run scale, the best Pong cell (sparse wiring, slow weights, targets
+off) scores 0.610 ± 0.204 vs the published 0.582 ± 0.100 — the
+improvement is real (z = +2.8) but modest, and its variance is doubled
+(heavier failure tails). The stacked tracking config at 200 seeds:
+0.512, reliability 0.72. General pattern worth naming: every effect in
+the campaign shrank monotonically from 12 → 48 → 200/500 seeds while
+keeping its sign — treat the small-n numbers as direction-finders and
+the large-n numbers as the citable ones.

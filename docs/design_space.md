@@ -480,9 +480,11 @@ pools are the motor symmetry-breakers.
 The generality check across embodiments (H58, H62) returned a signed
 answer. On Pong — which starts at Σw ≈ 0 (mean-zero weights, 25%
 inhibitory) so the controller *grows* input to comfort, the mirror image
-of tracking's erosion — sparse+slow is again the best cell (hit 0.679 at
-p=.02/wlr=.03 vs published 0.600), running nearly silent (f ≈ 0.02: ten
-active neurons of five hundred). But on wall avoidance the transfer
+of tracking's erosion — sparse+slow is again the best cell (12-seed
+screen 0.679; at the paper's own 500-run scale, with targets off:
+**0.610 ± 0.204 vs published 0.582 ± 0.100, z = +2.8** — a real but
+modest mean improvement bought at doubled variance), running nearly
+silent (f ≈ 0.02: ten active neurons of five hundred). But on wall avoidance the transfer
 FAILS, and the failure is the flow-sign law resurfacing: wall's
 "perfect" slow-wlr cells are dead statues (the task's degenerate death
 solution; an aliveness check caught the confounded metric), and the best

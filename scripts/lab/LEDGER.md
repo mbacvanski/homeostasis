@@ -2775,3 +2775,18 @@ distance streams exactly equal for all four rungs; 2/1, 2/1, 2/1, 6/6).
 Exhibit-surfaced detail now stated in its caption: budded copies receive
 identical input forever after, so the lineage moves in perfect lockstep
 — six agents, one trajectory (the H87 twin-superposition, inherited).
+
+## Paper-scale calibrations (pong500, stack200): effects survive, shrink
+
+PONG at the paper's own scale (500 runs x 1e5 steps, published config,
+sparse-slow-targets-off): hit 0.610 (SD 0.204) vs published 0.582
+(SD 0.100) — the improvement is real (z = +2.8) but MODEST (+0.028, ~5%
+relative), and the variance DOUBLES (heavy failure tail: the cell is
+bimodal at scale). No learning curve (0.608 -> 0.612), consistent with
+published. The 12-seed 0.679/0.684 was sampling optimism. STACK at 200
+seeds (+noise): 0.512 (SD 0.291), reliability 0.72 (from 0.607/0.81 at
+16 and 0.570/0.79 at 48). Pattern note for the whole campaign: every
+configuration effect shrank monotonically with n while keeping its
+sign — the 12-16-seed screening numbers are direction-finders, the
+48-500-seed numbers are the citable ones.
+(pong500_results.jsonl, stack200_results.jsonl)
