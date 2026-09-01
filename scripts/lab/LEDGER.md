@@ -2516,3 +2516,47 @@ activation noise proportionally large, and the lock's ~1% positional
 tolerance (H67) leaves no budget. Noise-as-resource is scoped to the
 1D tracking embodiment; the acquisition phase lottery stands
 unrescued. (h89_basin_noise.json)
+
+## H90 (preregistered): scaffolding — a developmental window in the world
+
+The pacemaker's 0.255 sits at the band's edge; acquisition from
+arbitrary starts is a ~10-25% lottery (H88). Curriculum: full-fidelity
+replay of A's trajectory, time-dilated to half speed for the first 3600
+steps (linear interpolation), full speed after. H88's 28-cell start
+grid, lock measured on the last 3600 steps (full-speed epoch).
+Predictions: (a) curriculum acquisition >= 2x the constant-speed replay
+baseline on the same grid; (b) the two H88 winners keep their locks
+through the speed ramp; (c) if curriculum <= baseline, slow-start
+scaffolding does not transfer through the speed change (the ramp breaks
+what it built).
+
+## H90 verdict: NULL — scaffolding does not rescue acquisition
+
+Curriculum 1/28 = constant 1/28. Half-speed starts sit mid-plateau for
+FOLLOWING (H75), but acquisition is not following: the bottleneck is
+finding/orienting to the ramp, which target speed does not fix. With
+H89 (noise fails too), acquisition stands as the family's hardest
+unsolved sub-competence — consistent with H55's below-horizon result,
+where selection preferred evolving blindness over solving acquisition.
+(h90_scaffold.json)
+
+## H91 (preregistered): are acquisition basins point-like or patches?
+
+Take H88's best winning start (offset -6, third angle, lock 0.91) and
+perturb the start position by delta in {0.25, 0.5, 1, 2} units in 4
+directions each. Predictions: (a) if >= 6/8 of the 0.25-0.5 ring still
+acquires, basins are small patches (order 1 unit); (b) if <= 2/8 at
+0.25, basins are near-point-like and the lottery is effectively a
+measure-zero phenomenon at practical resolution.
+
+## H91 verdict: basins are speckle — the lottery is unaimable
+
+(b) branch, sharpened: delta 0.25 keeps 1/4, delta 0.5 keeps 0/4, delta
+1.0 finds a DIFFERENT winner (1/4), delta 2.0 none — not a patch but a
+fractal-like speckle at sub-unit resolution (the signature of riddled/
+fractal basin boundaries). Acquisition cannot be aimed; the only
+reliable routes are warm starts and selection — which is what every
+working ecology and champion in this campaign implicitly used. Closes
+the acquisition arc: speckle basins (H91), noise fails (H89),
+curriculum fails (H90), below-horizon selection prefers blindness
+(H55). (h91_patch.json)
