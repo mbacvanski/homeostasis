@@ -232,10 +232,10 @@ ridge**:
 ![heatmap of performance across learning and forgetting speeds, with the crest marked](assets/tour_ridge.png)
 
 Here's the historical kicker: the original paper's own code fixed the
-learning speed at the far-right column of this map — one of the worst
-choices — and the entire published parameter search explored *up and
-down that one column*. Changing that single number roughly **doubles**
-the machine's tracking ability.
+learning speed at the far-right column of this map — which the crest
+only touches at the very leakiest settings — and the entire published
+parameter search explored *up and down that one column*. Changing that
+single number roughly **doubles** the machine's tracking ability.
 
 **Explore the map yourself:** `http://localhost:8471/lab/phase` — click
 any cell to launch that exact machine live.
@@ -382,9 +382,13 @@ locks of World 4's chasers.)
 the most *reliable* trackers we found. Reason: a sparse machine starts
 life much closer to comfortable — there's simply less overexcited wiring
 to tame — so even timid learning suffices, and the churn danger never
-arises. (It's not that sparse wires carry information better — dense
-wiring actually packs about ten times more information into each firing.
-Sparseness wins on *stability*, not on eloquence.)
+arises. The same recipe carried over to Pong: the best Pong player we
+measured — at the original study's own scale of 500 full games — was a
+sparse machine with its comfort dials frozen, playing measurably better
+than the published setup while nearly *silent* (about ten units firing
+out of five hundred). (It's not that sparse wires carry information
+better — dense wiring actually packs about ten times more information
+into each firing. Sparseness wins on *stability*, not on eloquence.)
 
 ### 8. The comfort dial betrays you
 
