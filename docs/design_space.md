@@ -341,6 +341,14 @@ First multi-agent data (H46–H47, `scripts/lab/h46_mutual.py`,
   pacemaker (morphology + arena rescaling), one-way coupling, and selection
   warm-started from prior follower competence (cold-start GAs find
   toll-booths).
+- **Entrainment propagates** (H49,
+  [fig_chain3](../scripts/out/lab/fig_chain3.png)): a third agent
+  warm-started from the follower's genome locks onto the *live follower*
+  (C–B dist 2.88, near4 1.00, 10,800 steps) — **three concentric
+  phase-locked circles**, a blind pacemaker's periodicity cascading down a
+  sensing chain. The rings contract ~15% per link (7.8 → 6.5 → 5.6),
+  predicting a *finite chain depth* when the innermost orbit leaves the
+  entrainment band — an open quantitative prediction.
 
 ## What the two homeostatic channels actually do
 
