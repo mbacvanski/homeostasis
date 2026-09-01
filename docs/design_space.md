@@ -758,7 +758,8 @@ the fast edge is sparse-and-informative.)
    sparsity buys information efficiency. Residue: gain sags ~25% at
    P=240 in every density, below the nominal absorption corner — the
    corner formula mispredicts for quiet nets. The sensor-spacing
-   resonance stays open.
+   "resonance" was retested at fine grain and retired — flat within
+   noise (H92).
 3. **Why does the carrier regionalize** — pure W-storage at w1′ vs mixed at
    ridge25? (Candidate: leak sets how long input context persists in x.)
 4. **Why the exact retinal drive formula underperforms the proxy** for the
