@@ -14,7 +14,10 @@ const C = {
 };
 const ARM_COLOR = { learning: C.green, frozen: C.orange };
 
-const connEl = document.getElementById("conn");
+// Batch status goes to its own element now that #conn shows the LIVE
+// connection state (the live section is served by lab_repair_live.js).
+const connEl = document.getElementById("batch-status") || document.getElementById("conn");
+const batchBox = document.getElementById("batch-box");
 let latest = null;
 let runSeq = 0;
 
@@ -28,6 +31,7 @@ function params() {
 }
 
 async function run() {
+  if (batchBox && !batchBox.open) return;  // batch is lazy: render only when shown
   const p = params();
   const seq = ++runSeq;
   connEl.textContent = "running… (two 14k-step arms)";
@@ -200,5 +204,12 @@ for (const id of ["kill", "seed", "steps"]) {
   document.getElementById(id).addEventListener("change", run);
 }
 document.getElementById("btn-run").addEventListener("click", run);
-fitWide();
-run();
+if (batchBox) {
+  let batchRan = false;
+  batchBox.addEventListener("toggle", () => {
+    if (batchBox.open && !batchRan) { batchRan = true; fitWide(); run(); }
+  });
+} else {
+  fitWide();
+  run();
+}
